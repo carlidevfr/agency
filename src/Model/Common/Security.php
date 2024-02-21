@@ -10,4 +10,6 @@ class Security
         $data = htmlspecialchars($data, ENT_QUOTES);
         return $data;
     }
+
+
 }

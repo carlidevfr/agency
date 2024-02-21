@@ -10,7 +10,7 @@ CREATE TABLE Speciality
 (
     idSpeciality INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     speName VARCHAR(250) NOT NULL
-);
+) engine=INNODB DEFAULT CHARSET=utf8;
 
 -- on crée la table pays
 
@@ -18,7 +18,7 @@ CREATE TABLE Country
 (
     idCountry INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     countryName VARCHAR(250) NOT NULL
-);
+) engine=INNODB DEFAULT CHARSET=utf8;
 
 -- on crée la table cible
 
@@ -32,7 +32,7 @@ CREATE TABLE Cibles
     codeName VARCHAR(250) NOT NULL,
     countryCible INT NOT NULL,
     FOREIGN KEY (countryCible) REFERENCES Country(idCountry)
-);
+) engine=INNODB DEFAULT CHARSET=utf8;
 
 -- on crée la table contacts
 
@@ -40,7 +40,7 @@ CREATE TABLE Contacts
 (
     idContact INT NOT NULL PRIMARY KEY,
     FOREIGN KEY (idContact) REFERENCES Cibles(idCible) ON DELETE CASCADE
-);
+) engine=INNODB DEFAULT CHARSET=utf8;
 
 -- on crée la table agents
 
@@ -49,7 +49,7 @@ CREATE TABLE Agents
     idAgent INT NOT NULL PRIMARY KEY,
     codeAgent VARCHAR(250) NOT NULL,
     FOREIGN KEY (idAgent) REFERENCES Cibles(idCible) ON DELETE CASCADE
-);
+) engine=INNODB DEFAULT CHARSET=utf8;
 
 -- table associative des agents et leurs specialités
 
@@ -60,7 +60,7 @@ CREATE TABLE AgentsSpecialities
     PRIMARY KEY (agent_id, speciality_id),
     FOREIGN KEY (agent_id) REFERENCES Agents(idAgent),
     FOREIGN KEY (speciality_id) REFERENCES Speciality(idSpeciality)
-);
+) engine=INNODB DEFAULT CHARSET=utf8;
 
 -- Création de la table type de mission
 
@@ -68,7 +68,7 @@ CREATE TABLE Types
 (
     idType INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     typeName VARCHAR(250) NOT NULL
-);
+) engine=INNODB DEFAULT CHARSET=utf8;
 
 -- Création de la table statut de mission
 
@@ -76,21 +76,7 @@ CREATE TABLE Status
 (
     idStatus INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     statusName VARCHAR(250) NOT NULL
-);
-
--- Création de la table planque
-
-CREATE TABLE Planques
-(
-    idPlanque INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    planqueName VARCHAR(250) NOT NULL,
-    location VARCHAR(250) NOT NULL,
-    planqueCountry INT NOT NULL,
-    actuallyMission INT,
-    type VARCHAR(250) NOT NULL,
-    FOREIGN KEY (planqueCountry) REFERENCES Country(idCountry),
-    FOREIGN KEY (actuallyMission) REFERENCES Missions(idMission)
-);
+) engine=INNODB DEFAULT CHARSET=utf8;
 
 -- Création de la table mission
 CREATE TABLE Missions
@@ -109,8 +95,21 @@ CREATE TABLE Missions
     FOREIGN KEY (missionType) REFERENCES Types(idType),
     FOREIGN KEY (missionStatus) REFERENCES Status(idStatus),
     FOREIGN KEY (missionSpeciality) REFERENCES Speciality(idSpeciality)
-);
+) engine=INNODB DEFAULT CHARSET=utf8;
 
+-- Création de la table planque
+
+CREATE TABLE Planques
+(
+    idPlanque INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    planqueName VARCHAR(250) NOT NULL,
+    location VARCHAR(250) NOT NULL,
+    planqueCountry INT NOT NULL,
+    actuallyMission INT,
+    type VARCHAR(250) NOT NULL,
+    FOREIGN KEY (planqueCountry) REFERENCES Country(idCountry),
+    FOREIGN KEY (actuallyMission) REFERENCES Missions(idMission)
+) engine=INNODB DEFAULT CHARSET=utf8;
 
 -- Table associative lien entre table contact et table mission
 CREATE TABLE ContactsInMission
@@ -120,7 +119,7 @@ CREATE TABLE ContactsInMission
     PRIMARY KEY (idContact, idMission),
     FOREIGN KEY (idContact) REFERENCES Contacts(idContact),
     FOREIGN KEY (idMission) REFERENCES Missions(idMission)
-);
+) engine=INNODB DEFAULT CHARSET=utf8;
 
 -- Table associative lien entre table cible et table mission
 CREATE TABLE CiblesInMission
@@ -130,7 +129,7 @@ CREATE TABLE CiblesInMission
     PRIMARY KEY (idCible, idMission),
     FOREIGN KEY (idCible) REFERENCES Cibles(idCible),
     FOREIGN KEY (idMission) REFERENCES Missions(idMission)
-);
+) engine=INNODB DEFAULT CHARSET=utf8;
 
 -- Table associative lien entre table agents et table mission
 CREATE TABLE AgentsInMission
@@ -140,7 +139,7 @@ CREATE TABLE AgentsInMission
     PRIMARY KEY (idAgent, idMission),
     FOREIGN KEY (idAgent) REFERENCES Agents(idAgent),
     FOREIGN KEY (idMission) REFERENCES Missions(idMission)
-);
+) engine=INNODB DEFAULT CHARSET=utf8;
 
 -- insertion données fictives;
 
@@ -222,14 +221,11 @@ INSERT INTO AgentsInMission (idAgent, idMission) VALUES
 
 INSERT INTO Planques (planqueName, location, planqueCountry, type, actuallyMission) VALUES
     ('tour eiffel', 'centre de la place', 1,'maison', 1),
-    ('Maisonnette', '2 quai des prés 75000 paris', 1, 'maison',''),
-    ('le gros immeuble', '2 quai des prés C187 Ville', 2,'maison',''),
-    ('hutte', '3 bd 2 F487 Ville', 3,'maison',''),
-    ('hohoha', 'place principale F4787 Ville', 4,'maison','');
+    ('Maisonnette', '2 quai des prés 75000 paris', 1, 'maison',NULL),
+    ('le gros immeuble', '2 quai des prés C187 Ville', 2,'maison',NULL),
+    ('hutte', '3 bd 2 F487 Ville', 3,'maison',NULL),
+    ('hohoha', 'place principale F4787 Ville', 4,'maison',NULL);
 
 -- création d'un utilisateur qui servira à faire la connexion dans le .ENV du PHP pour toute l'app;
 CREATE OR REPLACE USER 'agenceapp'@'%' IDENTIFIED BY PASSWORD '*54958E764CE10E50764C2EECBB71D01F08549980';
 GRANT SELECT, INSERT, UPDATE, DELETE ON secret_agency.* TO 'agenceapp'@'%' ;
-
-
-

@@ -28,4 +28,8 @@ class Router
         }
         return null;
     }
+
+    public function getRoutes(){
+        return $this->routes;
+    }
 }
