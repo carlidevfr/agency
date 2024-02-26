@@ -18,6 +18,11 @@ class Router
     public function getHandler(string $method, string $uri)
     {
         foreach ($this->routes as $route) {
+            // Evite le 404 s'il y a des paramètres GET
+            
+            $uriParts = explode('?', $uri);
+            $uri = $uriParts[0];
+            
             if ($route['method'] === $method && $route['path'] === $uri) {
                 return [
                     'method' => $route['method'],

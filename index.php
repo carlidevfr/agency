@@ -13,6 +13,7 @@ $router = new Router();
 
 $router->addRoute('GET', BASE_URL . '/', 'homecontroller', 'index');
 $router->addRoute('GET', BASE_URL . '/apigetmissions', 'HomeController', 'apiGetMissions');
+$router->addRoute('GET', BASE_URL . '/apigetselectedmissions', 'HomeController', 'apiGetSelectedMissions');
 
 //var_dump($router->getRoutes());
 //var_dump($_SERVER['REQUEST_URI']);
