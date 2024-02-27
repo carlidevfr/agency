@@ -7,7 +7,9 @@ class Security
     {
         $data = trim((string)$data);
         $data = stripslashes($data);
-        $data = htmlspecialchars($data, ENT_QUOTES, 'UTF-8');
+        //$data = htmlspecialchars($data, ENT_QUOTES, 'UTF-8');
+        $data = htmlentities($data);
+
         return $data;
     }
 

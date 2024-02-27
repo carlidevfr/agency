@@ -6,11 +6,44 @@
     <title>Document</title>
 </head>
 <body>
-    hello <br><br>
+    <h1>L'agency - Missions freelance impactantes</h1>
+    <form id = 'filters-form'>
+        <select name="country" id="country">
+            <option value="">Pays</option>
+        </select>
 
-    <button id='recuperer-toutes-donnees' >récupérer les données</button>
+        <select name="type" id="type">
+            <option value="">Type</option>
+        </select>
+
+        <select name="speciality" id="speciality">
+            <option value="">Spécialité</option>
+        </select>
+
+        <select name="status" id="status">
+            <option value="">Statut</option>
+        </select>
+
+        <select name="agent" id="agent">
+            <option value="">Agent</option>
+        </select>
+
+        <button type="submit">Filtrer</button>
+        
+    </form>
+
+    <button id='recuperer-toutes-donnees' >Reset</button>
+    
+    <form id = 'search-form'>
+        <input type="text" name='search'>
+        <button type="submit">search</button>
+
+    </form>
+
     <div id="missions-container"></div>
 
 </body>
 <script src="./public/js/home.js"></script>
+<script src="./public/js/test.js"></script>
+
 </html>
