@@ -7,19 +7,24 @@ class Mission extends Model
 
     public function getAllMissions()
     {
-        // retourne toutes les missions
+        try {
+            // retourne toutes les missions
 
-        $bdd = $this->connexionPDO();
-        $req = '
+            $bdd = $this->connexionPDO();
+            $req = '
         SELECT * 
         FROM Missions';
 
-        $stmt = $bdd->prepare($req);
+            $stmt = $bdd->prepare($req);
 
-        if ($stmt->execute()) {
-            $missions = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            $stmt->closeCursor();
-            return $missions;
+            if ($stmt->execute()) {
+                $missions = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                $stmt->closeCursor();
+                return $missions;
+            }
+        } catch (Exception $e) {
+            $message = 'erreur avec le message : ' . $e->getMessage();
+            return $message;
         }
     }
 
@@ -29,12 +34,12 @@ class Mission extends Model
         param : id Pays, Type, status, spécialité, agent de la mission
         return : missions correspondantes
         */
+        try {
+            // Connexion à la base de données
+            $bdd = $this->connexionPDO();
 
-        // Connexion à la base de données
-        $bdd = $this->connexionPDO();
-
-        // Requête SQL de base avec des jointures
-        $req = "SELECT
+            // Requête SQL de base avec des jointures
+            $req = "SELECT
             Missions.title,
             Missions.codeName,
             Missions.description,
@@ -53,78 +58,83 @@ class Mission extends Model
         JOIN AgentsInMission ON Missions.idMission = AgentsInMission.idMission
         JOIN Agents ON AgentsInMission.idAgent = Agents.idAgent";
 
-        // Construction dynamique de la clause WHERE
-        $conditions = [];
+            // Construction dynamique de la clause WHERE
+            $conditions = [];
 
-        if (!empty($countryId)) {
-            $conditions[] = "Country.idCountry = :countryId";
-        }
+            if (!empty($countryId)) {
+                $conditions[] = "Country.idCountry = :countryId";
+            }
 
-        if (!empty($typeId)) {
-            $conditions[] = "Types.idType = :typeId";
-        }
+            if (!empty($typeId)) {
+                $conditions[] = "Types.idType = :typeId";
+            }
 
-        if (!empty($statusId)) {
-            $conditions[] = "Status.idStatus = :statusId";
-        }
+            if (!empty($statusId)) {
+                $conditions[] = "Status.idStatus = :statusId";
+            }
 
-        if (!empty($specialityId)) {
-            $conditions[] = "Speciality.idSpeciality = :specialityId";
-        }
+            if (!empty($specialityId)) {
+                $conditions[] = "Speciality.idSpeciality = :specialityId";
+            }
 
-        if (!empty($agentId)) {
-            $conditions[] = "Agents.idAgent = :agentId";
-        }
+            if (!empty($agentId)) {
+                $conditions[] = "Agents.idAgent = :agentId";
+            }
 
-        // Ajout de la clause WHERE à la requête si nécessaire
-        if (!empty($conditions)) {
-            $req .= " WHERE " . implode(" AND ", $conditions);
-        }
-        // Préparation de la requête
-        $stmt = $bdd->prepare($req);
+            // Ajout de la clause WHERE à la requête si nécessaire
+            if (!empty($conditions)) {
+                $req .= " WHERE " . implode(" AND ", $conditions);
+            }
+            // Préparation de la requête
+            $stmt = $bdd->prepare($req);
 
-        // Liaison des paramètres
-        if (!empty($countryId)) {
-            $stmt->bindValue(':countryId', $countryId, PDO::PARAM_STR);
-        }
+            // Liaison des paramètres
+            if (!empty($countryId)) {
+                $stmt->bindValue(':countryId', $countryId, PDO::PARAM_STR);
+            }
 
-        if (!empty($typeId)) {
-            $stmt->bindValue(':typeId', $typeId, PDO::PARAM_STR);
-        }
+            if (!empty($typeId)) {
+                $stmt->bindValue(':typeId', $typeId, PDO::PARAM_STR);
+            }
 
-        if (!empty($statusId)) {
-            $stmt->bindValue(':statusId', $statusId, PDO::PARAM_STR);
-        }
+            if (!empty($statusId)) {
+                $stmt->bindValue(':statusId', $statusId, PDO::PARAM_STR);
+            }
 
-        if (!empty($specialityId)) {
-            $stmt->bindValue(':specialityId', $specialityId, PDO::PARAM_STR);
-        }
+            if (!empty($specialityId)) {
+                $stmt->bindValue(':specialityId', $specialityId, PDO::PARAM_STR);
+            }
 
-        if (!empty($agentId)) {
-            $stmt->bindValue(':agentId', $agentId, PDO::PARAM_STR);
-        }
+            if (!empty($agentId)) {
+                $stmt->bindValue(':agentId', $agentId, PDO::PARAM_STR);
+            }
 
-        // Exécution de la requête
-        if ($stmt->execute()) {
-            $missionsFiltered = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            $stmt->closeCursor();
-            return $missionsFiltered;
+            // Exécution de la requête
+            if ($stmt->execute()) {
+                $missionsFiltered = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                $stmt->closeCursor();
+                return $missionsFiltered;
+            }
+        } catch (Exception $e) {
+            $message = 'erreur avec le message : ' . $e->getMessage();
+            return $message;
         }
     }
 
 
-public function getSearchMissions($search)
+    public function getSearchMissions($search)
     {
         /*
         param : id Pays, Type, status, spécialité, agent de la mission
         return : missions correspondantes
         */
 
-        // Connexion à la base de données
-        $bdd = $this->connexionPDO();
+        try {
+            // Connexion à la base de données
+            $bdd = $this->connexionPDO();
 
-        // Requête SQL de base avec des jointures
-        $req = "SELECT
+            // Requête SQL de base avec des jointures
+            $req = "SELECT
             Missions.title,
             Missions.codeName,
             Missions.description,
@@ -150,21 +160,33 @@ public function getSearchMissions($search)
             Status.statusName LIKE :searchTerm OR
             Speciality.speName LIKE :searchTerm OR
             Country.countryName LIKE :searchTerm";
-            
-            
-        // Préparation de la requête
-        $stmt = $bdd->prepare($req);
 
-        // Liaison des paramètres
-        if (!empty($search)) {
-            $stmt->bindValue(':searchTerm', '%'. $search .'%', PDO::PARAM_STR);
 
-        // Exécution de la requête
-        if ($stmt->execute()) {
-            $missionsSearch = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            $stmt->closeCursor();
-            return $missionsSearch;
+            // Préparation de la requête
+            $stmt = $bdd->prepare($req);
+
+            // Liaison des paramètres
+            if (!empty($search)) {
+                $stmt->bindValue(':searchTerm', '%' . $search . '%', PDO::PARAM_STR);
+
+                // Exécution de la requête
+                if ($stmt->execute()) {
+                    $missionsSearch = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    $stmt->closeCursor();
+                    return $missionsSearch;
+                }
+
+            }
+        } catch (Exception $e) {
+            $log = sprintf(
+                "%s %s %s %s %s",
+                date('Y-m-d- h:m:s'),
+                $e->getMessage(),
+                $e->getCode(),
+                $e->getFile(),
+                $e->getLine()
+                );
+                error_log($log . "\n\r", 3, './src/error.log');
         }
     }
-}
 }

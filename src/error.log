@@ -1,0 +1,4 @@
+2024-03-04- 08:03:41 SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for loocalhost failed: Hôte inconnu.  2002 C:\wamp64\www\Agency\src\Model\Common\Model.php 8
+2024-03-04- 08:03:58 SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for loocalhost failed: Hôte inconnu.  2002 C:\wamp64\www\Agency\src\Model\Common\Model.php 8
+2024-03-04- 08:03:08 SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for loocalhost failed: Hôte inconnu.  2002 C:\wamp64\www\Agency\src\Model\Common\Model.php 8
+

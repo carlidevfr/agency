@@ -31,7 +31,6 @@ class HomeController
     public function index(){
         $loader = new Twig\Loader\FilesystemLoader('./src/templates');
         $twig = new Twig\Environment($loader);
-
         $template = $twig->load('home.twig');
         echo  $template->render([
             'base_url' => BASE_URL,
@@ -84,7 +83,7 @@ class HomeController
         (isset($_GET['status'])) ? $statusId = $this->Security->filter_form($_GET['status']) : $statusId = '';
         (isset($_GET['speciality'])) ? $specialityId = $this->Security->filter_form($_GET['speciality']) : $specialityId = '';
         (isset($_GET['agent'])) ? $agentId = $this->Security->filter_form($_GET['agent']) : $agentId = '';
-
+        
         //récupération et envoi du résultat en json
         $res = $this->Missions->getSelectedMissions($countryId, $typeId, $statusId, $specialityId, $agentId);
         Model::sendJSON($res) ;

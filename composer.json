@@ -1,5 +1,8 @@
 {
     "require": {
         "twig/twig": "^3.8"
+    },
+    "require-dev": {
+        "symfony/test-pack": "^1.1"
     }
 }
