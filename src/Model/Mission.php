@@ -23,8 +23,63 @@ class Mission extends Model
                 return $missions;
             }
         } catch (Exception $e) {
-            $message = 'erreur avec le message : ' . $e->getMessage();
-            return $message;
+            $log = sprintf(
+                "%s %s %s %s %s",
+                date('Y-m-d- H:i:s'),
+                $e->getMessage(),
+                $e->getCode(),
+                $e->getFile(),
+                $e->getLine()
+            );
+            error_log($log . "\n\r", 3, './src/error.log');
+        }
+    }
+
+    public function getMission($idMission)
+    {
+        try {
+            // retourne toutes les missions
+
+            $bdd = $this->connexionPDO();
+            $req = '
+        SELECT Missions.idMission,
+        Missions.title,
+        Missions.codeName,
+        Missions.description,
+        Missions.beginDate,
+        Missions.endDate,
+        Country.countryName,
+        Types.typeName,
+        Status.statusName,
+        Speciality.speName
+        FROM Missions
+        JOIN Country ON Missions.missionCountry = Country.idCountry
+        JOIN Types ON Missions.missionType = Types.idType
+        JOIN Status ON Missions.missionStatus = Status.idStatus
+        JOIN Speciality ON Missions.missionSpeciality = Speciality.idSpeciality
+        WHERE Missions.idMission = :idMission';
+
+            $stmt = $bdd->prepare($req);
+
+            if (!empty($idMission)) {
+                $stmt->bindValue(':idMission', $idMission, PDO::PARAM_STR);
+                if ($stmt->execute()) {
+                    $mission = $stmt->fetch(PDO::FETCH_ASSOC);
+                    $stmt->closeCursor();
+                    return $mission;
+                }
+            }
+
+        } catch (Exception $e) {
+            $log = sprintf(
+                "%s %s %s %s %s",
+                date('Y-m-d- H:i:s'),
+                $e->getMessage(),
+                $e->getCode(),
+                $e->getFile(),
+                $e->getLine()
+            );
+            error_log($log . "\n\r", 3, './src/error.log');
         }
     }
 
@@ -40,6 +95,7 @@ class Mission extends Model
 
             // Requête SQL de base avec des jointures
             $req = "SELECT
+            Missions.idMission,
             Missions.title,
             Missions.codeName,
             Missions.description,
@@ -49,7 +105,8 @@ class Mission extends Model
             Types.typeName,
             Status.statusName,
             Speciality.speName,
-            Agents.codeAgent
+            Agents.codeAgent,
+            GROUP_CONCAT(Agents.codeAgent) AS agentNames
         FROM Missions
         JOIN Country ON Missions.missionCountry = Country.idCountry
         JOIN Types ON Missions.missionType = Types.idType
@@ -84,7 +141,10 @@ class Mission extends Model
             // Ajout de la clause WHERE à la requête si nécessaire
             if (!empty($conditions)) {
                 $req .= " WHERE " . implode(" AND ", $conditions);
-            }
+            } 
+            $req .= " GROUP BY Missions.idMission" ;
+
+            
             // Préparation de la requête
             $stmt = $bdd->prepare($req);
 
@@ -116,8 +176,15 @@ class Mission extends Model
                 return $missionsFiltered;
             }
         } catch (Exception $e) {
-            $message = 'erreur avec le message : ' . $e->getMessage();
-            return $message;
+            $log = sprintf(
+                "%s %s %s %s %s",
+                date('Y-m-d- H:i:s'),
+                $e->getMessage(),
+                $e->getCode(),
+                $e->getFile(),
+                $e->getLine()
+            );
+            error_log($log . "\n\r", 3, './src/error.log');
         }
     }
 
@@ -135,6 +202,7 @@ class Mission extends Model
 
             // Requête SQL de base avec des jointures
             $req = "SELECT
+            Missions.idMission,
             Missions.title,
             Missions.codeName,
             Missions.description,
@@ -144,7 +212,8 @@ class Mission extends Model
             Types.typeName,
             Status.statusName,
             Speciality.speName,
-            Agents.codeAgent
+            Agents.codeAgent,
+            GROUP_CONCAT(Agents.codeAgent) AS agentNames
         FROM Missions
         JOIN Country ON Missions.missionCountry = Country.idCountry
         JOIN Types ON Missions.missionType = Types.idType
@@ -159,7 +228,8 @@ class Mission extends Model
             Types.typeName LIKE :searchTerm OR
             Status.statusName LIKE :searchTerm OR
             Speciality.speName LIKE :searchTerm OR
-            Country.countryName LIKE :searchTerm";
+            Country.countryName LIKE :searchTerm
+        GROUP BY Missions.idMission";
 
 
             // Préparation de la requête
@@ -185,8 +255,8 @@ class Mission extends Model
                 $e->getCode(),
                 $e->getFile(),
                 $e->getLine()
-                );
-                error_log($log . "\n\r", 3, './src/error.log');
+            );
+            error_log($log . "\n\r", 3, './src/error.log');
         }
     }
 }

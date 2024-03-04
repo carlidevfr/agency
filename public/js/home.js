@@ -48,6 +48,7 @@ function displayMissions(missions, resDom) {
                 <p><strong>Description:</strong> ${sanitizeHtml(mission.description)}</p>
                 <p><strong>Begin Date:</strong> ${sanitizeHtml(mission.beginDate)}</p>
                 <p><strong>End Date:</strong> ${sanitizeHtml(mission.endDate)}</p>
+                <a href="./mission?idMission=${mission.idMission}"> Voir la mission </a>
             `;
 
             // Ajouter la div de mission au conteneur

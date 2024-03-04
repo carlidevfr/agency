@@ -2,9 +2,9 @@
 require_once './src/Model/Common/Model.php';
 require_once './src/Model/Common/Security.php';
 
-class Cible extends Model
+class Planque extends Model
 {
-    public function getCiblesByIdMission($idMission)
+    public function getPlanquesByIdMission($idMission)
     {
         try {
             // retourne tous les status de missions
@@ -12,21 +12,17 @@ class Cible extends Model
             $bdd = $this->connexionPDO();
             $req = '
         SELECT
-            Cibles.idCible,
-            Cibles.isActive,
-            Cibles.firstname,
-            Cibles.lastname,
-            Cibles.birthdate,
-            Cibles.codeName,
-            Country.countryName AS countryCible
+            Planques.idPlanque,
+            Planques.planqueName,
+            Planques.location,
+            Planques.type,
+            Country.countryName AS planqueCountry
         FROM
-            Cibles
+            Planques
         JOIN
-            CiblesInMission ON Cibles.idCible = CiblesInMission.idCible
+            Missions ON Planques.actuallyMission = Missions.idMission
         JOIN
-            Missions ON CiblesInMission.idMission = Missions.idMission
-        JOIN
-            Country ON Cibles.countryCible = Country.idCountry
+            Country ON Planques.planqueCountry = Country.idCountry
         WHERE
             Missions.idMission = :idMission';
 
@@ -35,9 +31,9 @@ class Cible extends Model
             if (!empty($idMission)) {
                 $stmt->bindValue(':idMission', $idMission, PDO::PARAM_INT);
                 if ($stmt->execute()) {
-                    $cibles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    $planques = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     $stmt->closeCursor();
-                    return $cibles;
+                    return $planques;
                 }
             }
 

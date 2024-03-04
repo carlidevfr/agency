@@ -1,0 +1,50 @@
+{% if mission is empty %}
+    Aucune information sur la mission
+    <a href="{{ base_url }}"> Retour</a>
+
+{% else %}
+<h1> Fiche mission : {{mission.codeName|escape}}</h1> <br> 
+{{mission.title|escape}}<br>
+{{mission.description|escape}}<br>
+Date de début: {{mission.beginDate|escape}}<br>
+Date de fin: {{mission.endDate|escape}}<br>
+{{mission.countryName|escape}}<br>
+{{mission.typeName|escape}}<br>
+{{mission.statusName|escape}}<br>
+{{mission.speName|escape}}<br><br>
+
+Agents:
+
+<ul>
+    {% for agent in agents %}
+        <li>Nom : {{ agent.codeAgent|e }} - Spécialités : {{ agent.specialities|e }}</li>
+    {% endfor %}
+</ul><br><br>
+
+Contacts:
+
+<ul>
+    {% for contact in contacts %}
+        <li>Code : {{ contact.codeName|e }} - Nom : {{ contact.firstname|e }} {{ contact.lastname|e }} - Date de naissance : {{ contact.birthdate|e }} - Lieu de naissance : {{ contact.countryCible|e }}</li>
+    {% endfor %}
+</ul><br><br>
+
+Planques:
+
+<ul>
+    {% for planque in planques %}
+        <li> Nom : {{ planque.planqueName|e }} - Pays : {{ planque.planqueCountry|e }} - Adresse : {{ planque.location|e }} - Type : {{ planque.type|e }}</li>
+    {% endfor %}
+</ul><br><br>
+
+Cibles:
+
+<ul>
+    {% for cible in cibles %}
+        <li>Actif ? {{ cible.isActive|e }} - Code : {{ cible.codeName|e }} - Nom : {{ cible.firstname|e }} {{ cible.lastname|e }} - Date de naissance : {{ cible.birthdate|e }} - Lieu de naissance : {{ cible.countryCible|e }}</li>
+    {% endfor %}
+</ul><br><br>
+
+<a href="{{ base_url }}"> Retour</a>
+{% endif %}
+

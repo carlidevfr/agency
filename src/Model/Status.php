@@ -24,7 +24,7 @@ class Status extends Model
         } catch (Exception $e) {
             $log = sprintf(
                 "%s %s %s %s %s",
-                date('Y-m-d- h:m:s'),
+                date('Y-m-d- H:i:s'),
                 $e->getMessage(),
                 $e->getCode(),
                 $e->getFile(),

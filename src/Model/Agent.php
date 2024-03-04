@@ -24,13 +24,63 @@ class Agent extends Model
         } catch (Exception $e) {
             $log = sprintf(
                 "%s %s %s %s %s",
-                date('Y-m-d- h:m:s'),
+                date('Y-m-d- H:i:s'),
                 $e->getMessage(),
                 $e->getCode(),
                 $e->getFile(),
                 $e->getLine()
                 );
                 error_log($log . "\n\r", 3, './src/error.log');
+        }
+    }
+
+    public function getAgentsByIdMission($idMission)
+    {
+        try {
+            // retourne tous les status de missions
+
+            $bdd = $this->connexionPDO();
+            $req = '
+        SELECT
+            Agents.idAgent,
+            Agents.codeAgent,
+            GROUP_CONCAT(Speciality.speName) AS specialities
+        FROM
+            Agents
+        JOIN
+            AgentsInMission ON Agents.idAgent = AgentsInMission.idAgent
+        JOIN
+            Missions ON AgentsInMission.idMission = Missions.idMission
+        JOIN
+            AgentsSpecialities ON Agents.idAgent = AgentsSpecialities.agent_id
+        JOIN
+            Speciality ON AgentsSpecialities.speciality_id = Speciality.idSpeciality
+        WHERE
+            Missions.idMission = :idMission
+        GROUP BY
+            Agents.idAgent, Agents.codeAgent';
+
+            $stmt = $bdd->prepare($req);
+
+            if (!empty($idMission)) {
+                $stmt->bindValue(':idMission', $idMission, PDO::PARAM_INT);
+                if ($stmt->execute()) {
+                    $agents = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    $stmt->closeCursor();
+                    return $agents;
+                }
+            }
+
+        } catch (Exception $e) {
+            $log = sprintf(
+                "%s %s %s %s %s",
+                date('Y-m-d- H:i:s'),
+                $e->getMessage(),
+                $e->getCode(),
+                $e->getFile(),
+                $e->getLine()
+            );
+            error_log($log . "\n\r", 3, './src/error.log');
         }
     }
 }

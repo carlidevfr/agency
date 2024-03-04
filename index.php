@@ -6,6 +6,7 @@ define("BASE_URL", '/agency');
 require_once './src/Model/Common/Router.php';
 require_once './src/Config/env.php';
 require_once './src/Controller/HomeController.php';
+require_once './src/Controller/DisplayMissionsController.php';
 require_once './src/Model/Common/Security.php';
 
 
@@ -20,6 +21,8 @@ $router->addRoute('GET', BASE_URL . '/apigettype', 'HomeController', 'apiGetType
 $router->addRoute('GET', BASE_URL . '/apigetstatus', 'HomeController', 'apiGetStatus');
 $router->addRoute('GET', BASE_URL . '/apigetselectedmissions', 'HomeController', 'apiGetSelectedMissions');
 $router->addRoute('GET', BASE_URL . '/apigetsearchmissions', 'HomeController', 'apiGetSearchMissions');
+$router->addRoute('GET', BASE_URL . '/mission', 'DisplayMissionsController', 'getMission');
+
 
 //var_dump($router->getRoutes());
 //var_dump($_SERVER['REQUEST_URI']);

@@ -2,9 +2,9 @@
 require_once './src/Model/Common/Model.php';
 require_once './src/Model/Common/Security.php';
 
-class Cible extends Model
+class Contact extends Model
 {
-    public function getCiblesByIdMission($idMission)
+    public function getContactsByIdMission($idMission)
     {
         try {
             // retourne tous les status de missions
@@ -12,32 +12,33 @@ class Cible extends Model
             $bdd = $this->connexionPDO();
             $req = '
         SELECT
-            Cibles.idCible,
-            Cibles.isActive,
+            Contacts.idContact,
             Cibles.firstname,
             Cibles.lastname,
             Cibles.birthdate,
             Cibles.codeName,
             Country.countryName AS countryCible
         FROM
-            Cibles
+            Contacts
         JOIN
-            CiblesInMission ON Cibles.idCible = CiblesInMission.idCible
+            Cibles ON Contacts.idContact = Cibles.idCible
         JOIN
-            Missions ON CiblesInMission.idMission = Missions.idMission
+            ContactsInMission ON Contacts.idContact = ContactsInMission.idContact
+        JOIN
+            Missions ON ContactsInMission.idMission = Missions.idMission
         JOIN
             Country ON Cibles.countryCible = Country.idCountry
         WHERE
-            Missions.idMission = :idMission';
+            Missions.idMission = :idMission;';
 
             $stmt = $bdd->prepare($req);
 
             if (!empty($idMission)) {
                 $stmt->bindValue(':idMission', $idMission, PDO::PARAM_INT);
                 if ($stmt->execute()) {
-                    $cibles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    $contacts = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     $stmt->closeCursor();
-                    return $cibles;
+                    return $contacts;
                 }
             }
 
