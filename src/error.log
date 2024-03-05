@@ -1,4 +1,10 @@
 2024-03-04- 08:03:41 SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for loocalhost failed: HÙte inconnu.  2002 C:\wamp64\www\Agency\src\Model\Common\Model.php 8
 2024-03-04- 08:03:58 SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for loocalhost failed: HÙte inconnu.  2002 C:\wamp64\www\Agency\src\Model\Common\Model.php 8
 2024-03-04- 08:03:08 SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for loocalhost failed: HÙte inconnu.  2002 C:\wamp64\www\Agency\src\Model\Common\Model.php 8
+2024-03-04- 01:03:38 PDOStatement::execute(): SQLSTATE[42000]: Syntax error or access violation: 1064 Erreur de syntaxe pr√®s de 'FROM Missions
+        JOIN Country ON Missions.missionCountry = Country.idCo...' √† la ligne 13 2 C:\wamp64\www\Agency\src\Model\Mission.php 172
+2024-03-04- 01:03:04 PDOStatement::execute(): SQLSTATE[HY093]: Invalid parameter number: parameter was not defined 2 C:\wamp64\www\Agency\src\Model\Mission.php 176
+2024-03-04- 13:35:56 SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for loccalhost failed: HÙte inconnu.  2002 C:\wamp64\www\Agency\src\Model\Common\Model.php 8
+2024-03-04- 13:35:56 SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for loccalhost failed: HÙte inconnu.  2002 C:\wamp64\www\Agency\src\Model\Common\Model.php 8
+2024-03-04- 13:35:56 SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for loccalhost failed: HÙte inconnu.  2002 C:\wamp64\www\Agency\src\Model\Common\Model.php 8
 
