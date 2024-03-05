@@ -22,4 +22,16 @@ class AgentTest extends TestCase
       $this->assertIsArray($agentNames, 'La méthode getAllAgentNames devrait retourner un tableau.');
    }
 
+   public function testgetAgentsByIdMission()
+   {
+
+      $agentInstance = new Agent();
+
+      // Appeler la méthode à tester
+      $agentNames = $agentInstance->getAgentsByIdMission(1);
+
+      // Vérifier si on a un tableau
+      $this->assertIsArray($agentNames, 'La méthode getAgentsByIdMission devrait retourner un tableau.');
+   }
+
 }

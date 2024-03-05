@@ -62,7 +62,7 @@ class Mission extends Model
             $stmt = $bdd->prepare($req);
 
             if (!empty($idMission)) {
-                $stmt->bindValue(':idMission', $idMission, PDO::PARAM_STR);
+                $stmt->bindValue(':idMission', $idMission, PDO::PARAM_INT);
                 if ($stmt->execute()) {
                     $mission = $stmt->fetch(PDO::FETCH_ASSOC);
                     $stmt->closeCursor();

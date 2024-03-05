@@ -47,4 +47,17 @@ class MissionTest extends TestCase
          // Vérifier si on a un tableau
          $this->assertIsArray($missionNames, 'La méthode getSelectedMissions devrait retourner un tableau.');
       }
+
+            // Teste la méthode getMission de la classe Mission
+            public function testgetMission()
+            {
+         
+               $missionInstance = new Mission();
+         
+               // Appeler la méthode à tester
+               $missionNames = $missionInstance->getMission(1);
+         
+               // Vérifier si on a un tableau
+               $this->assertIsArray($missionNames, 'La méthode getMission devrait retourner un tableau.');
+            }
 }
