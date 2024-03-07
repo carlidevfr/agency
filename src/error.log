@@ -1,10 +1,37 @@
-2024-03-04- 08:03:41 SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for loocalhost failed: Hôte inconnu.  2002 C:\wamp64\www\Agency\src\Model\Common\Model.php 8
-2024-03-04- 08:03:58 SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for loocalhost failed: Hôte inconnu.  2002 C:\wamp64\www\Agency\src\Model\Common\Model.php 8
-2024-03-04- 08:03:08 SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for loocalhost failed: Hôte inconnu.  2002 C:\wamp64\www\Agency\src\Model\Common\Model.php 8
-2024-03-04- 01:03:38 PDOStatement::execute(): SQLSTATE[42000]: Syntax error or access violation: 1064 Erreur de syntaxe prÃ¨s de 'FROM Missions
+2024-03-04- 08:03:41 SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for loocalhost failed: Hï¿½te inconnu.  2002 C:\wamp64\www\Agency\src\Model\Common\Model.php 8
+
+2024-03-04- 08:03:58 SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for loocalhost failed: Hï¿½te inconnu.  2002 C:\wamp64\www\Agency\src\Model\Common\Model.php 8
+
+2024-03-04- 08:03:08 SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for loocalhost failed: Hï¿½te inconnu.  2002 C:\wamp64\www\Agency\src\Model\Common\Model.php 8
+
+2024-03-04- 01:03:38 PDOStatement::execute(): SQLSTATE[42000]: Syntax error or access violation: 1064 Erreur de syntaxe prÃ¨s de 'FROM Missions
         JOIN Country ON Missions.missionCountry = Country.idCo...' Ã  la ligne 13 2 C:\wamp64\www\Agency\src\Model\Mission.php 172
-2024-03-04- 01:03:04 PDOStatement::execute(): SQLSTATE[HY093]: Invalid parameter number: parameter was not defined 2 C:\wamp64\www\Agency\src\Model\Mission.php 176
-2024-03-04- 13:35:56 SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for loccalhost failed: Hôte inconnu.  2002 C:\wamp64\www\Agency\src\Model\Common\Model.php 8
-2024-03-04- 13:35:56 SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for loccalhost failed: Hôte inconnu.  2002 C:\wamp64\www\Agency\src\Model\Common\Model.php 8
-2024-03-04- 13:35:56 SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for loccalhost failed: Hôte inconnu.  2002 C:\wamp64\www\Agency\src\Model\Common\Model.php 8
-
+
+2024-03-04- 01:03:04 PDOStatement::execute(): SQLSTATE[HY093]: Invalid parameter number: parameter was not defined 2 C:\wamp64\www\Agency\src\Model\Mission.php 176
+
+2024-03-04- 13:35:56 SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for loccalhost failed: Hï¿½te inconnu.  2002 C:\wamp64\www\Agency\src\Model\Common\Model.php 8
+
+2024-03-04- 13:35:56 SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for loccalhost failed: Hï¿½te inconnu.  2002 C:\wamp64\www\Agency\src\Model\Common\Model.php 8
+
+2024-03-04- 13:35:56 SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for loccalhost failed: Hï¿½te inconnu.  2002 C:\wamp64\www\Agency\src\Model\Common\Model.php 8
+
+2024-03-06- 16:32:51 Erreur lors de l'exÃ©cution de la requÃªte getSearchCountryNames. 0 C:\wamp64\www\Agency\src\Model\Country.php 27
+
+2024-03-06- 16:32:55 Erreur lors de l'exÃ©cution de la requÃªte getSearchCountryNames. 0 C:\wamp64\www\Agency\src\Model\Country.php 27
+
+2024-03-06- 16:32:58 Erreur lors de l'exÃ©cution de la requÃªte getSearchCountryNames. 0 C:\wamp64\www\Agency\src\Model\Country.php 27
+
+2024-03-06- 16:34:32 SQLSTATE[42S22]: Column not found: 1054 Champ 'valeur' inconnu dans where clause 42S22 C:\wamp64\www\Agency\src\Model\Country.php 22
+
+2024-03-06- 16:34:35 SQLSTATE[42S22]: Column not found: 1054 Champ 'valeur' inconnu dans where clause 42S22 C:\wamp64\www\Agency\src\Model\Country.php 22
+
+2024-03-06- 16:34:37 SQLSTATE[42S22]: Column not found: 1054 Champ 'valeur' inconnu dans where clause 42S22 C:\wamp64\www\Agency\src\Model\Country.php 22
+
+2024-03-06- 16:36:20 SQLSTATE[42S22]: Column not found: 1054 Champ 'valeur' inconnu dans where clause 42S22 C:\wamp64\www\Agency\src\Model\Country.php 22
+
+2024-03-06- 16:36:23 SQLSTATE[42S22]: Column not found: 1054 Champ 'valeur' inconnu dans where clause 42S22 C:\wamp64\www\Agency\src\Model\Country.php 22
+
+2024-03-06- 16:36:50 SQLSTATE[42S22]: Column not found: 1054 Champ 'valeur' inconnu dans where clause 42S22 C:\wamp64\www\Agency\src\Model\Country.php 22
+
+2024-03-06- 16:36:53 SQLSTATE[42S22]: Column not found: 1054 Champ 'valeur' inconnu dans where clause 42S22 C:\wamp64\www\Agency\src\Model\Country.php 22
+

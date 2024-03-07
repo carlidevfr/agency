@@ -1,0 +1,24 @@
+<h1>Gestion des pays</h1>
+<br>
+
+<h2>liste des pays</h2>
+
+<form action="{{base_url}}/admin/manage-country" method="get">
+	<input type="text" name='search'>
+	<button type="submit">Rechercher un pays</button>
+	<button onclick="location.href='{{ base_url }}/admin/manage-country'">Reset</button>
+</form>
+
+
+<form action="" method="post">
+	{% for country in countries %}
+		<input type="radio" name="selectCountry" value="{{ country.id|e }}">
+		<label for="{{ country.id|e }}">{{ country.valeur|e }}</label>
+		<br>
+	{% endfor %}
+
+	<input type="submit" name="Ajouter" value="Ajouter">
+	<input type="submit" name="Modifier" value="Modifier">
+	<input type="submit" name="Supprimer" value="Supprimer">
+
+</form>
