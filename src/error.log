@@ -35,3 +35,20 @@
 
 2024-03-06- 16:36:53 SQLSTATE[42S22]: Column not found: 1054 Champ 'valeur' inconnu dans where clause 42S22 C:\wamp64\www\Agency\src\Model\Country.php 22
 
+2024-03-07- 15:48:18 SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for loccalhost failed: Hôte inconnu.  2002 C:\wamp64\www\Agency\src\Model\Common\Model.php 8
+2024-03-07- 15:49:23 SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for loccalhost failed: Hôte inconnu.  2002 C:\wamp64\www\Agency\src\Model\Common\Model.php 8
+2024-03-07- 15:51:26 SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for loccalhost failed: Hôte inconnu.  2002 C:\wamp64\www\Agency\src\Model\Common\Model.php 8
+2024-03-07- 15:58:18 SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for loccalhost failed: Hôte inconnu.  2002 C:\wamp64\www\Agency\src\Model\Common\Model.php 8
+2024-03-07- 15:58:23 SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for loccalhost failed: Hôte inconnu.  2002 C:\wamp64\www\Agency\src\Model\Common\Model.php 8
+2024-03-07- 15:59:24 SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for loccalhost failed: Hôte inconnu.  2002 C:\wamp64\www\Agency\src\Model\Common\Model.php 8
+2024-03-07- 15:59:25 SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for loccalhost failed: Hôte inconnu.  2002 C:\wamp64\www\Agency\src\Model\Common\Model.php 8
+2024-03-07- 15:59:39 SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for loccalhost failed: Hôte inconnu.  2002 C:\wamp64\www\Agency\src\Model\Common\Model.php 8
+2024-03-07- 16:00:51 SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for loccalhost failed: Hôte inconnu.  2002 C:\wamp64\www\Agency\src\Model\Common\Model.php 8
+2024-03-07- 16:01:03 SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for loccalhost failed: Hôte inconnu.  2002 C:\wamp64\www\Agency\src\Model\Common\Model.php 8
+2024-03-07- 16:01:41 SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for loccalhost failed: Hôte inconnu.  2002 C:\wamp64\www\Agency\src\Model\Common\Model.php 8
+2024-03-07- 16:02:50 SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for loccalhost failed: Hôte inconnu.  2002 C:\wamp64\www\Agency\src\Model\Common\Model.php 8
+2024-03-07- 16:11:01 SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for loccalhost failed: Hôte inconnu.  2002 C:\wamp64\www\Agency\src\Model\Common\Model.php 8
+2024-03-07- 16:11:08 SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for loccalhost failed: Hôte inconnu.  2002 C:\wamp64\www\Agency\src\Model\Common\Model.php 8
+2024-03-08- 13:33:22 SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for loccalhost failed: Hôte inconnu.  2002 C:\wamp64\www\Agency\src\Model\Common\Model.php 8
+2024-03-08- 13:33:28 SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for loccalhost failed: Hôte inconnu.  2002 C:\wamp64\www\Agency\src\Model\Common\Model.php 8
+

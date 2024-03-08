@@ -1,24 +1,94 @@
 <h1>Gestion des pays</h1>
-<br>
 
-<h2>liste des pays</h2>
+{% if addResult is defined and addResult is not empty %}
 
-<form action="{{base_url}}/admin/manage-country" method="get">
-	<input type="text" name='search'>
-	<button type="submit">Rechercher un pays</button>
-	<button onclick="location.href='{{ base_url }}/admin/manage-country'">Reset</button>
-</form>
+	{{addResult}}
+	<br>
+	<a href="{{ base_url }}/admin/manage-country">Retour</a>
+
+{% elseif modifySection is defined and modifySection == true %}
+	<h2>Modification du pays:</h2>
+  Ancien nom : {{country.valeur}} <br><br>
+  Nouveau nom : <br>
+  <form action="{{base_url}}/admin/manage-country/update" method="post">
+  <input type="text" name="updatedName" id="">
+  <input type="hidden" name="updateCountryId" value={{ country.id }}>
+
+  <button type="submit">Soumettre</button>
+  
+  </form>
+	<a href="{{ base_url }}/admin/manage-country">Retour</a>
+
+{% else %}
+
+	<h2>liste des pays</h2>
+
+	<form action="{{base_url}}/admin/manage-country" method="get">
+		<input type="text" name='search'>
+		<button type="submit">Rechercher un pays</button>
+		<button onclick="location.href='{{ base_url }}/admin/manage-country'">Reset</button>
+	</form>
+
+	{% if countries == 'une erreur est survenue' %}
+		<b>une erreur est survenue</b>
+	{% else %}
 
 
-<form action="" method="post">
-	{% for country in countries %}
-		<input type="radio" name="selectCountry" value="{{ country.id|e }}">
-		<label for="{{ country.id|e }}">{{ country.valeur|e }}</label>
+		<table>
+			<thead>
+				<tr>
+					<th>Nom du pays</th>
+					<th>Modifier</th>
+					<th>Supprimer</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for country in countries %}
+					<tr>
+						<td>{{ country.valeur }}</td>
+						<td>
+							<form method="get" action="{{base_url}}/admin/manage-country/update">
+								<input type="hidden" name="UpdateCountryId" value={{ country.id }}>
+								<button type="submit">Modifier</button>
+							</form>
+						</td>
+						<td>
+							<form method="post" action="{{base_url}}/admin/manage-country/delete">
+								<input type="hidden" name="deleteCountryId" value={{ country.id }}>
+								<button type="submit">Supprimer</button>
+							</form>
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+
+		<div class="pagination">
+			{% if activePage > 1 %}
+				<a href="?page={{ activePage - 1 }}&search={{search}}">Page précédente</a>
+			{% endif %}
+
+			{% for page in 1..pageMax %}
+				{% if page == activePage %}
+					<span class="current-page">{{ page }}</span>
+				{% else %}
+					<a href="?page={{ page }}&search={{search}}">{{ page }}</a>
+				{% endif %}
+			{% endfor %}
+
+			{% if activePage < pageMax %}
+				<a href="?page={{ activePage + 1 }}&search={{search}}">Page suivante</a>
+			{% endif %}
+		</div>
+
+
 		<br>
-	{% endfor %}
-
-	<input type="submit" name="Ajouter" value="Ajouter">
-	<input type="submit" name="Modifier" value="Modifier">
-	<input type="submit" name="Supprimer" value="Supprimer">
-
-</form>
+		<h2>Souhaitez vous ajouter un pays ?</h2>
+		<form action="{{base_url}}/admin/manage-country/add" method="post">
+			<label for="addCountryName">Nom du nouveau pays :
+			</label>
+			<input type="text" name="addCountryName" id="" placeholder="ajoutez un pays">
+			<button type="submit">Soumettre</button>
+		</form>
+	{% endif %}
+{% endif %}

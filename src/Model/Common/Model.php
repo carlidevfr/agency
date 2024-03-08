@@ -6,7 +6,7 @@ abstract class Model
     public function connexionPDO(){
         try {
             self::$pdo = new PDO('mysql:host=' . Security::filter_form($_ENV["DB_HOST"]) . ';dbname=' . Security::filter_form($_ENV["DB_NAME"]).';charset=utf8mb4' , Security::filter_form($_ENV["DB_USER"]), Security::filter_form($_ENV["DB_PASS"]));
-            self::$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
+            //self::$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
             return self::$pdo;
         } catch (PDOException $e) {
             $log = sprintf(

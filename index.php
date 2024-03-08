@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 require_once './vendor/autoload.php';
 define("BASE_URL", '/agency');
 
@@ -25,7 +27,11 @@ $router->addRoute('GET', BASE_URL . '/apigetsearchmissions', 'HomeController', '
 $router->addRoute('GET', BASE_URL . '/mission', 'DisplayMissionsController', 'getMission');
 $router->addRoute('GET', BASE_URL . '/admin', 'AdminHomeController', 'adminHomePage');
 $router->addRoute('GET', BASE_URL . '/admin/manage-country', 'AdminCountryController', 'adminCountryPage');
-$router->addRoute('POST', BASE_URL . '/admin/manage-country', 'AdminCountryController', 'adminSearchCountryPage');
+$router->addRoute('POST', BASE_URL . '/admin/manage-country/add', 'AdminCountryController', 'adminAddCountry');
+$router->addRoute('GET', BASE_URL . '/admin/manage-country/action/success', 'AdminCountryController', 'adminSuccessActionCountry');
+$router->addRoute('GET', BASE_URL . '/admin/manage-country/delete', 'AdminCountryController', 'adminDeleteCountry');
+$router->addRoute('GET', BASE_URL . '/admin/manage-country/update', 'AdminCountryController', 'adminUpdateCountryPage');
+$router->addRoute('POST', BASE_URL . '/admin/manage-country/update', 'AdminCountryController', 'adminUpdateCountry');
 
 
 
