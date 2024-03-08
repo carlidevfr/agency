@@ -29,7 +29,7 @@ $router->addRoute('GET', BASE_URL . '/admin', 'AdminHomeController', 'adminHomeP
 $router->addRoute('GET', BASE_URL . '/admin/manage-country', 'AdminCountryController', 'adminCountryPage');
 $router->addRoute('POST', BASE_URL . '/admin/manage-country/add', 'AdminCountryController', 'adminAddCountry');
 $router->addRoute('GET', BASE_URL . '/admin/manage-country/action/success', 'AdminCountryController', 'adminSuccessActionCountry');
-$router->addRoute('GET', BASE_URL . '/admin/manage-country/delete', 'AdminCountryController', 'adminDeleteCountry');
+$router->addRoute('POST', BASE_URL . '/admin/manage-country/delete', 'AdminCountryController', 'adminDeleteCountry');
 $router->addRoute('GET', BASE_URL . '/admin/manage-country/update', 'AdminCountryController', 'adminUpdateCountryPage');
 $router->addRoute('POST', BASE_URL . '/admin/manage-country/update', 'AdminCountryController', 'adminUpdateCountry');
 

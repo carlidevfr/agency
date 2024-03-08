@@ -4,32 +4,46 @@
 
 	{{addResult}}
 	<br>
-	<a href="{{ base_url }}/admin/manage-country">Retour</a>
+	{% if missions is defined and missions is not empty %}
+		<h2>Missions relatives à l'élément à supprimer</h2>
+		<h2>Peut empêcher la suppression :</h2>
+		<ul>
+			{% for mission in missions %}
+				<li>{{mission.title}}
+				</li>
+			{% endfor %}
+		</ul>
+
+	{% endif %}
+	<a href="{{ base_url }}{{previousUrl}}">Retour</a>
 
 {% elseif modifySection is defined and modifySection == true %}
 	<h2>Modification du pays:</h2>
-  Ancien nom : {{country.valeur}} <br><br>
-  Nouveau nom : <br>
-  <form action="{{base_url}}/admin/manage-country/update" method="post">
-  <input type="text" name="updatedName" id="">
-  <input type="hidden" name="updateCountryId" value={{ country.id }}>
+	Ancien nom :
+	{{elements.valeur}}
+	<br><br>
+	Nouveau nom :
+	<br>
+	<form action="{{base_url}}{{updateUrl}}" method="post">
+		<input type="text" name="updatedName" id="">
+		<input type="hidden" name="updateElementId" value={{ elements.id }}>
 
-  <button type="submit">Soumettre</button>
-  
-  </form>
-	<a href="{{ base_url }}/admin/manage-country">Retour</a>
+		<button type="submit">Soumettre</button>
+
+	</form>
+	<a href="{{ base_url }}{{previousUrl}}">Retour</a>
 
 {% else %}
 
 	<h2>liste des pays</h2>
 
-	<form action="{{base_url}}/admin/manage-country" method="get">
+	<form action="{{base_url}}{{previousUrl}}" method="get">
 		<input type="text" name='search'>
 		<button type="submit">Rechercher un pays</button>
-		<button onclick="location.href='{{ base_url }}/admin/manage-country'">Reset</button>
+		<button onclick="location.href='{{ base_url }}{{previousUrl}}'">Reset</button>
 	</form>
 
-	{% if countries == 'une erreur est survenue' %}
+	{% if elements == 'une erreur est survenue' %}
 		<b>une erreur est survenue</b>
 	{% else %}
 
@@ -43,18 +57,18 @@
 				</tr>
 			</thead>
 			<tbody>
-				{% for country in countries %}
+				{% for element in elements %}
 					<tr>
-						<td>{{ country.valeur }}</td>
+						<td>{{ element.valeur }}</td>
 						<td>
-							<form method="get" action="{{base_url}}/admin/manage-country/update">
-								<input type="hidden" name="UpdateCountryId" value={{ country.id }}>
+							<form method="get" action="{{base_url}}{{updateUrl}}">
+								<input type="hidden" name="UpdateElementId" value={{ element.id }}>
 								<button type="submit">Modifier</button>
 							</form>
 						</td>
 						<td>
-							<form method="post" action="{{base_url}}/admin/manage-country/delete">
-								<input type="hidden" name="deleteCountryId" value={{ country.id }}>
+							<form method="post" action="{{base_url}}{{deleteUrl}}">
+								<input type="hidden" name="deleteElementId" value={{ element.id }}>
 								<button type="submit">Supprimer</button>
 							</form>
 						</td>
@@ -84,10 +98,10 @@
 
 		<br>
 		<h2>Souhaitez vous ajouter un pays ?</h2>
-		<form action="{{base_url}}/admin/manage-country/add" method="post">
-			<label for="addCountryName">Nom du nouveau pays :
+		<form action="{{base_url}}{{addUrl}}" method="post">
+			<label for="addElementName">Nom du nouveau pays :
 			</label>
-			<input type="text" name="addCountryName" id="" placeholder="ajoutez un pays">
+			<input type="text" name="addElementName" id="" placeholder="ajoutez un pays">
 			<button type="submit">Soumettre</button>
 		</form>
 	{% endif %}
