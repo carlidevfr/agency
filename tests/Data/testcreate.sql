@@ -180,6 +180,7 @@ INSERT INTO Cibles (firstname, lastname, birthdate, codeName, countryCible, isAc
 
 
 INSERT INTO contacts (idContact) VALUES
+    (6),
     (8),
     (9),
     (10),
@@ -195,19 +196,21 @@ INSERT INTO agentsspecialities(agent_id, speciality_id) VALUES
     (7,3);
 
 INSERT INTO Missions (title, codeName, description, beginDate, endDate, missionCountry, missionType, missionStatus, missionSpeciality) VALUES
-    ('Un plan presque parfait','KLURX','Une mission de suivi dans un cardre chalereux','2023-11-28', '2023-12-31', 1, 1, 2, 3),
+    ('Un plan presque parfait <script> alert("hello") </script>','KLURX','Une mission de suivi dans un cardre chalereux','2023-11-28', '2023-12-31', 1, 1, 2, 3),
     ('Un tout petit trou','RODOX','Une mission pour petits et grands','2023-11-25', '2023-12-31', 1, 2, 2, 1),
     ('Un voyage agréable','INDA','Une mission de surveillance','2023-11-25', '2026-12-31', 2, 1, 2, 3),
     ('Un petit souvenir','OUPS','On a besoin de son sac','2023-11-25', '2024-12-31', 4, 3, 2, 3);
 
 INSERT INTO ContactsInMission(idContact, idMission) VALUES
     (10, 1),
+    (6, 1),
     (10, 2),
     (8, 3),
     (11, 4);
 
 INSERT INTO CiblesInMission (idCible, idMission) VALUES
     (1, 1),
+    (2, 1),
     (2, 2),
     (3, 3),
     (4, 4);
@@ -215,13 +218,14 @@ INSERT INTO CiblesInMission (idCible, idMission) VALUES
 
 INSERT INTO AgentsInMission (idAgent, idMission) VALUES
     (7, 1),
+    (6, 1),
     (6, 2),
     (7, 3),
     (7, 4);
 
 INSERT INTO Planques (planqueName, location, planqueCountry, type, actuallyMission) VALUES
     ('tour eiffel', 'centre de la place', 1,'maison', 1),
-    ('Maisonnette', '2 quai des prés 75000 paris', 1, 'maison',NULL),
+    ('Maisonnette', '2 quai des prés 75000 paris', 1, 'maison',1),
     ('le gros immeuble', '2 quai des prés C187 Ville', 2,'maison',NULL),
     ('hutte', '3 bd 2 F487 Ville', 3,'maison',NULL),
     ('hohoha', 'place principale F4787 Ville', 4,'maison',NULL);

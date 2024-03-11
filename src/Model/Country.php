@@ -21,20 +21,24 @@ class Country extends Model
         WHERE countryName LIKE :countryName
         ORDER BY idCountry
         LIMIT :offset, :itemsPerPage';
+            // on teste si la connexion pdo a réussi
+            if (is_object($bdd)) {
+                $stmt = $bdd->prepare($req);
 
-            $stmt = $bdd->prepare($req);
-
-            if (!empty($countryName) and !empty($page) and !empty($itemsPerPage)) {
-                $stmt->bindValue(':countryName', '%' . $countryName . '%', PDO::PARAM_STR);
-                $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
-                $stmt->bindValue(':itemsPerPage', $itemsPerPage, PDO::PARAM_INT);
-                if ($stmt->execute()) {
-                    $country = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                    $stmt->closeCursor();
-                    return $country;
+                if (!empty($countryName) and !empty($page) and !empty($itemsPerPage)) {
+                    $stmt->bindValue(':countryName', '%' . $countryName . '%', PDO::PARAM_STR);
+                    $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+                    $stmt->bindValue(':itemsPerPage', $itemsPerPage, PDO::PARAM_INT);
+                    if ($stmt->execute()) {
+                        $country = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                        $stmt->closeCursor();
+                        return $country;
+                    }
+                } else {
+                    return $this->getAllCountryNames();
                 }
             } else {
-                return $this->getAllCountryNames();
+                return 'une erreur est survenue';
             }
 
         } catch (Exception $e) {
@@ -84,7 +88,7 @@ class Country extends Model
             error_log($log . "\n\r", 3, './src/error.log');
         }
     }
-    
+
     public function getByCountryId($countryId)
     {
         try {
@@ -217,7 +221,7 @@ class Country extends Model
             $req = '
             DELETE FROM Country
             WHERE idCountry  = :countryId';
-            
+
             // on teste si la connexion pdo a réussi
             if (is_object($bdd)) {
                 $stmt = $bdd->prepare($req);
@@ -255,7 +259,7 @@ class Country extends Model
             UPDATE Country
             SET countryName = :newCountryName
             WHERE idCountry  = :countryId';
-            
+
             // on teste si la connexion pdo a réussi
             if (is_object($bdd)) {
                 $stmt = $bdd->prepare($req);
