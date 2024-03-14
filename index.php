@@ -1,4 +1,13 @@
 <?php
+
+// Sécurise le cookie de session avec httponly
+session_set_cookie_params([
+    'lifetime' => 600,
+    'path' => '/',
+    'domain' => $_SERVER['SERVER_NAME'],
+    'httponly' => true
+]);
+
 session_start();
 
 require_once './vendor/autoload.php';
@@ -30,6 +39,10 @@ $router->addRoute('GET', BASE_URL . '/apigetsearchmissions', 'HomeController', '
 $router->addRoute('GET', BASE_URL . '/mission', 'DisplayMissionsController', 'getMission');
 
 $router->addRoute('GET', BASE_URL . '/admin', 'AdminHomeController', 'adminHomePage');
+$router->addRoute('GET', BASE_URL . '/login', 'AdminHomeController', 'adminLogin');
+$router->addRoute('POST', BASE_URL . '/login', 'AdminHomeController', 'adminLogin');
+
+
 
 $router->addRoute('GET', BASE_URL . '/admin/manage-country', 'AdminCountryController', 'adminCountryPage');
 $router->addRoute('POST', BASE_URL . '/admin/manage-country/add', 'AdminCountryController', 'adminAddCountry');

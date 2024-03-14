@@ -81,6 +81,8 @@ class AdminCountryController
 
             //Si vide on retourne sur la page pays
             header('Location: ' . BASE_URL . '/admin/manage-country');
+            exit;
+
         }
 
         $loader = new Twig\Loader\FilesystemLoader('./src/templates');
@@ -113,6 +115,8 @@ class AdminCountryController
         $_SESSION['resultat'] = $res;
 
         header('Location: ' . BASE_URL . '/admin/manage-country/action/success');
+        exit;
+
 
     }
 
@@ -130,6 +134,8 @@ class AdminCountryController
         $_SESSION['idElement'] = $countryAction;
 
         header('Location: ' . BASE_URL . '/admin/manage-country/action/success');
+        exit;
+
 
     }
 
@@ -176,6 +182,8 @@ class AdminCountryController
         $_SESSION['resultat'] = $res;
 
         header('Location: ' . BASE_URL . '/admin/manage-country/action/success');
+        exit;
+
 
     }
 

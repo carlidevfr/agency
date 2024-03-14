@@ -113,6 +113,7 @@ class AdminStatusController
         $_SESSION['resultat'] = $res;
 
         header('Location: ' . BASE_URL . '/admin/manage-status/action/success');
+        exit;
 
     }
 
@@ -130,6 +131,8 @@ class AdminStatusController
         $_SESSION['idElement'] = $statusAction;
 
         header('Location: ' . BASE_URL . '/admin/manage-status/action/success');
+        exit;
+
 
     }
 
@@ -176,6 +179,8 @@ class AdminStatusController
         $_SESSION['resultat'] = $res;
 
         header('Location: ' . BASE_URL . '/admin/manage-status/action/success');
+        exit;
+
 
     }
 
