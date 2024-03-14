@@ -16,6 +16,9 @@ class AdminHomeController
     }
     public function adminHomePage()
     {
+        //On vérifie si on a le droit d'être là (admin)
+        $this->Security->verifyAccess();
+
         // Affiche la page admin
         $loader = new Twig\Loader\FilesystemLoader('./src/templates');
         $twig = new Twig\Environment($loader);
@@ -28,6 +31,13 @@ class AdminHomeController
 
     public function adminLogin()
     {
+        //On vérifie si on est déjà connecté (admin)
+        if ($this->Security->verifyAccess()) {
+            //on redirige vers la page admin
+            header('Location: ' . BASE_URL . '/admin');
+            exit;
+        }
+
         // Affiche le formulaire de connexion et traite ses données
         $loader = new Twig\Loader\FilesystemLoader('./src/templates');
         $twig = new Twig\Environment($loader);
@@ -50,7 +60,6 @@ class AdminHomeController
                 if (strpos($adminUUID, "erreur") === false) {
                     // on vérifie que l'uuid ne contient pas le mot erreur
                     //Si oui on attribue le role admin (le seul)
-                    echo 'connecté';
                     $_SESSION['role'] = 'admin';
                     $_SESSION['user'] = $adminUUID;
 
@@ -66,12 +75,18 @@ class AdminHomeController
                     //On met le time dans la variable session afin de gérer plus tard le renouvellement d'id
                     $_SESSION['last_id'] = time();
 
+                    //on redirige vers la page admin
+                    header('Location: ' . BASE_URL . '/admin');
+                    exit;
+
                 } else {
                     $msg = 'Erreur de connexion';
+                    session_unset();
                     session_destroy();
                 }
             } else {
                 $msg = 'Erreur de connexion';
+                session_unset();
                 session_destroy();
             }
 

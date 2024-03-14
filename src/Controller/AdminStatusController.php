@@ -20,6 +20,9 @@ class AdminStatusController
     public function adminStatusPage()
     // Accueil admin de la section status
     {
+        //On vérifie si on a le droit d'être là (admin)
+        $this->Security->verifyAccess();
+
         //Récupère  la pagination
         (isset($_GET['page']) and !empty($_GET['page'])) ? $page = max(1, $this->Security->filter_form($_GET['page'])) : $page = 1;
 
@@ -45,20 +48,23 @@ class AdminStatusController
 
         echo $template->render([
             'base_url' => BASE_URL,
-            'pageName'=> 'statut',
+            'pageName' => 'statut',
             'elements' => $status,
             'pageMax' => $pageMax,
             'activePage' => $page,
             'search' => $search,
-            'deleteUrl'=> '/admin/manage-status/delete',
-            'addUrl'=> '/admin/manage-status/add',
-            'updateUrl'=> '/admin/manage-status/update',
+            'deleteUrl' => '/admin/manage-status/delete',
+            'addUrl' => '/admin/manage-status/add',
+            'updateUrl' => '/admin/manage-status/update',
             'previousUrl' => '/admin/manage-status'
         ]);
     }
     public function adminSuccessActionStatus()
     // Résultat succès ou echec après action sur status
     {
+        //On vérifie si on a le droit d'être là (admin)
+        $this->Security->verifyAccess();
+
         $res = null;
         $idElement = null;
         $missions = null;
@@ -71,7 +77,7 @@ class AdminStatusController
             (isset($_SESSION['idElement']) and !empty($_SESSION['idElement'])) ? $idElement = $this->Security->filter_form($_SESSION['idElement']) : $idElement = '';
 
             // On récupère la liste des missions contenant l'id que l'on a tenté de supprimer, car peut empêcher la suppression
-            (isset($idElement) and !empty($idElement) ? $missions = $this->Missions->getSelectedMissions('','',$idElement,'','') : $missions = '');
+            (isset($idElement) and !empty($idElement) ? $missions = $this->Missions->getSelectedMissions('', '', $idElement, '', '') : $missions = '');
 
             // Efface les résultats de la session pour éviter de les conserver plus longtemps que nécessaire
             unset($_SESSION['resultat']);
@@ -89,12 +95,12 @@ class AdminStatusController
 
         echo $template->render([
             'base_url' => BASE_URL,
-            'pageName'=> 'statut',
+            'pageName' => 'statut',
             'addResult' => $res,
             'missions' => $missions,
-            'deleteUrl'=> '/admin/manage-status/delete',
-            'addUrl'=> '/admin/manage-status/add',
-            'updateUrl'=> '/admin/manage-status/update',
+            'deleteUrl' => '/admin/manage-status/delete',
+            'addUrl' => '/admin/manage-status/add',
+            'updateUrl' => '/admin/manage-status/update',
             'previousUrl' => '/admin/manage-status'
         ]);
 
@@ -103,6 +109,9 @@ class AdminStatusController
     public function adminAddStatus()
     // Ajout de status
     {
+        //On vérifie si on a le droit d'être là (admin)
+        $this->Security->verifyAccess();
+
         // on récupère le status ajouté
         (isset($_POST['addElementName']) and !empty($_POST['addElementName'])) ? $statusAction = $this->Security->filter_form($_POST['addElementName']) : $statusAction = '';
 
@@ -120,6 +129,9 @@ class AdminStatusController
     public function adminDeleteStatus()
     // Suppression de status
     {
+        //On vérifie si on a le droit d'être là (admin)
+        $this->Security->verifyAccess();
+
         // on récupère l'id status à supprimer
         (isset($_POST['deleteElementId']) and !empty($_POST['deleteElementId'])) ? $statusAction = $this->Security->filter_form($_POST['deleteElementId']) : $statusAction = '';
 
@@ -139,6 +151,9 @@ class AdminStatusController
     public function adminUpdateStatusPage()
     // Page permettant la saisie pour la modification de status
     {
+        //On vérifie si on a le droit d'être là (admin)
+        $this->Security->verifyAccess();
+
         //Récupère l'id du status à modifier
         (isset($_GET['UpdateElementId']) and !empty($_GET['UpdateElementId'])) ? $statusAction = $this->Security->filter_form($_GET['UpdateElementId']) : $statusAction = '';
 
@@ -152,12 +167,12 @@ class AdminStatusController
 
         echo $template->render([
             'base_url' => BASE_URL,
-            'pageName'=> 'status',
+            'pageName' => 'status',
             'elements' => $status,
             'modifySection' => $modifySection,
-            'deleteUrl'=> '/admin/manage-status/delete',
-            'addUrl'=> '/admin/manage-status/add',
-            'updateUrl'=> '/admin/manage-status/update',
+            'deleteUrl' => '/admin/manage-status/delete',
+            'addUrl' => '/admin/manage-status/add',
+            'updateUrl' => '/admin/manage-status/update',
             'previousUrl' => '/admin/manage-status'
         ]);
 
@@ -166,6 +181,9 @@ class AdminStatusController
     public function adminUpdateStatus()
     // Modification de status
     {
+        //On vérifie si on a le droit d'être là (admin)
+        $this->Security->verifyAccess();
+
         // on récupère l'id status à Modifier
         (isset($_POST['updateElementId']) and !empty($_POST['updateElementId'])) ? $statusAction = $this->Security->filter_form($_POST['updateElementId']) : $statusAction = '';
 
@@ -180,8 +198,6 @@ class AdminStatusController
 
         header('Location: ' . BASE_URL . '/admin/manage-status/action/success');
         exit;
-
-
     }
 
 }
