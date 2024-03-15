@@ -23,6 +23,9 @@ class AdminStatusController
         //On vérifie si on a le droit d'être là (admin)
         $this->Security->verifyAccess();
 
+        // On récupère le token
+        $token = $this->Security->getToken();
+
         //Récupère  la pagination
         (isset($_GET['page']) and !empty($_GET['page'])) ? $page = max(1, $this->Security->filter_form($_GET['page'])) : $page = 1;
 
@@ -30,9 +33,12 @@ class AdminStatusController
         $itemsPerPage = 10;
 
         //Récupère le résultat de la recherche et la valeur de search pour permettre un get sur le search avec la pagination
-        if (isset($_GET['search']) and !empty($_GET['search'])) {
+        if (isset($_GET['search']) and !empty($_GET['search'] and isset($_GET['tok']) and $this->Security->verifyToken($token, $_GET['tok']))) {
             $status = $this->Status->getSearchStatusNames($this->Security->filter_form($_GET['search']), $page, $itemsPerPage);
             $search = $this->Security->filter_form($_GET['search']);
+
+            // on regénère le token
+            $this->Security->regenerateToken();
         } else {
             $status = $this->Status->getPaginationAllStatusNames($page, $itemsPerPage);
             $search = '';
@@ -56,7 +62,8 @@ class AdminStatusController
             'deleteUrl' => '/admin/manage-status/delete',
             'addUrl' => '/admin/manage-status/add',
             'updateUrl' => '/admin/manage-status/update',
-            'previousUrl' => '/admin/manage-status'
+            'previousUrl' => '/admin/manage-status',
+            'token' => $token
         ]);
     }
     public function adminSuccessActionStatus()
@@ -112,14 +119,20 @@ class AdminStatusController
         //On vérifie si on a le droit d'être là (admin)
         $this->Security->verifyAccess();
 
-        // on récupère le status ajouté
-        (isset($_POST['addElementName']) and !empty($_POST['addElementName'])) ? $statusAction = $this->Security->filter_form($_POST['addElementName']) : $statusAction = '';
+        // On récupère le token
+        $token = $this->Security->getToken();
+
+        // on récupère le status ajouté et le token
+        (isset($_POST['addElementName']) and !empty($_POST['addElementName']) and isset($_POST['tok']) and $this->Security->verifyToken($token, $_POST['tok'])) ? $statusAction = $this->Security->filter_form($_POST['addElementName']) : $statusAction = '';
 
         // on fait l'ajout en BDD et on récupère le résultat
         $res = $this->Status->addStatus($statusAction);
 
         // Stockage des résultats dans la session puis redirection pour éviter renvoi au rafraichissement
         $_SESSION['resultat'] = $res;
+
+        // on regénère le token
+        $this->Security->regenerateToken();
 
         header('Location: ' . BASE_URL . '/admin/manage-status/action/success');
         exit;
@@ -132,8 +145,11 @@ class AdminStatusController
         //On vérifie si on a le droit d'être là (admin)
         $this->Security->verifyAccess();
 
+        // On récupère le token
+        $token = $this->Security->getToken();
+
         // on récupère l'id status à supprimer
-        (isset($_POST['deleteElementId']) and !empty($_POST['deleteElementId'])) ? $statusAction = $this->Security->filter_form($_POST['deleteElementId']) : $statusAction = '';
+        (isset($_POST['deleteElementId']) and !empty($_POST['deleteElementId']) and isset($_POST['tok']) and $this->Security->verifyToken($token, $_POST['tok'])) ? $statusAction = $this->Security->filter_form($_POST['deleteElementId']) : $statusAction = '';
 
         // on fait la suppression en BDD et on récupère le résultat
         $res = $this->Status->deleteStatus($statusAction);
@@ -141,6 +157,9 @@ class AdminStatusController
         // Stockage des résultats et l'id de l'élément dans la session puis redirection pour éviter renvoi au rafraichissement
         $_SESSION['resultat'] = $res;
         $_SESSION['idElement'] = $statusAction;
+
+        // on regénère le token
+        $this->Security->regenerateToken();
 
         header('Location: ' . BASE_URL . '/admin/manage-status/action/success');
         exit;
@@ -154,12 +173,22 @@ class AdminStatusController
         //On vérifie si on a le droit d'être là (admin)
         $this->Security->verifyAccess();
 
-        //Récupère l'id du status à modifier
-        (isset($_GET['UpdateElementId']) and !empty($_GET['UpdateElementId'])) ? $statusAction = $this->Security->filter_form($_GET['UpdateElementId']) : $statusAction = '';
+        // On récupère le token
+        $token = $this->Security->getToken();
+
+        //Récupère l'id du status à modifier et vérifie si la requête est authentifiée
+        (isset($_GET['UpdateElementId']) and !empty($_GET['UpdateElementId']) and isset($_GET['tok']) and $this->Security->verifyToken($token, $_GET['tok'])) ? $statusAction = $this->Security->filter_form($_GET['UpdateElementId']) : $statusAction = '';
 
         // Récupère le status à modifier
         $status = $this->Status->getBystatusId($statusAction);
         $modifySection = true;
+
+        // on regénère le token
+        $this->Security->regenerateToken();
+
+        // On récupère le token pour le nouveau form
+        $token = $this->Security->getToken();
+
         //twig
         $loader = new Twig\Loader\FilesystemLoader('./src/templates');
         $twig = new Twig\Environment($loader);
@@ -173,7 +202,8 @@ class AdminStatusController
             'deleteUrl' => '/admin/manage-status/delete',
             'addUrl' => '/admin/manage-status/add',
             'updateUrl' => '/admin/manage-status/update',
-            'previousUrl' => '/admin/manage-status'
+            'previousUrl' => '/admin/manage-status',
+            'token' => $token
         ]);
 
     }
@@ -184,17 +214,23 @@ class AdminStatusController
         //On vérifie si on a le droit d'être là (admin)
         $this->Security->verifyAccess();
 
+        // On récupère le token
+        $token = $this->Security->getToken();
+
         // on récupère l'id status à Modifier
-        (isset($_POST['updateElementId']) and !empty($_POST['updateElementId'])) ? $statusAction = $this->Security->filter_form($_POST['updateElementId']) : $statusAction = '';
+        (isset($_POST['updateElementId']) and !empty($_POST['updateElementId']) and isset($_POST['tok']) and $this->Security->verifyToken($token, $_POST['tok'])) ? $statusAction = $this->Security->filter_form($_POST['updateElementId']) : $statusAction = '';
 
         // on récupère le nouveau nom et on vérifie qu'il n'est pas vide
-        (isset($_POST['updatedName']) and !empty($_POST['updatedName'])) ? $newName = $this->Security->filter_form($_POST['updatedName']) : $newName = '';
+        (isset($_POST['updatedName']) and !empty($_POST['updatedName']) and isset($_POST['tok']) and $this->Security->verifyToken($token, $_POST['tok'])) ? $newName = $this->Security->filter_form($_POST['updatedName']) : $newName = '';
 
         // on fait la suppression en BDD et on récupère le résultat
         $res = $this->Status->updateStatus($statusAction, $newName);
 
         // Stockage des résultats dans la session puis redirection pour éviter renvoi au rafraichissement
         $_SESSION['resultat'] = $res;
+
+        // on regénère le token
+        $this->Security->regenerateToken();
 
         header('Location: ' . BASE_URL . '/admin/manage-status/action/success');
         exit;

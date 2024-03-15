@@ -2,7 +2,7 @@
 
 // Sécurise le cookie de session avec httponly
 session_set_cookie_params([
-    'lifetime' => 600,
+    'lifetime' => 600, // 10 minutes d'inactivité max
     'path' => '/',
     'domain' => $_SERVER['SERVER_NAME'],
     'httponly' => true

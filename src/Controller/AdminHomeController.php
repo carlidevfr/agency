@@ -31,13 +31,17 @@ class AdminHomeController
 
     public function adminLogin()
     {
-        //On vérifie si on est déjà connecté (admin)
-        if ($this->Security->verifyAccess()) {
-            //on redirige vers la page admin
-            header('Location: ' . BASE_URL . '/admin');
+        // on vérifie si l'utilisateur est déjà connecté ou non
+
+        if (
+            isset($_SESSION['ipAdress']) and $_SESSION['ipAdress'] === $_SERVER['REMOTE_ADDR'] and
+            isset($_SESSION['userAgent']) and $_SESSION['userAgent'] === $_SERVER['HTTP_USER_AGENT'] and
+            isset($_SESSION['role']) and $_SESSION['role'] === 'admin' and
+            isset($_SESSION['csrf_token'])
+        ) {
+            header('Location: ' . BASE_URL.'/admin');
             exit;
         }
-
         // Affiche le formulaire de connexion et traite ses données
         $loader = new Twig\Loader\FilesystemLoader('./src/templates');
         $twig = new Twig\Environment($loader);
@@ -64,7 +68,7 @@ class AdminHomeController
                     $_SESSION['user'] = $adminUUID;
 
                     // Génère un token aléatoire
-                    $_SESSION['csrf_token'] = md5(bin2hex(openssl_random_pseudo_bytes(6)));
+                    $_SESSION['csrf_token'] = md5(bin2hex(random_bytes(32)));
 
                     // Récupère l'ip du visiteur
                     $_SESSION['ipAdress'] = $this->Security->filter_form($_SERVER['REMOTE_ADDR']);
