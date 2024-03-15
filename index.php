@@ -21,6 +21,7 @@ require_once './src/Controller/DisplayMissionsController.php';
 require_once './src/Controller/AdminHomeController.php';
 require_once './src/Controller/AdminCountryController.php';
 require_once './src/Controller/AdminStatusController.php';
+require_once './src/Controller/AdminTypeController.php';
 require_once './src/Model/Common/Security.php';
 
 $router = new Router();
@@ -57,6 +58,13 @@ $router->addRoute('GET', BASE_URL . '/admin/manage-status/action/success', 'Admi
 $router->addRoute('POST', BASE_URL . '/admin/manage-status/delete', 'AdminStatusController', 'adminDeleteStatus');
 $router->addRoute('GET', BASE_URL . '/admin/manage-status/update', 'AdminStatusController', 'adminUpdateStatusPage');
 $router->addRoute('POST', BASE_URL . '/admin/manage-status/update', 'AdminStatusController', 'adminUpdateStatus');
+
+$router->addRoute('GET', BASE_URL . '/admin/manage-type', 'AdminTypeController', 'adminTypePage');
+$router->addRoute('POST', BASE_URL . '/admin/manage-type/add', 'AdminTypeController', 'adminAddType');
+$router->addRoute('GET', BASE_URL . '/admin/manage-type/action/success', 'AdminTypeController', 'adminSuccessActionType');
+$router->addRoute('POST', BASE_URL . '/admin/manage-type/delete', 'AdminTypeController', 'adminDeleteType');
+$router->addRoute('GET', BASE_URL . '/admin/manage-type/update', 'AdminTypeController', 'adminUpdateTypePage');
+$router->addRoute('POST', BASE_URL . '/admin/manage-type/update', 'AdminTypeController', 'adminUpdateType');
 
 
 //var_dump($router->getRoutes());

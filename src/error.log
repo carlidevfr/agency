@@ -115,4 +115,29 @@
 2024-03-14- 09:33:58 SQLSTATE[HY093]: Invalid parameter number: parameter was not defined HY093 C:\wamp64\www\Agency\src\Model\Admin.php 25
 2024-03-14- 09:33:58 SQLSTATE[HY093]: Invalid parameter number: parameter was not defined HY093 C:\wamp64\www\Agency\src\Model\Admin.php 25
 2024-03-14- 09:33:59 SQLSTATE[HY093]: Invalid parameter number: parameter was not defined HY093 C:\wamp64\www\Agency\src\Model\Admin.php 25
+2024-03-15- 13:46:56 SQLSTATE[42S02]: Base table or view not found: 1146 La table 'secret_agency.type' n'existe pas 42S02 C:\wamp64\www\Agency\src\Model\Type.php 114
+2024-03-15- 13:46:56 SQLSTATE[42S02]: Base table or view not found: 1146 La table 'secret_agency.type' n'existe pas 42S02 C:\wamp64\www\Agency\src\Model\Type.php 20
+2024-03-15- 13:47:14 SQLSTATE[42S02]: Base table or view not found: 1146 La table 'secret_agency.type' n'existe pas 42S02 C:\wamp64\www\Agency\src\Model\Type.php 114
+2024-03-15- 13:47:14 SQLSTATE[42S02]: Base table or view not found: 1146 La table 'secret_agency.type' n'existe pas 42S02 C:\wamp64\www\Agency\src\Model\Type.php 20
+2024-03-15- 13:48:16 SQLSTATE[42S02]: Base table or view not found: 1146 La table 'secret_agency.type' n'existe pas 42S02 C:\wamp64\www\Agency\src\Model\Type.php 114
+2024-03-15- 13:48:16 SQLSTATE[42S02]: Base table or view not found: 1146 La table 'secret_agency.type' n'existe pas 42S02 C:\wamp64\www\Agency\src\Model\Type.php 20
+2024-03-15- 13:53:20 SQLSTATE[42S02]: Base table or view not found: 1146 La table 'secret_agency.type' n'existe pas 42S02 C:\wamp64\www\Agency\src\Model\Type.php 114
+2024-03-15- 13:53:20 SQLSTATE[42S02]: Base table or view not found: 1146 La table 'secret_agency.type' n'existe pas 42S02 C:\wamp64\www\Agency\src\Model\Type.php 20
+2024-03-15- 13:55:03 SQLSTATE[42S02]: Base table or view not found: 1146 La table 'secret_agency.type' n'existe pas 42S02 C:\wamp64\www\Agency\src\Model\Type.php 114
+2024-03-15- 13:55:03 SQLSTATE[42S02]: Base table or view not found: 1146 La table 'secret_agency.type' n'existe pas 42S02 C:\wamp64\www\Agency\src\Model\Type.php 20
+2024-03-15- 13:55:05 SQLSTATE[42S02]: Base table or view not found: 1146 La table 'secret_agency.type' n'existe pas 42S02 C:\wamp64\www\Agency\src\Model\Type.php 114
+2024-03-15- 13:55:05 SQLSTATE[42S02]: Base table or view not found: 1146 La table 'secret_agency.type' n'existe pas 42S02 C:\wamp64\www\Agency\src\Model\Type.php 20
+2024-03-15- 13:55:05 SQLSTATE[42S02]: Base table or view not found: 1146 La table 'secret_agency.type' n'existe pas 42S02 C:\wamp64\www\Agency\src\Model\Type.php 114
+2024-03-15- 13:55:05 SQLSTATE[42S02]: Base table or view not found: 1146 La table 'secret_agency.type' n'existe pas 42S02 C:\wamp64\www\Agency\src\Model\Type.php 20
+2024-03-15- 13:55:06 SQLSTATE[42S02]: Base table or view not found: 1146 La table 'secret_agency.type' n'existe pas 42S02 C:\wamp64\www\Agency\src\Model\Type.php 114
+2024-03-15- 13:55:06 SQLSTATE[42S02]: Base table or view not found: 1146 La table 'secret_agency.type' n'existe pas 42S02 C:\wamp64\www\Agency\src\Model\Type.php 20
+2024-03-15- 13:55:06 SQLSTATE[42S02]: Base table or view not found: 1146 La table 'secret_agency.type' n'existe pas 42S02 C:\wamp64\www\Agency\src\Model\Type.php 114
+2024-03-15- 13:55:06 SQLSTATE[42S02]: Base table or view not found: 1146 La table 'secret_agency.type' n'existe pas 42S02 C:\wamp64\www\Agency\src\Model\Type.php 20
+2024-03-15- 13:55:06 SQLSTATE[42S02]: Base table or view not found: 1146 La table 'secret_agency.type' n'existe pas 42S02 C:\wamp64\www\Agency\src\Model\Type.php 114
+2024-03-15- 13:55:06 SQLSTATE[42S02]: Base table or view not found: 1146 La table 'secret_agency.type' n'existe pas 42S02 C:\wamp64\www\Agency\src\Model\Type.php 20
+2024-03-15- 13:55:16 SQLSTATE[42S02]: Base table or view not found: 1146 La table 'secret_agency.type' n'existe pas 42S02 C:\wamp64\www\Agency\src\Model\Type.php 114
+2024-03-15- 13:55:16 SQLSTATE[42S02]: Base table or view not found: 1146 La table 'secret_agency.type' n'existe pas 42S02 C:\wamp64\www\Agency\src\Model\Type.php 20
+2024-03-15- 13:56:15 SQLSTATE[42S02]: Base table or view not found: 1146 La table 'secret_agency.type' n'existe pas 42S02 C:\wamp64\www\Agency\src\Model\Type.php 193
+2024-03-15- 13:57:40 SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`secret_agency`.`missions`, CONSTRAINT `missions_ibfk_2` FOREIGN KEY (`missionType`) REFERENCES `types` (`idType`)) 23000 C:\wamp64\www\Agency\src\Model\Type.php 230
+2024-03-15- 13:58:01 SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`secret_agency`.`missions`, CONSTRAINT `missions_ibfk_2` FOREIGN KEY (`missionType`) REFERENCES `types` (`idType`)) 23000 C:\wamp64\www\Agency\src\Model\Type.php 230
 

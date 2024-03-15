@@ -45,8 +45,12 @@ class AdminCountryController
         }
 
         // Récupère le nombre de pages, on arrondi au dessus
-        $pageMax = ceil(count($this->Country->getAllCountryNames()) / $itemsPerPage);
-
+        if (!empty($this->Country->getAllCountryNames())) {
+            $pageMax = ceil(count($this->Country->getAllCountryNames()) / $itemsPerPage);
+        }else{
+            $pageMax = 1;
+        }
+        
         //twig
         $loader = new Twig\Loader\FilesystemLoader('./src/templates');
         $twig = new Twig\Environment($loader);
