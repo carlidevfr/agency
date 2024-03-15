@@ -141,6 +141,15 @@ CREATE TABLE AgentsInMission
     FOREIGN KEY (idMission) REFERENCES Missions(idMission)
 ) engine=INNODB DEFAULT CHARSET=utf8;
 
+CREATE TABLE Admins
+(
+    idAdmin CHAR(36) NOT NULL PRIMARY KEY, -- UUID
+    firstname VARCHAR(250),
+    lastname VARCHAR(250),
+    email VARCHAR(250) NOT NULL UNIQUE,
+    password VARCHAR(60) NOT NULL
+) engine=INNODB DEFAULT CHARSET=utf8;
+
 -- insertion données fictives;
 
 INSERT INTO speciality (speName) VALUES
@@ -230,6 +239,9 @@ INSERT INTO Planques (planqueName, location, planqueCountry, type, actuallyMissi
     ('hutte', '3 bd 2 F487 Ville', 3,'maison',NULL),
     ('hohoha', 'place principale F4787 Ville', 4,'maison',NULL);
 
+INSERT INTO Admins (idAdmin, firstname, lastname, email, password) VALUES
+    (UUID(), 'Anthony', 'DOTTOR', 'test@test.fr', '$2y$10$w/Z3seCK31OxqV22WKRY2u51LdlRf9cJ6tFAyOnMUGMJ57I5sxdEm')
+;
 -- création d'un utilisateur qui servira à faire la connexion dans le .ENV du PHP pour toute l'app;
 CREATE OR REPLACE USER 'agenceapp'@'%' IDENTIFIED BY PASSWORD '*54958E764CE10E50764C2EECBB71D01F08549980';
 GRANT SELECT, INSERT, UPDATE, DELETE ON secret_agency.* TO 'agenceapp'@'%' ;

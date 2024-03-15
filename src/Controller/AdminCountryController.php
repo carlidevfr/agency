@@ -20,6 +20,12 @@ class AdminCountryController
     public function adminCountryPage()
     // Accueil admin de la section country
     {
+        //On vérifie si on a le droit d'être là (admin)
+        $this->Security->verifyAccess();
+
+        // On récupère le token
+        $token = $this->Security->getToken();
+
         //Récupère  la pagination
         (isset($_GET['page']) and !empty($_GET['page'])) ? $page = max(1, $this->Security->filter_form($_GET['page'])) : $page = 1;
 
@@ -27,9 +33,12 @@ class AdminCountryController
         $itemsPerPage = 10;
 
         //Récupère le résultat de la recherche et la valeur de search pour permettre un get sur le search avec la pagination
-        if (isset($_GET['search']) and !empty($_GET['search'])) {
+        if (isset($_GET['search']) and !empty($_GET['search']) and isset($_GET['tok']) and $this->Security->verifyToken($token, $_GET['tok'])) {
             $countries = $this->Country->getSearchCountryNames($this->Security->filter_form($_GET['search']), $page, $itemsPerPage);
             $search = $this->Security->filter_form($_GET['search']);
+
+            // on regénère le token
+            $this->Security->regenerateToken();
         } else {
             $countries = $this->Country->getPaginationAllCountryNames($page, $itemsPerPage);
             $search = '';
@@ -45,20 +54,24 @@ class AdminCountryController
 
         echo $template->render([
             'base_url' => BASE_URL,
-            'pageName'=> 'pays',
+            'pageName' => 'pays',
             'elements' => $countries,
             'pageMax' => $pageMax,
             'activePage' => $page,
             'search' => $search,
-            'deleteUrl'=> '/admin/manage-country/delete',
-            'addUrl'=> '/admin/manage-country/add',
-            'updateUrl'=> '/admin/manage-country/update',
-            'previousUrl' => '/admin/manage-country'
+            'deleteUrl' => '/admin/manage-country/delete',
+            'addUrl' => '/admin/manage-country/add',
+            'updateUrl' => '/admin/manage-country/update',
+            'previousUrl' => '/admin/manage-country',
+            'token' => $token
         ]);
     }
     public function adminSuccessActionCountry()
     // Résultat succès ou echec après action sur pays
     {
+        //On vérifie si on a le droit d'être là (admin)
+        $this->Security->verifyAccess();
+
         $res = null;
         $idElement = null;
         $missions = null;
@@ -71,7 +84,7 @@ class AdminCountryController
             (isset($_SESSION['idElement']) and !empty($_SESSION['idElement'])) ? $idElement = $this->Security->filter_form($_SESSION['idElement']) : $idElement = '';
 
             // On récupère la liste des missions contenant l'id que l'on a tenté de supprimer, car peut empêcher la suppression
-            (isset($idElement) and !empty($idElement) ? $missions = $this->Missions->getSelectedMissions($idElement,'','','','') : $missions = '');
+            (isset($idElement) and !empty($idElement) ? $missions = $this->Missions->getSelectedMissions($idElement, '', '', '', '') : $missions = '');
 
             // Efface les résultats de la session pour éviter de les conserver plus longtemps que nécessaire
             unset($_SESSION['resultat']);
@@ -81,6 +94,8 @@ class AdminCountryController
 
             //Si vide on retourne sur la page pays
             header('Location: ' . BASE_URL . '/admin/manage-country');
+            exit;
+
         }
 
         $loader = new Twig\Loader\FilesystemLoader('./src/templates');
@@ -89,12 +104,12 @@ class AdminCountryController
 
         echo $template->render([
             'base_url' => BASE_URL,
-            'pageName'=> 'pays',
+            'pageName' => 'pays',
             'addResult' => $res,
             'missions' => $missions,
-            'deleteUrl'=> '/admin/manage-country/delete',
-            'addUrl'=> '/admin/manage-country/add',
-            'updateUrl'=> '/admin/manage-country/update',
+            'deleteUrl' => '/admin/manage-country/delete',
+            'addUrl' => '/admin/manage-country/add',
+            'updateUrl' => '/admin/manage-country/update',
             'previousUrl' => '/admin/manage-country'
         ]);
 
@@ -103,8 +118,14 @@ class AdminCountryController
     public function adminAddCountry()
     // Ajout de pays
     {
+        //On vérifie si on a le droit d'être là (admin)
+        $this->Security->verifyAccess();
+
+        // On récupère le token
+        $token = $this->Security->getToken();
+
         // on récupère le pays ajouté
-        (isset($_POST['addElementName']) and !empty($_POST['addElementName'])) ? $countryAction = $this->Security->filter_form($_POST['addElementName']) : $countryAction = '';
+        (isset($_POST['addElementName']) and !empty($_POST['addElementName']) and isset($_POST['tok']) and $this->Security->verifyToken($token, $_POST['tok'])) ? $countryAction = $this->Security->filter_form($_POST['addElementName']) : $countryAction = '';
 
         // on fait l'ajout en BDD et on récupère le résultat
         $res = $this->Country->addCountry($countryAction);
@@ -112,15 +133,26 @@ class AdminCountryController
         // Stockage des résultats dans la session puis redirection pour éviter renvoi au rafraichissement
         $_SESSION['resultat'] = $res;
 
+        // on regénère le token
+        $this->Security->regenerateToken();
+
         header('Location: ' . BASE_URL . '/admin/manage-country/action/success');
+        exit;
+
 
     }
 
     public function adminDeleteCountry()
     // Suppression de pays
     {
+        //On vérifie si on a le droit d'être là (admin)
+        $this->Security->verifyAccess();
+
+        // On récupère le token
+        $token = $this->Security->getToken();
+
         // on récupère l'id pays à supprimer
-        (isset($_POST['deleteElementId']) and !empty($_POST['deleteElementId'])) ? $countryAction = $this->Security->filter_form($_POST['deleteElementId']) : $countryAction = '';
+        (isset($_POST['deleteElementId']) and !empty($_POST['deleteElementId']) and isset($_POST['tok']) and $this->Security->verifyToken($token, $_POST['tok'])) ? $countryAction = $this->Security->filter_form($_POST['deleteElementId']) : $countryAction = '';
 
         // on fait la suppression en BDD et on récupère le résultat
         $res = $this->Country->deleteCountry($countryAction);
@@ -129,19 +161,37 @@ class AdminCountryController
         $_SESSION['resultat'] = $res;
         $_SESSION['idElement'] = $countryAction;
 
+        // on regénère le token
+        $this->Security->regenerateToken();
+
         header('Location: ' . BASE_URL . '/admin/manage-country/action/success');
+        exit;
+
 
     }
 
     public function adminUpdateCountryPage()
     // Page permettant la saisie pour la modification de pays
     {
+        //On vérifie si on a le droit d'être là (admin)
+        $this->Security->verifyAccess();
+
+        // On récupère le token
+        $token = $this->Security->getToken();
+
         //Récupère l'id du pays à modifier
-        (isset($_GET['UpdateElementId']) and !empty($_GET['UpdateElementId'])) ? $countryAction = $this->Security->filter_form($_GET['UpdateElementId']) : $countryAction = '';
+        (isset($_GET['UpdateElementId']) and !empty($_GET['UpdateElementId']) and isset($_GET['tok']) and $this->Security->verifyToken($token, $_GET['tok'])) ? $countryAction = $this->Security->filter_form($_GET['UpdateElementId']) : $countryAction = '';
 
         // Récupère le pays à modifier
         $country = $this->Country->getByCountryId($countryAction);
         $modifySection = true;
+
+        // on regénère le token
+        $this->Security->regenerateToken();
+
+        // On récupère le token pour le nouveau form
+        $token = $this->Security->getToken();
+
         //twig
         $loader = new Twig\Loader\FilesystemLoader('./src/templates');
         $twig = new Twig\Environment($loader);
@@ -149,13 +199,14 @@ class AdminCountryController
 
         echo $template->render([
             'base_url' => BASE_URL,
-            'pageName'=> 'pays',
+            'pageName' => 'pays',
             'elements' => $country,
             'modifySection' => $modifySection,
-            'deleteUrl'=> '/admin/manage-country/delete',
-            'addUrl'=> '/admin/manage-country/add',
-            'updateUrl'=> '/admin/manage-country/update',
-            'previousUrl' => '/admin/manage-country'
+            'deleteUrl' => '/admin/manage-country/delete',
+            'addUrl' => '/admin/manage-country/add',
+            'updateUrl' => '/admin/manage-country/update',
+            'previousUrl' => '/admin/manage-country',
+            'token' => $token
         ]);
 
     }
@@ -163,11 +214,17 @@ class AdminCountryController
     public function adminUpdateCountry()
     // Modification de pays
     {
+        //On vérifie si on a le droit d'être là (admin)
+        $this->Security->verifyAccess();
+
+        // On récupère le token
+        $token = $this->Security->getToken();
+
         // on récupère l'id pays à Modifier
-        (isset($_POST['updateElementId']) and !empty($_POST['updateElementId'])) ? $countryAction = $this->Security->filter_form($_POST['updateElementId']) : $countryAction = '';
+        (isset($_POST['updateElementId']) and !empty($_POST['updateElementId']) and isset($_POST['tok']) and $this->Security->verifyToken($token, $_POST['tok'])) ? $countryAction = $this->Security->filter_form($_POST['updateElementId']) : $countryAction = '';
 
         // on récupère le nouveau nom et on vérifie qu'il n'est pas vide
-        (isset($_POST['updatedName']) and !empty($_POST['updatedName'])) ? $newName = $this->Security->filter_form($_POST['updatedName']) : $newName = '';
+        (isset($_POST['updatedName']) and !empty($_POST['updatedName']) and isset($_POST['tok']) and $this->Security->verifyToken($token, $_POST['tok'])) ? $newName = $this->Security->filter_form($_POST['updatedName']) : $newName = '';
 
         // on fait la suppression en BDD et on récupère le résultat
         $res = $this->Country->updateCountry($countryAction, $newName);
@@ -175,7 +232,12 @@ class AdminCountryController
         // Stockage des résultats dans la session puis redirection pour éviter renvoi au rafraichissement
         $_SESSION['resultat'] = $res;
 
+        // on regénère le token
+        $this->Security->regenerateToken();
+
         header('Location: ' . BASE_URL . '/admin/manage-country/action/success');
+        exit;
+
 
     }
 
