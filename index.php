@@ -22,6 +22,7 @@ require_once './src/Controller/AdminHomeController.php';
 require_once './src/Controller/AdminCountryController.php';
 require_once './src/Controller/AdminStatusController.php';
 require_once './src/Controller/AdminTypeController.php';
+require_once './src/Controller/AdminSpecialityController.php';
 require_once './src/Model/Common/Security.php';
 
 $router = new Router();
@@ -66,6 +67,12 @@ $router->addRoute('POST', BASE_URL . '/admin/manage-type/delete', 'AdminTypeCont
 $router->addRoute('GET', BASE_URL . '/admin/manage-type/update', 'AdminTypeController', 'adminUpdateTypePage');
 $router->addRoute('POST', BASE_URL . '/admin/manage-type/update', 'AdminTypeController', 'adminUpdateType');
 
+$router->addRoute('GET', BASE_URL . '/admin/manage-speciality', 'AdminSpecialityController', 'adminSpecialityPage');
+$router->addRoute('POST', BASE_URL . '/admin/manage-speciality/add', 'AdminSpecialityController', 'adminAddSpeciality');
+$router->addRoute('GET', BASE_URL . '/admin/manage-speciality/action/success', 'AdminSpecialityController', 'adminSuccessActionSpeciality');
+$router->addRoute('POST', BASE_URL . '/admin/manage-speciality/delete', 'AdminSpecialityController', 'adminDeleteSpeciality');
+$router->addRoute('GET', BASE_URL . '/admin/manage-speciality/update', 'AdminSpecialityController', 'adminUpdateSpecialityPage');
+$router->addRoute('POST', BASE_URL . '/admin/manage-speciality/update', 'AdminSpecialityController', 'adminUpdateSpeciality');
 
 //var_dump($router->getRoutes());
 //var_dump($_SERVER['REQUEST_URI']);
