@@ -25,7 +25,7 @@ class Country extends Model
             if (is_object($bdd)) {
                 $stmt = $bdd->prepare($req);
 
-                if (!empty($countryName) and !empty($page) and !empty($itemsPerPage)) {
+                if (!empty ($countryName) and !empty ($page) and !empty ($itemsPerPage)) {
                     $stmt->bindValue(':countryName', '%' . $countryName . '%', PDO::PARAM_STR);
                     $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
                     $stmt->bindValue(':itemsPerPage', $itemsPerPage, PDO::PARAM_INT);
@@ -104,7 +104,7 @@ class Country extends Model
                 // on teste si la connexion pdo a réussi
                 $stmt = $bdd->prepare($req);
 
-                if (!empty($countryId)) {
+                if (!empty ($countryId)) {
                     $stmt->bindValue(':countryId', $countryId, PDO::PARAM_INT);
 
                     if ($stmt->execute()) {
@@ -116,6 +116,64 @@ class Country extends Model
             } else {
                 return 'une erreur est survenue';
             }
+        } catch (Exception $e) {
+            $log = sprintf(
+                "%s %s %s %s %s",
+                date('Y-m-d- H:i:s'),
+                $e->getMessage(),
+                $e->getCode(),
+                $e->getFile(),
+                $e->getLine()
+            );
+            error_log($log . "\n\r", 3, './src/error.log');
+        }
+    }
+
+    public function getRelatedCountries($countryId)
+    // Récupère tous les éléments liés à un pays
+    {
+        try {
+
+            // Initialisation de la liste des éléments liés
+            $relatedElements = array();
+
+            // Liste des tables avec des clés étrangères vers Country
+            $tables = array(
+                'Cibles' => 'countryCible',
+                'Planques' => 'planqueCountry',
+                'Missions' => 'missionCountry'
+            );
+
+            // Boucle sur les tables pour récupérer les éléments liés
+            foreach ($tables as $tableName => $foreignKey) {
+
+                $bdd = $this->connexionPDO();
+                $req = "SELECT * FROM $tableName WHERE $foreignKey = :countryId";
+
+                // on teste si la connexion pdo a réussi
+                if (is_object($bdd)) {
+                    $stmt = $bdd->prepare($req);
+
+                    if (!empty ($countryId) and !empty ($countryId)) {
+                        $stmt->bindValue(':countryId', $countryId, PDO::PARAM_INT);
+                        if ($stmt->execute()) {
+                            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                            $stmt->closeCursor();
+
+                            // Ajout des résultats à la liste
+                            $relatedElements[$tableName] = $results;
+                        } else {
+                            return 'une erreur est survenue';
+                        }
+                    }
+                } else {
+                    return 'une erreur est survenue';
+                }
+            }
+
+            // Retourne la liste des éléments liés
+            return $relatedElements;
+
         } catch (Exception $e) {
             $log = sprintf(
                 "%s %s %s %s %s",
@@ -148,7 +206,7 @@ class Country extends Model
                 // on teste si la connexion pdo a réussi
                 $stmt = $bdd->prepare($req);
 
-                if (!empty($page) and !empty($itemsPerPage)) {
+                if (!empty ($page) and !empty ($itemsPerPage)) {
                     $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
                     $stmt->bindValue(':itemsPerPage', $itemsPerPage, PDO::PARAM_INT);
 
@@ -189,7 +247,7 @@ class Country extends Model
                 // on teste si la connexion pdo a réussi
                 $stmt = $bdd->prepare($req);
 
-                if (!empty($countryName)) {
+                if (!empty ($countryName)) {
                     $stmt->bindValue(':countryName', $countryName, PDO::PARAM_STR);
                     if ($stmt->execute()) {
                         return 'Le pays suivant a bien été ajouté : ' . $countryName;
@@ -226,7 +284,7 @@ class Country extends Model
             if (is_object($bdd)) {
                 $stmt = $bdd->prepare($req);
 
-                if (!empty($countryId)) {
+                if (!empty ($countryId)) {
                     $stmt->bindValue(':countryId', $countryId, PDO::PARAM_STR);
                     if ($stmt->execute()) {
                         return 'Le pays a bien été supprimé ';
@@ -264,7 +322,7 @@ class Country extends Model
             if (is_object($bdd)) {
                 $stmt = $bdd->prepare($req);
 
-                if (!empty($countryId) and !empty($newName)) {
+                if (!empty ($countryId) and !empty ($newName)) {
                     $stmt->bindValue(':countryId', $countryId, PDO::PARAM_INT);
                     $stmt->bindValue(':newCountryName', $newName, PDO::PARAM_STR);
                     if ($stmt->execute()) {
