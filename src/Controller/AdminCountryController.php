@@ -1,4 +1,5 @@
 <?php
+use PHPUnit\Framework\Constraint\IsEmpty;
 require_once './src/Model/Mission.php';
 require_once './src/Model/Country.php';
 require_once './src/Model/Common/Security.php';
@@ -20,6 +21,7 @@ class AdminCountryController
     public function adminCountryPage()
     // Accueil admin de la section country
     {
+
         //On vérifie si on a le droit d'être là (admin)
         $this->Security->verifyAccess();
 
@@ -87,8 +89,8 @@ class AdminCountryController
             // Si l'id est en variable session on le récupère
             (isset($_SESSION['idElement']) and !empty($_SESSION['idElement'])) ? $idElement = $this->Security->filter_form($_SESSION['idElement']) : $idElement = '';
 
-            // On récupère la liste des missions contenant l'id que l'on a tenté de supprimer, car peut empêcher la suppression
-            (isset($idElement) and !empty($idElement) ? $missions = $this->Missions->getSelectedMissions($idElement, '', '', '', '') : $missions = '');
+            // On récupère la liste des éléments liés pouvant empêcher la suppression
+            (isset($idElement) and !empty($idElement) ? $data = $this->Country->getRelatedCountries($idElement): $data = '');
 
             // Efface les résultats de la session pour éviter de les conserver plus longtemps que nécessaire
             unset($_SESSION['resultat']);
@@ -110,7 +112,7 @@ class AdminCountryController
             'base_url' => BASE_URL,
             'pageName' => 'pays',
             'addResult' => $res,
-            'missions' => $missions,
+            'data' => $data,
             'deleteUrl' => '/admin/manage-country/delete',
             'addUrl' => '/admin/manage-country/add',
             'updateUrl' => '/admin/manage-country/update',

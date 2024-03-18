@@ -87,8 +87,8 @@ class AdminTypeController
             // Si l'id est en variable session on le récupère
             (isset($_SESSION['idElement']) and !empty($_SESSION['idElement'])) ? $idElement = $this->Security->filter_form($_SESSION['idElement']) : $idElement = '';
 
-            // On récupère la liste des missions contenant l'id que l'on a tenté de supprimer, car peut empêcher la suppression
-            (isset($idElement) and !empty($idElement) ? $missions = $this->Missions->getSelectedMissions('',$idElement,'','','') : $missions = '');
+           // On récupère la liste des éléments liés pouvant empêcher la suppression
+           (isset($idElement) and !empty($idElement) ? $data = $this->Type->getRelatedType($idElement): $data = '');
 
             // Efface les résultats de la session pour éviter de les conserver plus longtemps que nécessaire
             unset($_SESSION['resultat']);
@@ -108,7 +108,7 @@ class AdminTypeController
             'base_url' => BASE_URL,
             'pageName' => 'type',
             'addResult' => $res,
-            'missions' => $missions,
+            'data' => $data,
             'deleteUrl' => '/admin/manage-type/delete',
             'addUrl' => '/admin/manage-type/add',
             'updateUrl' => '/admin/manage-type/update',

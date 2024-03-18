@@ -1,26 +1,64 @@
-<a href="{{base_url}}">Accueil</a> 		<a href="{{base_url}}/admin">Admin</a> <br><br>
+{# Menu #}
+<a href="{{base_url}}">Accueil</a>
+<a href="{{base_url}}/admin">Admin</a>
+<br><br>
 
-<h1>Gestion des {{pageName}}</h1>
+{# Titre de la page #}
+<h1>Gestion des
+	{{pageName}}</h1>
 
+{# Page 'résultat' suite à une action créer, update ou delete terminée #}
 {% if addResult is defined and addResult is not empty %}
 
+	{# résultat de l'action #}
 	{{addResult}}
 	<br>
-	{% if missions is defined and missions is not empty %}
-		<h2>Missions relatives à l'élément à supprimer</h2>
-		<h2>Peut empêcher la suppression :</h2>
-		<ul>
-			{% for mission in missions %}
-				<li>{{mission.title}}
-				</li>
-			{% endfor %}
-		</ul>
 
+	{# Liste des éléments liés pouvant empêcher la suppression #}
+	{% if data is defined and data is not empty %}
+		<h2>Liaisons relatives à l'élément à supprimer</h2>
+		<h3>Peut empêcher la suppression :</h3>
+
+		{% for tableName, items in data %}
+
+			{# utilisé pour Cibles ? #}
+			{% if tableName == 'Cibles' and tableName is not empty %}
+				<ul>
+					{% for cible in items %}
+						<li>Nom de la cible:
+							{{ cible.firstname }}
+							{{ cible.lastname }}
+						</li>
+					{% endfor %}
+				</ul>
+
+			{# utilisé pour Planques ? #}
+			{% elseif tableName == 'Planques' and tableName is not empty %}
+				<ul>
+					{% for planque in items %}
+						<li>Planque :
+							{{ planque.planqueName }}</li>
+					{% endfor %}
+				</ul>
+
+			{# utilisé pour Missions ? #}
+			{% elseif tableName == 'Missions' and tableName is not empty %}
+				<ul>
+					{% for mission in items %}
+						<li>Mission :
+							{{ mission.title }}</li>
+					{% endfor %}
+				</ul>
+
+			{% endif %}
+		{% endfor %}
 	{% endif %}
 	<a href="{{ base_url }}{{previousUrl}}">Retour</a>
 
+	{# Page 'update' pour mettre le nouveau nom #}
 {% elseif modifySection is defined and modifySection == true %}
-	<h2>Modification {{pageName}}:</h2>
+	<h2>Modification
+		{{pageName}}:</h2>
 	Ancien nom :
 	{{elements.valeur}}
 	<br><br>
@@ -36,14 +74,18 @@
 	</form>
 	<a href="{{ base_url }}{{previousUrl}}">Retour</a>
 
+	{# Page 'main' de la section avec CRUD #}
 {% else %}
 
-	<h2>liste des {{pageName}}</h2>
+	<h2>liste des
+		{{pageName}}</h2>
 
+	{# Formulaire de recherche #}
 	<form action="{{base_url}}{{previousUrl}}" method="get">
 		<input type="text" name='search'>
 		<input type="hidden" name="tok" value={{ token }}>
-		<button type="submit">Recherche {{pageName}}</button>
+		<button type="submit">Recherche
+			{{pageName}}</button>
 		<button onclick="location.href='{{ base_url }}{{previousUrl}}'">Reset</button>
 	</form>
 
@@ -51,11 +93,12 @@
 		<b>une erreur est survenue</b>
 	{% else %}
 
-
+		{# Tableau des éléments #}
 		<table>
 			<thead>
 				<tr>
-					<th>Nom {{pageName}}</th>
+					<th>Nom
+						{{pageName}}</th>
 					<th>Modifier</th>
 					<th>Supprimer</th>
 				</tr>
@@ -83,8 +126,10 @@
 			</tbody>
 		</table>
 
+		{# Pagination #}
 		<div class="pagination">
-			page <br>
+			page
+			<br>
 			{% if activePage > 1 %}
 				<a href="?page={{ activePage - 1 }}&search={{search}}">Page précédente</a>
 			{% endif %}
@@ -100,11 +145,12 @@
 			{% if activePage < pageMax %}
 				<a href="?page={{ activePage + 1 }}&search={{search}}">Page suivante</a>
 			{% endif %}
-		</div>
+		</div><br>
 
-
-		<br>
-		<h2>Souhaitez vous faire un ajout : {{pageName}} ?</h2>
+		{# Section add #}
+		<h2>Souhaitez vous faire un ajout :
+			{{pageName}}
+			?</h2>
 		<form action="{{base_url}}{{addUrl}}" method="post">
 			<label for="addElementName">Nom du nouvel élément :
 			</label>
@@ -114,6 +160,8 @@
 		</form>
 		<br>
 		<br>
+
+		{# Retour vers page d'accueil admin #}
 		<a href="{{base_url}}/admin">Retour</a>
 	{% endif %}
 {% endif %}
