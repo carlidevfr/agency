@@ -182,7 +182,7 @@ class Status extends Model
             // Initialisation de la liste des éléments liés
             $relatedElements = array();
 
-            // Liste des tables avec des clés étrangères vers Country
+            // Liste des tables avec des clés étrangères vers status
             $tables = array(
                 'Missions' => 'missionStatus'
             );

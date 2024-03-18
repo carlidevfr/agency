@@ -69,7 +69,7 @@ class Speciality extends Model
                         return $speciality;
                     }
                 } else {
-                    return $this->getAllspeNames();
+                    return $this->getAllSpecialityNames();
                 }
             } else {
                 return 'une erreur est survenue';
@@ -161,6 +161,62 @@ class Speciality extends Model
             } else {
                 return 'une erreur est survenue';
             }
+        } catch (Exception $e) {
+            $log = sprintf(
+                "%s %s %s %s %s",
+                date('Y-m-d- H:i:s'),
+                $e->getMessage(),
+                $e->getCode(),
+                $e->getFile(),
+                $e->getLine()
+            );
+            error_log($log . "\n\r", 3, './src/error.log');
+        }
+    }
+
+    public function getRelatedSpeciality($specialityId)
+    // Récupère tous les éléments liés à un speciality
+    {
+        try {
+
+            // Initialisation de la liste des éléments liés
+            $relatedElements = array();
+
+            // Liste des tables avec des clés étrangères vers speciality
+            $tables = array(
+                'Missions' => 'missionSpeciality'
+            );
+
+            // Boucle sur les tables pour récupérer les éléments liés
+            foreach ($tables as $tableName => $foreignKey) {
+
+                $bdd = $this->connexionPDO();
+                $req = "SELECT * FROM $tableName WHERE $foreignKey = :specialityId";
+
+                // on teste si la connexion pdo a réussi
+                if (is_object($bdd)) {
+                    $stmt = $bdd->prepare($req);
+
+                    if (!empty ($specialityId) and !empty ($specialityId)) {
+                        $stmt->bindValue(':specialityId', $specialityId, PDO::PARAM_INT);
+                        if ($stmt->execute()) {
+                            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                            $stmt->closeCursor();
+
+                            // Ajout des résultats à la liste
+                            $relatedElements[$tableName] = $results;
+                        } else {
+                            return 'une erreur est survenue';
+                        }
+                    }
+                } else {
+                    return 'une erreur est survenue';
+                }
+            }
+
+            // Retourne la liste des éléments liés
+            return $relatedElements;
+
         } catch (Exception $e) {
             $log = sprintf(
                 "%s %s %s %s %s",
