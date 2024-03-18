@@ -61,6 +61,19 @@ class StatusTest extends TestCase
       $this->assertIsArray($statusNames, 'La méthode getByStatusId devrait retourner un tableau.');
    }
 
+   public function testgetRelatedStatus()
+   // Teste la méthode getRelatedStatus de la classe Status
+   {
+
+      $statusInstance = new Status();
+
+      // Appeler la méthode à tester
+      $statusNames = $statusInstance->getRelatedStatus(1);
+
+      // Vérifier si on a un tableau
+      $this->assertIsArray($statusNames, 'La méthode getRelatedStatus devrait retourner un tableau.');
+   }
+
    public function testaddStatus()
    // Teste la méthode addStatus de la classe Status
    {

@@ -61,6 +61,19 @@ class SpecialityTest extends TestCase
       $this->assertIsArray($specialityNames, 'La méthode getBySpecialityId devrait retourner un tableau.');
    }
 
+   public function testgetRelatedSpeciality()
+   // Teste la méthode getRelatedSpeciality de la classe Speciality
+   {
+
+      $specialityInstance = new Speciality();
+
+      // Appeler la méthode à tester
+      $specialityNames = $specialityInstance->getRelatedSpeciality(1);
+
+      // Vérifier si on a un tableau
+      $this->assertIsArray($specialityNames, 'La méthode getRelatedSpeciality devrait retourner un tableau.');
+   }
+
    public function testaddSpeciality()
    // Teste la méthode addSpeciality de la classe Speciality
    {

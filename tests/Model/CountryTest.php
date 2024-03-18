@@ -61,6 +61,19 @@ class CountryTest extends TestCase
       $this->assertIsArray($CountryNames, 'La méthode getByCountryId devrait retourner un tableau.');
    }
 
+   public function testgetRelatedCountries()
+   // Teste la méthode getRelatedCountries de la classe Country
+   {
+
+      $CountryInstance = new Country();
+
+      // Appeler la méthode à tester
+      $CountryNames = $CountryInstance->getRelatedCountries(1);
+
+      // Vérifier si on a un tableau
+      $this->assertIsArray($CountryNames, 'La méthode getRelatedCountries devrait retourner un tableau.');
+   }
+
    public function testaddCountry()
    // Teste la méthode addCountry de la classe Country
    {

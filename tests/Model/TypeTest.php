@@ -61,6 +61,20 @@ class TypeTest extends TestCase
       $this->assertIsArray($typeNames, 'La méthode getByTypeId devrait retourner un tableau.');
    }
 
+   public function testgetRelatedType()
+   // Teste la méthode getRelatedType de la classe Type
+   {
+
+      $typeInstance = new Type();
+
+      // Appeler la méthode à tester
+      $typeNames = $typeInstance->getRelatedType(1);
+
+      // Vérifier si on a un tableau
+      $this->assertIsArray($typeNames, 'La méthode getRelatedType devrait retourner un tableau.');
+   }
+
+
    public function testaddType()
    // Teste la méthode addType de la classe Type
    {
