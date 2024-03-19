@@ -23,6 +23,7 @@ require_once './src/Controller/AdminCountryController.php';
 require_once './src/Controller/AdminStatusController.php';
 require_once './src/Controller/AdminTypeController.php';
 require_once './src/Controller/AdminSpecialityController.php';
+require_once './src/Controller/AdminPlanqueController.php';
 require_once './src/Model/Common/Security.php';
 
 $router = new Router();
@@ -74,8 +75,12 @@ $router->addRoute('POST', BASE_URL . '/admin/manage-speciality/delete', 'AdminSp
 $router->addRoute('GET', BASE_URL . '/admin/manage-speciality/update', 'AdminSpecialityController', 'adminUpdateSpecialityPage');
 $router->addRoute('POST', BASE_URL . '/admin/manage-speciality/update', 'AdminSpecialityController', 'adminUpdateSpeciality');
 
-//var_dump($router->getRoutes());
-//var_dump($_SERVER['REQUEST_URI']);
+$router->addRoute('GET', BASE_URL . '/admin/manage-planque', 'AdminPlanqueController', 'adminPlanquePage');
+$router->addRoute('POST', BASE_URL . '/admin/manage-planque/add', 'AdminPlanqueController', 'adminAddPlanque');
+$router->addRoute('GET', BASE_URL . '/admin/manage-planque/action/success', 'AdminPlanqueController', 'adminSuccessActionPlanque');
+$router->addRoute('POST', BASE_URL . '/admin/manage-planque/delete', 'AdminPlanqueController', 'adminDeletePlanque');
+$router->addRoute('GET', BASE_URL . '/admin/manage-planque/update', 'AdminPlanqueController', 'adminUpdatePlanquePage');
+$router->addRoute('POST', BASE_URL . '/admin/manage-planque/update', 'AdminPlanqueController', 'adminUpdatePlanque');
 
 $method = $_SERVER['REQUEST_METHOD'];
 $uri = strtolower($_SERVER['REQUEST_URI']); // gère les minuscules et les majuscules

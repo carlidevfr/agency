@@ -66,7 +66,7 @@ class HomeController
     public function apiGetType(){
 
         //récupération et envoi des types en json
-        $res = $this->Type->getAllTypesNames();
+        $res = $this->Type->getAllTypeNames();
         Model::sendJSON($res) ;     
     }
     public function apiGetStatus(){
