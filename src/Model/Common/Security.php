@@ -101,4 +101,13 @@ class Security
             return false;
         }
     }
+
+    public static function logOut()
+    //  on déconnecte
+    {
+            session_unset();
+            session_destroy();
+            header('Location: ' . BASE_URL . '/login');
+            exit;
+    }
 }

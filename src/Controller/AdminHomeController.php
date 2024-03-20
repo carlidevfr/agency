@@ -109,4 +109,9 @@ class AdminHomeController
         }
     }
 
+    public function adminLogout()
+    // on déconnecte
+    {
+        return $this->Security->logout();
+    }
 }

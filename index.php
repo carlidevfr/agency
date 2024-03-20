@@ -44,6 +44,8 @@ $router->addRoute('GET', BASE_URL . '/mission', 'DisplayMissionsController', 'ge
 $router->addRoute('GET', BASE_URL . '/admin', 'AdminHomeController', 'adminHomePage');
 $router->addRoute('GET', BASE_URL . '/login', 'AdminHomeController', 'adminLogin');
 $router->addRoute('POST', BASE_URL . '/login', 'AdminHomeController', 'adminLogin');
+$router->addRoute('GET', BASE_URL . '/logout', 'AdminHomeController', 'adminLogout');
+
 
 
 
