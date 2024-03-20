@@ -5,9 +5,9 @@ require_once './src/Model/Common/Security.php';
 class Planque extends Model
 {
     public function getPlanquesByIdMission($idMission)
+    // retourne toutes les planques de la mission
     {
         try {
-            // retourne toutes les planques de la mission
 
             $bdd = $this->connexionPDO();
             $req = '
@@ -15,7 +15,7 @@ class Planque extends Model
             Planques.idPlanque,
             Planques.planqueName,
             Planques.location,
-            Planques.planque,
+            Planques.type,
             Country.countryName AS planqueCountry
         FROM
             Planques
@@ -51,14 +51,16 @@ class Planque extends Model
     }
 
     public function getAllPlanqueNames()
+    // retourne toutes les planques
     {
         try {
-            // retourne tous les planque de missions
 
             $bdd = $this->connexionPDO();
             $req = '
-        SELECT idPlanque AS id, planqueName AS valeur
-        FROM Planques';
+            SELECT idPlanque AS id, planqueName AS valeur, Planques.location, Planques.type, Country.countryName AS planqueCountry, Missions.title AS missionName
+            FROM Planques
+            JOIN Country ON planqueCountry = Country.idCountry
+            LEFT JOIN Missions ON Planques.actuallyMission = Missions.idMission';
             if (is_object($bdd)) {
                 // on teste si la connexion pdo a réussi
                 $stmt = $bdd->prepare($req);
@@ -85,22 +87,22 @@ class Planque extends Model
     }
 
     public function getSearchPlanqueNames($PlanqueName, $page, $itemsPerPage)
+    // retourne les planques recherchées
+    // si vide toutes les planques
     {
         try {
-
-            // retourne les planque recherchés
-            // si vide tous les planque
-
             // Calculez l'offset pour la requête : Page 1,2 etc
             $offset = ($page - 1) * $itemsPerPage;
 
             $bdd = $this->connexionPDO();
             $req = '
-        SELECT idPlanque AS id, planqueName AS valeur
-        FROM Planques
-        WHERE planqueName LIKE :planqueName
-        ORDER BY idPlanque
-        LIMIT :offset, :itemsPerPage';
+            SELECT idPlanque AS id, planqueName AS valeur, Planques.location, Planques.type, Country.countryName AS planqueCountry, Missions.title AS missionName
+            FROM Planques
+            JOIN Country ON planqueCountry = Country.idCountry
+            LEFT JOIN Missions ON Planques.actuallyMission = Missions.idMission
+            WHERE planqueName LIKE :planqueName
+            ORDER BY idPlanque
+            LIMIT :offset, :itemsPerPage';
             // on teste si la connexion pdo a réussi
             if (is_object($bdd)) {
                 $stmt = $bdd->prepare($req);
@@ -144,8 +146,10 @@ class Planque extends Model
 
             $bdd = $this->connexionPDO();
             $req = '
-        SELECT idPlanque AS id, planqueName AS valeur
+        SELECT idPlanque AS id, planqueName AS valeur, Planques.location, Planques.type, Country.countryName AS planqueCountry, Missions.title AS missionName
         FROM Planques
+        JOIN Country ON planqueCountry = Country.idCountry
+        LEFT JOIN Missions ON Planques.actuallyMission = Missions.idMission
         ORDER BY idPlanque
         LIMIT :offset, :itemsPerPage';
 
@@ -187,9 +191,10 @@ class Planque extends Model
 
             $bdd = $this->connexionPDO();
             $req = '
-            SELECT idPlanque AS id, planqueName AS valeur
+            SELECT Planques.idPlanque AS id, Planques.planqueName AS valeur, Planques.location, Planques.type, Country.countryName AS planqueCountry
             FROM Planques
-        WHERE idPlanque  = :PlanqueId';
+            JOIN Country ON planqueCountry = Country.idCountry
+            WHERE idPlanque  = :PlanqueId';
 
             if (is_object($bdd)) {
                 // on teste si la connexion pdo a réussi
@@ -220,80 +225,29 @@ class Planque extends Model
         }
     }
 
-    public function getRelatedPlanque($planqueId)
-    // Récupère tous les éléments liés à un planque
+    public function addPlanque($planqueName, $planqueAdress, $planqueCountry, $planqueMission, $planqueType)
     {
         try {
-
-            // Initialisation de la liste des éléments liés
-            $relatedElements = array();
-
-            // Liste des tables avec des clés étrangères vers planque
-            $tables = array(
-                'Missions' => 'missionPlanque'
-            );
-
-            // Boucle sur les tables pour récupérer les éléments liés
-            foreach ($tables as $tableName => $foreignKey) {
-
-                $bdd = $this->connexionPDO();
-                $req = "SELECT * FROM $tableName WHERE $foreignKey = :planqueId";
-
-                // on teste si la connexion pdo a réussi
-                if (is_object($bdd)) {
-                    $stmt = $bdd->prepare($req);
-
-                    if (!empty ($planqueId) and !empty ($planqueId)) {
-                        $stmt->bindValue(':planqueId', $planqueId, PDO::PARAM_INT);
-                        if ($stmt->execute()) {
-                            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                            $stmt->closeCursor();
-
-                            // Ajout des résultats à la liste
-                            $relatedElements[$tableName] = $results;
-                        } else {
-                            return 'une erreur est survenue';
-                        }
-                    }
-                } else {
-                    return 'une erreur est survenue';
-                }
-            }
-
-            // Retourne la liste des éléments liés
-            return $relatedElements;
-
-        } catch (Exception $e) {
-            $log = sprintf(
-                "%s %s %s %s %s",
-                date('Y-m-d- H:i:s'),
-                $e->getMessage(),
-                $e->getCode(),
-                $e->getFile(),
-                $e->getLine()
-            );
-            error_log($log . "\n\r", 3, './src/error.log');
-        }
-    }
-
-    public function addPlanque($planqueName)
-    {
-        try {
-            // Ajoute un planque
+            // Ajoute une planque
 
             $bdd = $this->connexionPDO();
             $req = '
-            INSERT INTO Planques (planqueName)
-            VALUES (:planqueName)';
-
+            INSERT INTO Planques (planqueName, location, planqueCountry, actuallyMission, type)
+            VALUES (:planqueName, :location, :planqueCountry, :actuallyMission, :type)';
+            
             if (is_object($bdd)) {
                 // on teste si la connexion pdo a réussi
                 $stmt = $bdd->prepare($req);
 
                 if (!empty($planqueName)) {
                     $stmt->bindValue(':planqueName', $planqueName, PDO::PARAM_STR);
+                    $stmt->bindValue(':location', $planqueAdress, PDO::PARAM_STR);
+                    $stmt->bindValue(':planqueCountry', $planqueCountry, PDO::PARAM_INT);
+                    $stmt->bindValue(':actuallyMission', $planqueMission, PDO::PARAM_INT);
+                    $stmt->bindValue(':type', $planqueType, PDO::PARAM_STR);
+
                     if ($stmt->execute()) {
-                        return 'Le planque suivant a bien été ajouté : ' . $planqueName;
+                        return 'La planque suivant a bien été ajoutée : ' . $planqueName;
                     }
                 }
             } else {
@@ -314,9 +268,9 @@ class Planque extends Model
     }
 
     public function deletePlanque($planqueId)
+    // Supprime la planque selon l'id
     {
         try {
-            // Supprime la planque selon l'id
 
             $bdd = $this->connexionPDO();
             $req = '
@@ -350,7 +304,7 @@ class Planque extends Model
         }
     }
 
-    public function updatePlanque($PlanqueId, $newName)
+    public function updatePlanque($planqueId, $newName, $newAdress, $newCountry, $newMission, $newType)
     {
         try {
             // Modifie la planque selon l'id
@@ -358,16 +312,26 @@ class Planque extends Model
             $bdd = $this->connexionPDO();
             $req = '
             UPDATE Planques
-            SET PlanqueName = :newPlanqueName
+            SET planqueName = :newPlanqueName,
+            location = :updatedAddress,
+            planqueCountry = :updatedCountry,
+            type = :updatedType,
+            actuallyMission = :updatedMission
             WHERE idPlanque  = :PlanqueId';
 
             // on teste si la connexion pdo a réussi
             if (is_object($bdd)) {
                 $stmt = $bdd->prepare($req);
 
-                if (!empty($PlanqueId) and !empty($newName)) {
-                    $stmt->bindValue(':PlanqueId', $PlanqueId, PDO::PARAM_INT);
+                if (!empty($planqueId) and !empty($newName)) {
+                    $stmt->bindValue(':PlanqueId', $planqueId, PDO::PARAM_INT);
                     $stmt->bindValue(':newPlanqueName', $newName, PDO::PARAM_STR);
+                    $stmt->bindValue(':updatedAddress', $newAdress, PDO::PARAM_STR);
+                    $stmt->bindValue(':updatedCountry', $newCountry, PDO::PARAM_INT);
+                    $stmt->bindValue(':updatedType', $newType, PDO::PARAM_STR);
+                    $stmt->bindValue(':updatedMission', $newMission, PDO::PARAM_INT);
+
+                    
                     if ($stmt->execute()) {
                         return 'La planque a bien été modifiée : ' . $newName;
                     }

@@ -1,3 +1,22 @@
+<style>
+	table {
+		border-collapse: collapse;
+		background-color: #ffffff; /* Changer la couleur de fond du tableau si nécessaire */
+	}
+
+	td,
+	th {
+		border: 1px solid #000000; /* Ajouter des bordures aux cellules */
+		padding: 8px; /* Ajouter un remplissage pour améliorer la lisibilité */
+	}
+
+	/* Changer la couleur du texte si nécessaire */
+	td,
+	th {
+		color: #000000; /* Changer la couleur du texte si nécessaire */
+	}
+</style>
+
 {# Menu #}
 <a href="{{base_url}}">Accueil</a>
 <a href="{{base_url}}/admin">Admin</a>
@@ -7,32 +26,38 @@
 <h1>Gestion des
 	{{pageName}}</h1>
 
-{# Page 'résultat' suite à une action créer, update ou delete terminée #}
 {% if addResult is defined and addResult is not empty %}
+
+	{# Page 'résultat' suite à une action créer, update ou delete terminée -------------------------------------#}
 
 	{# résultat de l'action #}
 	{{addResult}}
 	<br>
 
 	{# Liste des éléments liés pouvant empêcher la suppression #}
-	{% if data is defined and data is not empty %}
-		<h2>Liaisons relatives à l'élément à supprimer</h2>
-		<h3>Peut empêcher la suppression :</h3>
+		{% if data is defined and data is not empty %}
+			<h2>
+		Liaisons relatives à l'élément à supprimer
+		</h2>
+			<h3>
+		Peut empêcher la suppression :
+		</h3>
 
-		{% for tableName, items in data %}
+			{% for tableName, items in data %}
 
 			{# utilisé pour Cibles ? #}
-			{% if tableName == 'Cibles' and tableName is not empty %}
-				<ul>
-					{% for cible in items %}
-						<li>Nom de la cible:
+				{% if tableName == 'Cibles' and tableName is not empty %}
+					<ul>
+						{% for cible in items %}
+							<li>
+							Nom de la cible:
 							{{ cible.firstname }}
-							{{ cible.lastname }}
-						</li>
-					{% endfor %}
+						{{ cible.lastname }}
+					</li>
+				{% endfor %}
 				</ul>
 
-			{# utilisé pour Planques ? #}
+				{# utilisé pour Planques ? #}
 			{% elseif tableName == 'Planques' and tableName is not empty %}
 				<ul>
 					{% for planque in items %}
@@ -41,7 +66,7 @@
 					{% endfor %}
 				</ul>
 
-			{# utilisé pour Missions ? #}
+				{# utilisé pour Missions ? #}
 			{% elseif tableName == 'Missions' and tableName is not empty %}
 				<ul>
 					{% for mission in items %}
@@ -55,27 +80,78 @@
 	{% endif %}
 	<a href="{{ base_url }}{{previousUrl}}">Retour</a>
 
-	{# Page 'update' pour mettre le nouveau nom #}
 {% elseif modifySection is defined and modifySection == true %}
+
+	{# Page 'update' pour mettre le nouveau nom -----------------------------------------------------------------#}
+
 	<h2>Modification
 		{{pageName}}:</h2>
-	Ancien nom :
-	{{elements.valeur}}
-	<br><br>
-	Nouveau nom :
-	<br>
-	<form action="{{base_url}}{{updateUrl}}" method="post">
-		<input type="text" name="updatedName" id="">
-		<input type="hidden" name="updateElementId" value={{ elements.id }}>
-		<input type="hidden" name="tok" value={{ token }}>
 
-		<button type="submit">Soumettre</button>
+	{# Section 'update' si on est sur la page planque #}
+	{% if "planque" in pageName|lower %}
+		Ancien nom de planque:
+		{{elements.valeur}}<br>
+		Ancienne adresse de planque:
+		{{elements.location}}<br>
+		Ancien pays de planque:
+		{{elements.planqueCountry}}<br>
+		Ancien type de planque:
+		{{elements.type}}<br>
 
-	</form>
+		<br><br>
+		Nouveau :
+		<br><br>
+
+		<form action="{{base_url}}{{updateUrl}}" method="post" enctype="multipart/form-data">
+			<input type="hidden" name="updateElementId" value={{ elements.id }}>
+			<input type="hidden" name="tok" value={{ token }}>
+
+			<label for="updatedName">Nom de la nouvelle planque :
+			</label><br>
+			<input type="text" name="updatedName" id=""><br><br>
+
+			<label for="updatedElementAdress">Adresse de la nouvelle planque :
+			</label><br>
+			<input required type="text" name="updatedElementAdress" id="" placeholder="adresse"><br><br>
+
+			<label for="updatedElementCountry">Pays de la nouvelle planque :
+			</label><br>
+			<select name="updatedElementCountry">
+				{% for item in countries %}
+					<option value="{{ item.id }}">{{ item.valeur }}</option>
+				{% endfor %}
+			</select><br><br>
+
+			<label for="updatedElementType">Type de planque :
+			</label><br>
+			<input required type="text" name="updatedElementType" id="" placeholder="maison/appartement"><br><br>
+
+			<button type="submit">Soumettre</button>
+
+		</form>
+	{% else %}
+		{# Section 'update' pour les autres éléments #}
+
+		Ancien nom :
+		{{elements.valeur}}
+		<br><br>
+		Nouveau nom :
+		<br>
+		<form action="{{base_url}}{{updateUrl}}" method="post">
+			<input type="text" name="updatedName" id="">
+			<input type="hidden" name="updateElementId" value={{ elements.id }}>
+			<input type="hidden" name="tok" value={{ token }}>
+
+			<button type="submit">Soumettre</button>
+
+		</form>
+	{% endif %}
+
+
 	<a href="{{ base_url }}{{previousUrl}}">Retour</a>
 
-	{# Page 'main' de la section avec CRUD #}
 {% else %}
+	{# Page 'main' de la section avec CRUD ----------------------------------------------------------------------#}
 
 	<h2>liste des
 		{{pageName}}</h2>
@@ -99,6 +175,14 @@
 				<tr>
 					<th>Nom
 						{{pageName}}</th>
+
+					{# Colonnes supp si planque #}
+					{% if "planque" in pageName|lower %}
+						<th>Adresse</th>
+						<th>Pays</th>
+						<th>Type</th>
+						<th>Mission</th>
+					{% endif %}
 					<th>Modifier</th>
 					<th>Supprimer</th>
 				</tr>
@@ -107,6 +191,14 @@
 				{% for element in elements %}
 					<tr>
 						<td>{{ element.valeur }}</td>
+
+						{# Colonnes supp si planque #}
+						{% if "planque" in pageName|lower %}
+							<td>{{ element.location }}</td>
+							<td>{{ element.planqueCountry }}</td>
+							<td>{{ element.type }}</td>
+							<td>{{ element.missionName }}</td>
+						{% endif %}
 						<td>
 							<form method="get" action="{{base_url}}{{updateUrl}}">
 								<input type="hidden" name="UpdateElementId" value={{ element.id }}>
@@ -147,17 +239,51 @@
 			{% endif %}
 		</div><br>
 
-		{# Section add #}
+		{# Section add ------------------------------------------------------------------------------------------#}
+
 		<h2>Souhaitez vous faire un ajout :
 			{{pageName}}
 			?</h2>
-		<form action="{{base_url}}{{addUrl}}" method="post">
-			<label for="addElementName">Nom du nouvel élément :
-			</label>
-			<input type="text" name="addElementName" id="" placeholder="{{pageName}}">
-			<input type="hidden" name="tok" value={{ token }}>
-			<button type="submit">Soumettre</button>
-		</form>
+
+		{# Section add si on est sur la page planque #}
+		{% if "planque" in pageName|lower %}
+			<form action="{{base_url}}{{addUrl}}" method="post">
+				<label for="addElementName">Nom de la nouvelle planque :
+				</label><br>
+				<input required type="text" name="addElementName" id="" placeholder="nom">
+				<br><br>
+
+				<label for="addElementAdress">Adresse de la nouvelle planque :
+				</label><br>
+				<input required type="text" name="addElementAdress" id="" placeholder="adresse"><br><br>
+
+				<label for="addElementCountry">Pays de la nouvelle planque :
+				</label><br>
+				<select name="addElementCountry">
+					{% for item in countries %}
+						<option value="{{ item.id }}">{{ item.valeur }}</option>
+					{% endfor %}
+				</select><br><br>
+
+				<label for="addElementType">Type de planque :
+				</label><br>
+				<input required type="text" name="addElementType" id="" placeholder="maison/appartement"><br><br>
+
+				<input type="hidden" name="tok" value={{ token }}>
+				<button type="submit">Soumettre</button>
+			</form>
+		{% else %}
+			{# Section add pour les autres éléments #}
+
+			<form action="{{base_url}}{{addUrl}}" method="post">
+				<label for="addElementName">Nom du nouvel élément :
+				</label>
+				<input type="text" name="addElementName" id="" placeholder="{{pageName}}">
+				<input type="hidden" name="tok" value={{ token }}>
+				<button type="submit">Soumettre</button>
+			</form>
+		{% endif %}
+
 		<br>
 		<br>
 
