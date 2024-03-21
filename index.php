@@ -5,7 +5,9 @@ session_set_cookie_params([
     'lifetime' => 600, // 10 minutes d'inactivité max
     'path' => '/',
     'domain' => $_SERVER['SERVER_NAME'],
-    'httponly' => true
+    'httponly' => true,
+    'samesite' => 'Strict', // Définir le SameSite sur Strict pour plus de sécurité
+    'secure' => true // Indique que le cookie ne doit être envoyé que via une connexion HTTPS
 ]);
 
 session_start();
