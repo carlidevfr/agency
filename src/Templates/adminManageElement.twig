@@ -182,6 +182,15 @@
 						<th>Pays</th>
 						<th>Type</th>
 						<th>Mission</th>
+
+					{# Colonnes supp si planque #}
+					{% elseif "cible" in pageName|lower%}
+						<th>Cible active ?</th>
+						<th>Prénom</th>
+						<th>Nom</th>
+						<th>Date de naissance </th>
+						<th>Pays</th>
+
 					{% endif %}
 					<th>Modifier</th>
 					<th>Supprimer</th>
@@ -198,6 +207,16 @@
 							<td>{{ element.planqueCountry }}</td>
 							<td>{{ element.type }}</td>
 							<td>{{ element.missionName }}</td>
+						{% endif %}
+
+						{# Colonnes supp si cible #}
+						{% if "cible" in pageName|lower %}
+							<td> {% if element.isActive ==1 %} Oui {% endif %} </td>
+							<td>{{ element.firstname }}</td>
+							<td>{{ element.lastname }}</td>
+							<td>{{ element.formattedBirthdate }}</td>
+							<td>{{ element.countryName }}</td>
+
 						{% endif %}
 						<td>
 							<form method="get" action="{{base_url}}{{updateUrl}}">

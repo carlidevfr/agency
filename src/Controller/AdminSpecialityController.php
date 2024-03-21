@@ -27,27 +27,29 @@ class AdminSpecialityController
         $token = $this->Security->getToken();
 
         //Récupère  la pagination
-        (isset($_GET['page']) and !empty($_GET['page'])) ? $page = max(1, $this->Security->filter_form($_GET['page'])) : $page = 1;
+        (isset ($_GET['page']) and !empty ($_GET['page'])) ? $page = max(1, $this->Security->filter_form($_GET['page'])) : $page = 1;
 
         // Nombre d'éléments par page
         $itemsPerPage = 10;
 
         //Récupère le résultat de la recherche et la valeur de search pour permettre un get sur le search avec la pagination
-        if (isset($_GET['search']) and !empty($_GET['search'] and isset($_GET['tok']) and $this->Security->verifyToken($token, $_GET['tok']))) {
+        if (isset ($_GET['search']) and !empty ($_GET['search'] and isset ($_GET['tok']) and $this->Security->verifyToken($token, $_GET['tok']))) {
             $speciality = $this->Speciality->getSearchSpecialityNames($this->Security->filter_form($_GET['search']), $page, $itemsPerPage);
             $search = $this->Security->filter_form($_GET['search']);
 
             // on regénère le token
             $this->Security->regenerateToken();
+            // On récupère le token
+            $token = $this->Security->getToken();
         } else {
             $speciality = $this->Speciality->getPaginationAllSpecialityNames($page, $itemsPerPage);
             $search = '';
         }
 
         // Récupère le nombre de pages, on arrondi au dessus. Dans un if pour éviter toute erreur
-        if (!empty($this->Speciality->getAllSpecialityNames())) {
+        if (!empty ($this->Speciality->getAllSpecialityNames())) {
             $pageMax = ceil(count($this->Speciality->getAllSpecialityNames()) / $itemsPerPage);
-        }else{
+        } else {
             $pageMax = 1;
         }
 
@@ -81,14 +83,14 @@ class AdminSpecialityController
         $missions = null;
 
         // On récupère le résultat de la requête
-        if (isset($_SESSION['resultat']) and !empty($_SESSION['resultat'])) {
+        if (isset ($_SESSION['resultat']) and !empty ($_SESSION['resultat'])) {
             $res = $this->Security->filter_form($_SESSION['resultat']);
 
             // Si l'id est en variable session on le récupère
-            (isset($_SESSION['idElement']) and !empty($_SESSION['idElement'])) ? $idElement = $this->Security->filter_form($_SESSION['idElement']) : $idElement = '';
+            (isset ($_SESSION['idElement']) and !empty ($_SESSION['idElement'])) ? $idElement = $this->Security->filter_form($_SESSION['idElement']) : $idElement = '';
 
             // On récupère la liste des éléments liés pouvant empêcher la suppression
-            (isset($idElement) and !empty($idElement) ? $data = $this->Speciality->getRelatedSpeciality($idElement): $data = '');
+            (isset ($idElement) and !empty ($idElement) ? $data = $this->Speciality->getRelatedSpeciality($idElement) : $data = '');
 
             // Efface les résultats de la session pour éviter de les conserver plus longtemps que nécessaire
             unset($_SESSION['resultat']);
@@ -127,7 +129,7 @@ class AdminSpecialityController
         $token = $this->Security->getToken();
 
         // on récupère le speciality ajouté et le token
-        (isset($_POST['addElementName']) and !empty($_POST['addElementName']) and isset($_POST['tok']) and $this->Security->verifyToken($token, $_POST['tok'])) ? $specialityAction = $this->Security->filter_form($_POST['addElementName']) : $specialityAction = '';
+        (isset ($_POST['addElementName']) and !empty ($_POST['addElementName']) and isset ($_POST['tok']) and $this->Security->verifyToken($token, $_POST['tok'])) ? $specialityAction = $this->Security->filter_form($_POST['addElementName']) : $specialityAction = '';
 
         // on fait l'ajout en BDD et on récupère le résultat
         $res = $this->Speciality->addSpeciality($specialityAction);
@@ -153,7 +155,7 @@ class AdminSpecialityController
         $token = $this->Security->getToken();
 
         // on récupère l'id speciality à supprimer
-        (isset($_POST['deleteElementId']) and !empty($_POST['deleteElementId']) and isset($_POST['tok']) and $this->Security->verifyToken($token, $_POST['tok'])) ? $specialityAction = $this->Security->filter_form($_POST['deleteElementId']) : $specialityAction = '';
+        (isset ($_POST['deleteElementId']) and !empty ($_POST['deleteElementId']) and isset ($_POST['tok']) and $this->Security->verifyToken($token, $_POST['tok'])) ? $specialityAction = $this->Security->filter_form($_POST['deleteElementId']) : $specialityAction = '';
 
         // on fait la suppression en BDD et on récupère le résultat
         $res = $this->Speciality->deleteSpeciality($specialityAction);
@@ -181,7 +183,7 @@ class AdminSpecialityController
         $token = $this->Security->getToken();
 
         //Récupère l'id du speciality à modifier et vérifie si la requête est authentifiée
-        (isset($_GET['UpdateElementId']) and !empty($_GET['UpdateElementId']) and isset($_GET['tok']) and $this->Security->verifyToken($token, $_GET['tok'])) ? $specialityAction = $this->Security->filter_form($_GET['UpdateElementId']) : $specialityAction = '';
+        (isset ($_GET['UpdateElementId']) and !empty ($_GET['UpdateElementId']) and isset ($_GET['tok']) and $this->Security->verifyToken($token, $_GET['tok'])) ? $specialityAction = $this->Security->filter_form($_GET['UpdateElementId']) : $specialityAction = '';
 
         // Récupère le speciality à modifier
         $speciality = $this->Speciality->getByspecialityId($specialityAction);
@@ -222,10 +224,10 @@ class AdminSpecialityController
         $token = $this->Security->getToken();
 
         // on récupère l'id speciality à Modifier
-        (isset($_POST['updateElementId']) and !empty($_POST['updateElementId']) and isset($_POST['tok']) and $this->Security->verifyToken($token, $_POST['tok'])) ? $specialityAction = $this->Security->filter_form($_POST['updateElementId']) : $specialityAction = '';
+        (isset ($_POST['updateElementId']) and !empty ($_POST['updateElementId']) and isset ($_POST['tok']) and $this->Security->verifyToken($token, $_POST['tok'])) ? $specialityAction = $this->Security->filter_form($_POST['updateElementId']) : $specialityAction = '';
 
         // on récupère le nouveau nom et on vérifie qu'il n'est pas vide
-        (isset($_POST['updatedName']) and !empty($_POST['updatedName']) and isset($_POST['tok']) and $this->Security->verifyToken($token, $_POST['tok'])) ? $newName = $this->Security->filter_form($_POST['updatedName']) : $newName = '';
+        (isset ($_POST['updatedName']) and !empty ($_POST['updatedName']) and isset ($_POST['tok']) and $this->Security->verifyToken($token, $_POST['tok'])) ? $newName = $this->Security->filter_form($_POST['updatedName']) : $newName = '';
 
         // on fait la suppression en BDD et on récupère le résultat
         $res = $this->Speciality->updateSpeciality($specialityAction, $newName);

@@ -41,6 +41,10 @@ class AdminCountryController
 
             // on regénère le token
             $this->Security->regenerateToken();
+
+            // On récupère le token
+            $token = $this->Security->getToken();
+            
         } else {
             $countries = $this->Country->getPaginationAllCountryNames($page, $itemsPerPage);
             $search = '';

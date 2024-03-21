@@ -24,6 +24,7 @@ require_once './src/Controller/AdminStatusController.php';
 require_once './src/Controller/AdminTypeController.php';
 require_once './src/Controller/AdminSpecialityController.php';
 require_once './src/Controller/AdminPlanqueController.php';
+require_once './src/Controller/AdminCibleController.php';
 require_once './src/Model/Common/Security.php';
 
 $router = new Router();
@@ -83,6 +84,14 @@ $router->addRoute('GET', BASE_URL . '/admin/manage-planque/action/success', 'Adm
 $router->addRoute('POST', BASE_URL . '/admin/manage-planque/delete', 'AdminPlanqueController', 'adminDeletePlanque');
 $router->addRoute('GET', BASE_URL . '/admin/manage-planque/update', 'AdminPlanqueController', 'adminUpdatePlanquePage');
 $router->addRoute('POST', BASE_URL . '/admin/manage-planque/update', 'AdminPlanqueController', 'adminUpdatePlanque');
+
+$router->addRoute('GET', BASE_URL . '/admin/manage-cible', 'AdminCibleController', 'adminCiblePage');
+$router->addRoute('POST', BASE_URL . '/admin/manage-cible/add', 'AdminCibleController', 'adminAddCible');
+$router->addRoute('GET', BASE_URL . '/admin/manage-cible/action/success', 'AdminCibleController', 'adminSuccessActionCible');
+$router->addRoute('POST', BASE_URL . '/admin/manage-cible/delete', 'AdminCibleController', 'adminDeleteCible');
+$router->addRoute('GET', BASE_URL . '/admin/manage-cible/update', 'AdminCibleController', 'adminUpdateCiblePage');
+$router->addRoute('POST', BASE_URL . '/admin/manage-cible/update', 'AdminCibleController', 'adminUpdateCible');
+
 
 $method = $_SERVER['REQUEST_METHOD'];
 $uri = strtolower($_SERVER['REQUEST_URI']); // gère les minuscules et les majuscules

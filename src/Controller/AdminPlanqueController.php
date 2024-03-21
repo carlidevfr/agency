@@ -43,6 +43,9 @@ class AdminPlanqueController
 
             // on regénère le token
             $this->Security->regenerateToken();
+
+            // On récupère le token
+            $token = $this->Security->getToken();
         } else {
             $planque = $this->Planque->getPaginationAllPlanqueNames($page, $itemsPerPage);
             $search = '';

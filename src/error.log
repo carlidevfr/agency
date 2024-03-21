@@ -290,4 +290,11 @@
 2024-03-19- 14:41:42 SQLSTATE[23000]: Integrity constraint violation: 1452 Cannot add or update a child row: a foreign key constraint fails (`secret_agency`.`planques`, CONSTRAINT `planques_ibfk_2` FOREIGN KEY (`actuallyMission`) REFERENCES `missions` (`idMission`)) 23000 C:\wamp64\www\Agency\src\Model\Planque.php 242
 
 2024-03-20- 09:51:14 SQLSTATE[HY093]: Invalid parameter number: parameter was not defined HY093 C:\wamp64\www\Agency\src\Model\Planque.php 329
+2024-03-21- 15:57:48 SQLSTATE[42S22]: Column not found: 1054 Champ 'cibleName' inconnu dans field list 42S22 C:\wamp64\www\Agency\src\Model\Cible.php 263
+2024-03-21- 15:57:48 SQLSTATE[42S22]: Column not found: 1054 Champ 'cibleName' inconnu dans field list 42S22 C:\wamp64\www\Agency\src\Model\Cible.php 121
+2024-03-21- 16:09:38 SQLSTATE[42S22]: Column not found: 1054 Champ 'cibleName' inconnu dans field list 42S22 C:\wamp64\www\Agency\src\Model\Cible.php 121
+2024-03-21- 16:17:06 SQLSTATE[HY093]: Invalid parameter number: parameter was not defined HY093 C:\wamp64\www\Agency\src\Model\Cible.php 88
+2024-03-21- 16:17:16 SQLSTATE[HY093]: Invalid parameter number: parameter was not defined HY093 C:\wamp64\www\Agency\src\Model\Cible.php 88
+2024-03-21- 16:18:00 SQLSTATE[HY093]: Invalid parameter number: parameter was not defined HY093 C:\wamp64\www\Agency\src\Model\Cible.php 88
+2024-03-21- 16:18:50 SQLSTATE[HY093]: Invalid parameter number: parameter was not defined HY093 C:\wamp64\www\Agency\src\Model\Cible.php 88
 
