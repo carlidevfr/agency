@@ -64,7 +64,7 @@ class Cible extends Model
 
             $bdd = $this->connexionPDO();
             $req =
-            "SELECT Cibles.idCible AS id,
+                "SELECT Cibles.idCible AS id,
             Cibles.codeName AS valeur,
             Cibles.isActive,
             Cibles.firstname,
@@ -210,16 +210,38 @@ class Cible extends Model
 
             // Liste des tables avec des clés étrangères vers Cible
             $tables = array(
-                'Cibles' => 'cibleCible',
-                'Planques' => 'planqueCible',
-                'Missions' => 'missionCible'
+                'Contacts' => 'idContact',
+                'Agents' => 'idAgent',
+                'CiblesInMission' => 'idCible'
             );
 
             // Boucle sur les tables pour récupérer les éléments liés
             foreach ($tables as $tableName => $foreignKey) {
 
                 $bdd = $this->connexionPDO();
-                $req = "SELECT * FROM $tableName WHERE $foreignKey = :cibleId";
+                $req = "";
+
+                // Utilisation de switch-case pour gérer les différents cas
+                switch ($tableName) {
+                    case 'Contacts':
+                        $req = "SELECT Cibles.codeName
+                        FROM Cibles
+                        JOIN Contacts ON Contacts.idContact = Cibles.idCible
+                        WHERE Cibles.idCible = :cibleId";
+                        break;
+
+                    case 'CiblesInMission':
+                        $req = "
+                        SELECT Missions.codeName AS missionCodeName
+                        FROM CiblesInMission
+                        JOIN Missions ON CiblesInMission.idMission = Missions.idMission
+                        WHERE CiblesInMission.idCible = :cibleId;";
+                        break;
+
+                    default:
+                        $req = "SELECT * FROM $tableName WHERE $foreignKey = :cibleId";
+                        break;
+                }
 
                 // on teste si la connexion pdo a réussi
                 if (is_object($bdd)) {
@@ -311,24 +333,30 @@ class Cible extends Model
         }
     }
 
-    public function addCible($cibleName)
+    public function addCible($cibleName, $cibleFirstName, $cibleLastName, $cibleBirthDate, $cibleCountry, $cibleActive)
     {
+        // Ajoute une cible
         try {
-            // Ajoute un cibles
 
             $bdd = $this->connexionPDO();
             $req = '
-            INSERT INTO Cible (cibleName)
-            VALUES (:cibleName)';
+            INSERT INTO Cibles (isActive, firstname, lastname, birthdate, codeName, countryCible)
+            VALUES (:isActive, :firstname, :lastname, :birthdate, :codeName, :countryCible)';
 
             if (is_object($bdd)) {
                 // on teste si la connexion pdo a réussi
                 $stmt = $bdd->prepare($req);
 
                 if (!empty ($cibleName)) {
-                    $stmt->bindValue(':cibleName', $cibleName, PDO::PARAM_STR);
+                    $stmt->bindValue(':isActive', $cibleActive, PDO::PARAM_INT);
+                    $stmt->bindValue(':firstname', $cibleFirstName, PDO::PARAM_STR);
+                    $stmt->bindValue(':lastname', $cibleLastName, PDO::PARAM_STR);
+                    $stmt->bindValue(':birthdate', $cibleBirthDate, PDO::PARAM_STR);
+                    $stmt->bindValue(':codeName', $cibleName, PDO::PARAM_STR);
+                    $stmt->bindValue(':countryCible', $cibleCountry, PDO::PARAM_INT);
+
                     if ($stmt->execute()) {
-                        return 'Le cibles suivant a bien été ajouté : ' . $cibleName;
+                        return 'La cible suivante a bien été ajoutée : ' . $cibleName;
                     }
                 }
             } else {
@@ -344,14 +372,15 @@ class Cible extends Model
                 $e->getLine()
             );
             error_log($log . "\n\r", 3, './src/error.log');
-            return 'Une erreur est survenue';
+            return 'une erreur est survenue';
         }
     }
 
     public function deleteCible($cibleId)
+    // Supprime la cible selon l'id
     {
         try {
-            // Supprime la cible selon l'id
+
 
             $bdd = $this->connexionPDO();
             $req = '
@@ -365,7 +394,7 @@ class Cible extends Model
                 if (!empty ($cibleId)) {
                     $stmt->bindValue(':cibleId', $cibleId, PDO::PARAM_STR);
                     if ($stmt->execute()) {
-                        return 'Le cibles a bien été supprimé ';
+                        return 'La cible a bien été supprimée ';
                     }
                 }
             } else {
@@ -385,26 +414,60 @@ class Cible extends Model
         }
     }
 
-    public function updateCible($cibleId, $newName)
+    public function updateCible($cibleId, $cibleName, $cibleFirstName, $cibleLastName, $cibleBirthDate, $cibleCountry, $cibleActive)
     {
         try {
             // Modifie la cible selon l'id
 
             $bdd = $this->connexionPDO();
-            $req = '
-            UPDATE Cible
-            SET cibleName = :newCibleName
-            WHERE idCible  = :cibleId';
+            $req = "UPDATE Cibles SET";
+
+            // Initialiser un tableau pour stocker les éléments à mettre à jour
+            $updateValues = array();
+
+            // Construire la requête dynamiquement en fonction des éléments fournis
+            if (!empty ($cibleName)) {
+                $req .= " codeName = :codeName,";
+                $updateValues[':codeName'] = $cibleName;
+            }
+            if (!empty ($cibleFirstName)) {
+                $req .= " firstname = :firstname,";
+                $updateValues[':firstname'] = $cibleFirstName;
+            }
+            if (!empty ($cibleLastName)) {
+                $req .= " lastname = :lastname,";
+                $updateValues[':lastname'] = $cibleLastName;
+            }
+            if (!empty ($cibleBirthDate)) {
+                $req .= " birthdate = :birthdate,";
+                $updateValues[':birthdate'] = $cibleBirthDate;
+            }
+            if (!empty ($cibleCountry)) {
+                $req .= " countryCible = :countryCible,";
+                $updateValues[':countryCible'] = $cibleCountry;
+            }
+            if (isset ($cibleActive)) {
+                $req .= " isActive = :isActive,";
+                $updateValues[':isActive'] = $cibleActive;
+            }
+
+            // Supprimer la virgule finale de la requête
+            $req = rtrim($req, ',');
+
+            // Ajouter la condition WHERE pour spécifier l'ID de la cible à mettre à jour
+            $req .= " WHERE idCible = :idCible";
+            $updateValues[':idCible'] = $cibleId;
 
             // on teste si la connexion pdo a réussi
             if (is_object($bdd)) {
                 $stmt = $bdd->prepare($req);
 
-                if (!empty ($cibleId) and !empty ($newName)) {
-                    $stmt->bindValue(':cibleId', $cibleId, PDO::PARAM_INT);
-                    $stmt->bindValue(':newCibleName', $newName, PDO::PARAM_STR);
+                if (!empty ($cibleId)) {
+                    foreach ($updateValues as $key => $value) {
+                        $stmt->bindValue($key, $value);
+                    }
                     if ($stmt->execute()) {
-                        return 'Le cibles a bien été modifié : ' . $newName;
+                        return 'La cible a bien été modifiée : ' . $cibleName;
                     }
                 }
             } else {

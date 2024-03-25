@@ -74,6 +74,39 @@
 							{{ mission.title }}</li>
 					{% endfor %}
 				</ul>
+				{# utilisé pour CiblesInMission ? #}
+			{% elseif tableName == 'CiblesInMission' and tableName is not empty %}
+				<ul>
+					{% for mission in items %}
+						<li>Mission :
+							{{ mission.missionCodeName }}</li>
+					{% endfor %}
+				</ul>
+				{# utilisé pour Agents ? #}
+			{% elseif tableName == 'Agents' and tableName is not empty %}
+				<ul>
+					{% for agent in items %}
+						<li>Agent :
+							{{ agent.codeAgent }}</li>
+					{% endfor %}
+				</ul>
+				{# utilisé pour Contacts ? #}
+			{% elseif tableName == 'Contacts' and tableName is not empty %}
+				<ul>
+					{% for contacts in items %}
+						<li>Contact :
+							{{ contacts.codeName }}</li>
+					{% endfor %}
+				</ul>
+
+				{# utilisé pour spécialités ? #}
+			{% elseif tableName == 'AgentsSpecialities' and tableName is not empty %}
+				<ul>
+					{% for AgentsSpecialities in items %}
+						<li>Agents :
+							{{ AgentsSpecialities.codeAgent }}</li>
+					{% endfor %}
+				</ul>
 
 			{% endif %}
 		{% endfor %}
@@ -129,6 +162,68 @@
 			<button type="submit">Soumettre</button>
 
 		</form>
+
+	{% elseif "cible" in pageName|lower%}
+		{# Section 'update' si on est sur la page cible #}
+		Ancien nom de code de la cible:
+		{{elements.valeur}}<br>
+		Ancien prénom de la cible:
+		{{elements.firstname}}<br>
+		Ancien nom de la cible:
+		{{elements.lastname}}<br>
+		Ancienne date de naissance de la cible:
+		{{elements.formattedBirthdate}}<br>
+		Ancien pays d'origine de la cible:
+		{{elements.countryName}}<br>
+		La cible est active ? (si non pas de contrat en cours contre elle):
+		{% if elements.isActive ==1 %}
+			Oui
+		{% endif %}<br>
+
+		<br><br>
+		Nouveau :
+		<br><br>
+
+		<form action="{{base_url}}{{updateUrl}}" method="post" enctype="multipart/form-data">
+			<input type="hidden" name="updateElementId" value={{ elements.id }}>
+			<input type="hidden" name="tok" value={{ token }}>
+
+			<label for="updateElementName">Nom de code modifié :
+			</label><br>
+			<input type="text" name="updateElementName" id="" placeholder="Code">
+			<br><br>
+
+			<label for="updateElementFirstName">Prénom modifié :
+			</label><br>
+			<input type="text" name="updateElementFirstName" id="" placeholder="prénom">
+			<br><br>
+
+			<label for="updateElementLastName">Nom modifié :
+			</label><br>
+			<input type="text" name="updateElementLastName" id="" placeholder="nom">
+			<br><br>
+
+			<label for="updateElementBirthDate">Date de naissance modifiée :
+			</label><br>
+			<input type="date" name="updateElementBirthDate" id=""><br><br>
+
+			<label for="updateElementCountry">Pays modifié :
+			</label><br>
+			<select name="updateElementCountry">
+				<option value=""></option>
+				{% for item in countries %}
+					<option value="{{ item.id }}">{{ item.valeur }}</option>
+				{% endfor %}
+			</select><br><br>
+
+			<label for="updateElementActive">La cible est active ? (Si non, il s'agit d'un agent, contact ou autre) :
+			</label><br>
+			<input type="checkbox" name="updateElementActive" value='1' id=""><br><br>
+
+			<button type="submit">Soumettre</button>
+
+		</form>
+
 	{% else %}
 		{# Section 'update' pour les autres éléments #}
 
@@ -137,7 +232,7 @@
 		<br><br>
 		Nouveau nom :
 		<br>
-		<form action="{{base_url}}{{updateUrl}}" method="post">
+		<form action="{{base_url}}{{updateUrl}}" method="post" enctype='multipart/form-data'>
 			<input type="text" name="updatedName" id="">
 			<input type="hidden" name="updateElementId" value={{ elements.id }}>
 			<input type="hidden" name="tok" value={{ token }}>
@@ -157,7 +252,7 @@
 		{{pageName}}</h2>
 
 	{# Formulaire de recherche #}
-	<form action="{{base_url}}{{previousUrl}}" method="get">
+	<form action="{{base_url}}{{previousUrl}}" method="get" enctype='multipart/form-data'>
 		<input type="text" name='search'>
 		<input type="hidden" name="tok" value={{ token }}>
 		<button type="submit">Recherche
@@ -183,12 +278,13 @@
 						<th>Type</th>
 						<th>Mission</th>
 
-					{# Colonnes supp si planque #}
+						{# Colonnes supp si planque #}
 					{% elseif "cible" in pageName|lower%}
 						<th>Cible active ?</th>
 						<th>Prénom</th>
 						<th>Nom</th>
-						<th>Date de naissance </th>
+						<th>Date de naissance
+						</th>
 						<th>Pays</th>
 
 					{% endif %}
@@ -211,7 +307,11 @@
 
 						{# Colonnes supp si cible #}
 						{% if "cible" in pageName|lower %}
-							<td> {% if element.isActive ==1 %} Oui {% endif %} </td>
+							<td>
+								{% if element.isActive ==1 %}
+									Oui
+								{% endif %}
+							</td>
 							<td>{{ element.firstname }}</td>
 							<td>{{ element.lastname }}</td>
 							<td>{{ element.formattedBirthdate }}</td>
@@ -219,14 +319,14 @@
 
 						{% endif %}
 						<td>
-							<form method="get" action="{{base_url}}{{updateUrl}}">
+							<form method="get" action="{{base_url}}{{updateUrl}}" enctype='multipart/form-data'>
 								<input type="hidden" name="UpdateElementId" value={{ element.id }}>
 								<input type="hidden" name="tok" value={{ token }}>
 								<button type="submit">Modifier</button>
 							</form>
 						</td>
 						<td>
-							<form method="post" action="{{base_url}}{{deleteUrl}}">
+							<form method="post" action="{{base_url}}{{deleteUrl}}" enctype='multipart/form-data'>
 								<input type="hidden" name="deleteElementId" value={{ element.id }}>
 								<input type="hidden" name="tok" value={{ token }}>
 								<button type="submit">Supprimer</button>
@@ -266,7 +366,7 @@
 
 		{# Section add si on est sur la page planque #}
 		{% if "planque" in pageName|lower %}
-			<form action="{{base_url}}{{addUrl}}" method="post">
+			<form action="{{base_url}}{{addUrl}}" method="post" enctype='multipart/form-data'>
 				<label for="addElementName">Nom de la nouvelle planque :
 				</label><br>
 				<input required type="text" name="addElementName" id="" placeholder="nom">
@@ -291,10 +391,49 @@
 				<input type="hidden" name="tok" value={{ token }}>
 				<button type="submit">Soumettre</button>
 			</form>
+
+			{# Section add si on est sur la page cible #}
+		{% elseif "cible" in pageName|lower%}
+			<form action="{{base_url}}{{addUrl}}" method="post" enctype='multipart/form-data'>
+				<label for="addElementName">Nom de code de la nouvelle cible :
+				</label><br>
+				<input required type="text" name="addElementName" id="" placeholder="Code">
+				<br><br>
+
+				<label for="addElementFirstName">Prénom de la nouvelle cible :
+				</label><br>
+				<input required type="text" name="addElementFirstName" id="" placeholder="prénom">
+				<br><br>
+
+				<label for="addElementLastName">Nom de la nouvelle cible :
+				</label><br>
+				<input required type="text" name="addElementLastName" id="" placeholder="nom">
+				<br><br>
+
+				<label for="addElementBirthDate">Date de naissance de la nouvelle cible :
+				</label><br>
+				<input required type="date" name="addElementBirthDate" id=""><br><br>
+
+				<label for="addElementCountry">Pays de la nouvelle cible :
+				</label><br>
+				<select name="addElementCountry">
+					{% for item in countries %}
+						<option value="{{ item.id }}">{{ item.valeur }}</option>
+					{% endfor %}
+				</select><br><br>
+
+				<label for="addElementActive">La cible est active ? (Si non, il s'agit d'un agent, contact ou autre) :
+				</label><br>
+				<input type="checkbox" name="addElementActive" value='1' id=""><br><br>
+
+				<input type="hidden" name="tok" value={{ token }}>
+				<button type="submit">Soumettre</button>
+			</form>
+
 		{% else %}
 			{# Section add pour les autres éléments #}
 
-			<form action="{{base_url}}{{addUrl}}" method="post">
+			<form action="{{base_url}}{{addUrl}}" method="post" enctype='multipart/form-data'>
 				<label for="addElementName">Nom du nouvel élément :
 				</label>
 				<input type="text" name="addElementName" id="" placeholder="{{pageName}}">

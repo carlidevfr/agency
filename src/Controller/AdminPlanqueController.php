@@ -207,7 +207,7 @@ class AdminPlanqueController
         // On récupère le token
         $token = $this->Security->getToken();
 
-        //Récupère l'id du planque à modifier et vérifie si la requête est authentifiée
+        //Récupère l'id de la planque à modifier et vérifie si la requête est authentifiée
         (isset ($_GET['UpdateElementId']) and !empty ($_GET['UpdateElementId']) and isset ($_GET['tok']) and $this->Security->verifyToken($token, $_GET['tok'])) ? $planqueAction = $this->Security->filter_form($_GET['UpdateElementId']) : $planqueAction = '';
 
         // Récupère la planque à modifier
@@ -220,7 +220,7 @@ class AdminPlanqueController
         // On récupère le token pour le nouveau form
         $token = $this->Security->getToken();
 
-        // On récupère la liste des pays pour un éventuel add
+        // On récupère la liste des pays 
         $countries = $this->Country->getAllCountryNames();
 
 

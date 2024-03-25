@@ -59,7 +59,7 @@ class Speciality extends Model
             if (is_object($bdd)) {
                 $stmt = $bdd->prepare($req);
 
-                if (!empty($speName) and !empty($page) and !empty($itemsPerPage)) {
+                if (!empty ($speName) and !empty ($page) and !empty ($itemsPerPage)) {
                     $stmt->bindValue(':specialityName', '%' . $speName . '%', PDO::PARAM_STR);
                     $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
                     $stmt->bindValue(':itemsPerPage', $itemsPerPage, PDO::PARAM_INT);
@@ -107,7 +107,7 @@ class Speciality extends Model
                 // on teste si la connexion pdo a réussi
                 $stmt = $bdd->prepare($req);
 
-                if (!empty($page) and !empty($itemsPerPage)) {
+                if (!empty ($page) and !empty ($itemsPerPage)) {
                     $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
                     $stmt->bindValue(':itemsPerPage', $itemsPerPage, PDO::PARAM_INT);
 
@@ -149,7 +149,7 @@ class Speciality extends Model
                 // on teste si la connexion pdo a réussi
                 $stmt = $bdd->prepare($req);
 
-                if (!empty($SpecialityId)) {
+                if (!empty ($SpecialityId)) {
                     $stmt->bindValue(':SpecialityId', $SpecialityId, PDO::PARAM_INT);
 
                     if ($stmt->execute()) {
@@ -184,14 +184,28 @@ class Speciality extends Model
 
             // Liste des tables avec des clés étrangères vers speciality
             $tables = array(
-                'Missions' => 'missionSpeciality'
+                'Missions' => 'missionSpeciality',
+                'AgentsSpecialities' => 'speciality_id',
             );
 
             // Boucle sur les tables pour récupérer les éléments liés
             foreach ($tables as $tableName => $foreignKey) {
-
+                $req = "";
                 $bdd = $this->connexionPDO();
-                $req = "SELECT * FROM $tableName WHERE $foreignKey = :specialityId";
+
+                // Utilisation de switch-case pour gérer les différents cas
+                switch ($tableName) {
+                    case 'AgentsSpecialities':
+                        $req = "SELECT Agents.idAgent, Agents.codeAgent
+                        FROM Agents
+                        INNER JOIN AgentsSpecialities ON Agents.idAgent = AgentsSpecialities.agent_id
+                        WHERE AgentsSpecialities.speciality_id = :specialityId";
+                        break;
+
+                    default:
+                        $req = "SELECT * FROM $tableName WHERE $foreignKey = :specialityId";
+                        break;
+                }
 
                 // on teste si la connexion pdo a réussi
                 if (is_object($bdd)) {
@@ -244,7 +258,7 @@ class Speciality extends Model
                 // on teste si la connexion pdo a réussi
                 $stmt = $bdd->prepare($req);
 
-                if (!empty($specialityName)) {
+                if (!empty ($specialityName)) {
                     $stmt->bindValue(':specialityName', $specialityName, PDO::PARAM_STR);
                     if ($stmt->execute()) {
                         return 'La speciality suivant a bien été ajoutée : ' . $specialityName;
@@ -281,7 +295,7 @@ class Speciality extends Model
             if (is_object($bdd)) {
                 $stmt = $bdd->prepare($req);
 
-                if (!empty($specialityId)) {
+                if (!empty ($specialityId)) {
                     $stmt->bindValue(':specialityId', $specialityId, PDO::PARAM_STR);
                     if ($stmt->execute()) {
                         return 'La speciality a bien été supprimée ';
@@ -319,7 +333,7 @@ class Speciality extends Model
             if (is_object($bdd)) {
                 $stmt = $bdd->prepare($req);
 
-                if (!empty($SpecialityId) and !empty($newName)) {
+                if (!empty ($SpecialityId) and !empty ($newName)) {
                     $stmt->bindValue(':SpecialityId', $SpecialityId, PDO::PARAM_INT);
                     $stmt->bindValue(':newspeName', $newName, PDO::PARAM_STR);
                     if ($stmt->execute()) {
