@@ -5,20 +5,20 @@ require_once './src/Model/Common/Security.php';
 class Cible extends Model
 {
     public function getCiblesByIdMission($idMission)
-    // retourne toutes les cibles selon l'id de missions
+    // retourne toutes les cibles actives selon l'id de missions
     {
         try {
 
             $bdd = $this->connexionPDO();
             $req = '
-        SELECT
+            SELECT
             Cibles.idCible,
             Cibles.isActive,
             Cibles.firstname,
             Cibles.lastname,
             Cibles.birthdate,
             Cibles.codeName,
-            Cible.cibleName AS cibleCible
+            Country.countryName AS countryCible
         FROM
             Cibles
         JOIN
@@ -26,9 +26,10 @@ class Cible extends Model
         JOIN
             Missions ON CiblesInMission.idMission = Missions.idMission
         JOIN
-            Cible ON Cibles.cibleCible = Cible.idCible
+            Country ON Cibles.countryCible = Country.idCountry
         WHERE
-            Missions.idMission = :idMission';
+            Missions.idMission = :idMission
+            AND Cibles.isActive = 1';
 
             $stmt = $bdd->prepare($req);
 
