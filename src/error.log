@@ -371,4 +371,24 @@
 2024-03-25- 14:36:22 SQLSTATE[42S02]: Base table or view not found: 1146 La table 'secret_agency.cible' n'existe pas 42S02 C:\wamp64\www\Agency\src\Model\Cible.php 37
 2024-03-25- 14:36:39 SQLSTATE[42S02]: Base table or view not found: 1146 La table 'secret_agency.cible' n'existe pas 42S02 C:\wamp64\www\Agency\src\Model\Cible.php 37
 2024-03-25- 14:36:57 SQLSTATE[42S02]: Base table or view not found: 1146 La table 'secret_agency_test.cible' n'existe pas 42S02 C:\wamp64\www\Agency\src\Model\Cible.php 37
+2024-03-25- 14:49:09 SQLSTATE[42S22]: Column not found: 1054 Champ 'contactName' inconnu dans field list 42S22 C:\wamp64\www\Agency\src\Model\Contact.php 165
+2024-03-25- 14:49:09 SQLSTATE[42S22]: Column not found: 1054 Champ 'contactName' inconnu dans field list 42S22 C:\wamp64\www\Agency\src\Model\Contact.php 71
+2024-03-28- 15:40:00 SQLSTATE[42S22]: Column not found: 1054 Champ 'contactName' inconnu dans field list 42S22 C:\wamp64\www\Agency\src\Model\Contact.php 165
+2024-03-28- 15:40:00 SQLSTATE[42S22]: Column not found: 1054 Champ 'contactName' inconnu dans field list 42S22 C:\wamp64\www\Agency\src\Model\Contact.php 71
+2024-03-28- 15:41:05 SQLSTATE[42S22]: Column not found: 1054 Champ 'contactName' inconnu dans field list 42S22 C:\wamp64\www\Agency\src\Model\Contact.php 165
+2024-03-28- 15:41:05 SQLSTATE[42S22]: Column not found: 1054 Champ 'contactName' inconnu dans field list 42S22 C:\wamp64\www\Agency\src\Model\Contact.php 71
+2024-03-28- 15:46:29 SQLSTATE[42S22]: Column not found: 1054 Champ 'contactName' inconnu dans field list 42S22 C:\wamp64\www\Agency\src\Model\Contact.php 176
+2024-03-28- 15:47:10 SQLSTATE[42S22]: Column not found: 1054 Champ 'contactName' inconnu dans field list 42S22 C:\wamp64\www\Agency\src\Model\Contact.php 176
+2024-03-28- 15:47:24 SQLSTATE[42S22]: Column not found: 1054 Champ 'contactName' inconnu dans field list 42S22 C:\wamp64\www\Agency\src\Model\Contact.php 177
+2024-03-28- 15:47:25 SQLSTATE[42S22]: Column not found: 1054 Champ 'contactName' inconnu dans field list 42S22 C:\wamp64\www\Agency\src\Model\Contact.php 177
+2024-03-28- 15:47:26 SQLSTATE[42S22]: Column not found: 1054 Champ 'contactName' inconnu dans field list 42S22 C:\wamp64\www\Agency\src\Model\Contact.php 177
+2024-03-28- 15:47:27 SQLSTATE[42S22]: Column not found: 1054 Champ 'contactName' inconnu dans field list 42S22 C:\wamp64\www\Agency\src\Model\Contact.php 177
+2024-03-28- 15:49:56 SQLSTATE[42S22]: Column not found: 1054 Champ 'contactName' inconnu dans field list 42S22 C:\wamp64\www\Agency\src\Model\Contact.php 187
+2024-03-28- 15:50:03 SQLSTATE[42S22]: Column not found: 1054 Champ 'contactName' inconnu dans field list 42S22 C:\wamp64\www\Agency\src\Model\Contact.php 187
+2024-03-28- 16:41:52 SQLSTATE[42000]: Syntax error or access violation: 1064 Erreur de syntaxe près de 'FROM Cibles
+            WHERE idCible NOT IN (SELECT idContact FROM Contacts)' à la ligne 3 42000 C:\wamp64\www\Agency\src\Model\Contact.php 118
+2024-03-28- 16:41:55 SQLSTATE[42000]: Syntax error or access violation: 1064 Erreur de syntaxe près de 'FROM Cibles
+            WHERE idCible NOT IN (SELECT idContact FROM Contacts)' à la ligne 3 42000 C:\wamp64\www\Agency\src\Model\Contact.php 118
+2024-03-28- 16:42:11 SQLSTATE[42000]: Syntax error or access violation: 1064 Erreur de syntaxe près de 'FROM Cibles
+            WHERE idCible NOT IN (SELECT idContact FROM Contacts)' à la ligne 3 42000 C:\wamp64\www\Agency\src\Model\Contact.php 118
 

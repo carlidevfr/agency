@@ -278,9 +278,16 @@
 						<th>Type</th>
 						<th>Mission</th>
 
-						{# Colonnes supp si planque #}
-					{% elseif "cible" in pageName|lower%}
+						{# Colonnes supp si Cible #}
+					{% elseif "cible" in pageName|lower %}
 						<th>Cible active ?</th>
+						<th>Prénom</th>
+						<th>Nom</th>
+						<th>Date de naissance
+						</th>
+						<th>Pays</th>
+
+					{% elseif "contact" in pageName|lower  %}
 						<th>Prénom</th>
 						<th>Nom</th>
 						<th>Date de naissance
@@ -312,6 +319,15 @@
 									Oui
 								{% endif %}
 							</td>
+							<td>{{ element.firstname }}</td>
+							<td>{{ element.lastname }}</td>
+							<td>{{ element.formattedBirthdate }}</td>
+							<td>{{ element.countryName }}</td>
+
+						{% endif %}
+
+						{# Colonnes supp si CONTACT #}
+						{% if "contact" in pageName|lower %}
 							<td>{{ element.firstname }}</td>
 							<td>{{ element.lastname }}</td>
 							<td>{{ element.formattedBirthdate }}</td>
@@ -425,6 +441,23 @@
 				<label for="addElementActive">La cible est active ? (Si non, il s'agit d'un agent, contact ou autre) :
 				</label><br>
 				<input type="checkbox" name="addElementActive" value='1' id=""><br><br>
+
+				<input type="hidden" name="tok" value={{ token }}>
+				<button type="submit">Soumettre</button>
+			</form>
+
+		{# Section add si on est sur la page contact #}
+		{% elseif "contact" in pageName|lower%}
+			<form action="{{base_url}}{{addUrl}}" method="post" enctype='multipart/form-data'>
+
+				<label for="addElementId">Nom de code du nouveau contact (si manquant le créer dans 'cible inactive' puis l'ajouter):
+				</label><br>
+				<select name="addElementId">
+				<option value="">Sélectionner une personne</option>
+					{% for item in cibles %}
+						<option value="{{ item.id }}">{{ item.valeur }}</option>
+					{% endfor %}
+				</select><br><br>
 
 				<input type="hidden" name="tok" value={{ token }}>
 				<button type="submit">Soumettre</button>
