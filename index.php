@@ -99,8 +99,6 @@ $router->addRoute('GET', BASE_URL . '/admin/manage-contact', 'AdminContactContro
 $router->addRoute('POST', BASE_URL . '/admin/manage-contact/add', 'AdminContactController', 'adminAddContact');
 $router->addRoute('GET', BASE_URL . '/admin/manage-contact/action/success', 'AdminContactController', 'adminSuccessActionContact');
 $router->addRoute('POST', BASE_URL . '/admin/manage-contact/delete', 'AdminContactController', 'adminDeleteContact');
-$router->addRoute('GET', BASE_URL . '/admin/manage-contact/update', 'AdminContactController', 'adminUpdateContactPage');
-$router->addRoute('POST', BASE_URL . '/admin/manage-contact/update', 'AdminContactController', 'adminUpdateContact');
 
 $method = $_SERVER['REQUEST_METHOD'];
 $uri = strtolower($_SERVER['REQUEST_URI']); // gère les minuscules et les majuscules

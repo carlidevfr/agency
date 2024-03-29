@@ -254,71 +254,34 @@ class Contact extends Model
         }
     }
 
-    public function getByContactId($ContactId)
-    {
-        try {
-            // retourne le contact en fonction de son id
-
-            $bdd = $this->connexionPDO();
-            $req = '
-            SELECT idContact AS id, contactName AS valeur
-            FROM Contacts
-        WHERE idContact  = :ContactId';
-
-            if (is_object($bdd)) {
-                // on teste si la connexion pdo a réussi
-                $stmt = $bdd->prepare($req);
-
-                if (!empty($ContactId)) {
-                    $stmt->bindValue(':ContactId', $ContactId, PDO::PARAM_INT);
-
-                    if ($stmt->execute()) {
-                        $contact = $stmt->fetch(PDO::FETCH_ASSOC);
-                        $stmt->closeCursor();
-                        return $contact;
-                    }
-                }
-            } else {
-                return 'une erreur est survenue';
-            }
-        } catch (Exception $e) {
-            $log = sprintf(
-                "%s %s %s %s %s",
-                date('Y-m-d- H:i:s'),
-                $e->getMessage(),
-                $e->getCode(),
-                $e->getFile(),
-                $e->getLine()
-            );
-            error_log($log . "\n\r", 3, './src/error.log');
-        }
-    }
-
     public function getRelatedContact($contactId)
     // Récupère tous les éléments liés à un contact
     {
         try {
-
-            // Initialisation de la liste des éléments liés
+           // Initialisation de la liste des éléments liés
             $relatedElements = array();
 
-            // Liste des tables avec des clés étrangères vers contact
+            // Liste des tables avec des clés étrangères vers Cible
             $tables = array(
-                'Missions' => 'missionContact'
+                'Contacts' => 'idContact',
             );
 
             // Boucle sur les tables pour récupérer les éléments liés
             foreach ($tables as $tableName => $foreignKey) {
 
                 $bdd = $this->connexionPDO();
-                $req = "SELECT * FROM $tableName WHERE $foreignKey = :contactId";
+                $req = "SELECT Missions.codeName
+                FROM Contacts
+                INNER JOIN ContactsInMission ON Contacts.idContact = ContactsInMission.idContact
+                INNER JOIN Missions ON ContactsInMission.idMission = Missions.idMission
+                WHERE Contacts.idContact =  :ContactId";
 
                 // on teste si la connexion pdo a réussi
                 if (is_object($bdd)) {
                     $stmt = $bdd->prepare($req);
 
                     if (!empty ($contactId) and !empty ($contactId)) {
-                        $stmt->bindValue(':contactId', $contactId, PDO::PARAM_INT);
+                        $stmt->bindValue(':ContactId', $contactId, PDO::PARAM_INT);
                         if ($stmt->execute()) {
                             $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             $stmt->closeCursor();
@@ -336,7 +299,6 @@ class Contact extends Model
 
             // Retourne la liste des éléments liés
             return $relatedElements;
-
         } catch (Exception $e) {
             $log = sprintf(
                 "%s %s %s %s %s",
@@ -348,16 +310,16 @@ class Contact extends Model
             );
             error_log($log . "\n\r", 3, './src/error.log');
         }
+
     }
 
     public function addContact($contactName)
+    // Ajoute un contact
     {
         try {
-            // Ajoute un contact
-
             $bdd = $this->connexionPDO();
             $req = '
-            INSERT INTO Contacts (contactName)
+            INSERT INTO Contacts (idContact)
             VALUES (:contactName)';
 
             if (is_object($bdd)) {
@@ -367,7 +329,7 @@ class Contact extends Model
                 if (!empty($contactName)) {
                     $stmt->bindValue(':contactName', $contactName, PDO::PARAM_STR);
                     if ($stmt->execute()) {
-                        return 'Le contact suivant a bien été ajouté : ' . $contactName;
+                        return 'Le contact a bien été ajouté ';
                     }
                 }
             } else {
@@ -388,10 +350,9 @@ class Contact extends Model
     }
 
     public function deleteContact($contactId)
+    // Supprime le contact selon l'id
     {
         try {
-            // Supprime le contact selon l'id
-
             $bdd = $this->connexionPDO();
             $req = '
             DELETE FROM Contacts
@@ -424,42 +385,4 @@ class Contact extends Model
         }
     }
 
-    public function updateContact($ContactId, $newName)
-    {
-        try {
-            // Modifie le contact selon l'id
-
-            $bdd = $this->connexionPDO();
-            $req = '
-            UPDATE Contacts
-            SET ContactName = :newContactName
-            WHERE idContact  = :ContactId';
-
-            // on teste si la connexion pdo a réussi
-            if (is_object($bdd)) {
-                $stmt = $bdd->prepare($req);
-
-                if (!empty($ContactId) and !empty($newName)) {
-                    $stmt->bindValue(':ContactId', $ContactId, PDO::PARAM_INT);
-                    $stmt->bindValue(':newContactName', $newName, PDO::PARAM_STR);
-                    if ($stmt->execute()) {
-                        return 'Le contact a bien été modifié : ' . $newName;
-                    }
-                }
-            } else {
-                return 'une erreur est survenue';
-            }
-        } catch (Exception $e) {
-            $log = sprintf(
-                "%s %s %s %s %s",
-                date('Y-m-d- H:i:s'),
-                $e->getMessage(),
-                $e->getCode(),
-                $e->getFile(),
-                $e->getLine()
-            );
-            error_log($log . "\n\r", 3, './src/error.log');
-            return 'Une erreur est survenue';
-        }
-    }
 }

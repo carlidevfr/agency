@@ -92,13 +92,22 @@
 				</ul>
 				{# utilisé pour Contacts ? #}
 			{% elseif tableName == 'Contacts' and tableName is not empty %}
-				<ul>
-					{% for contacts in items %}
-						<li>Contact :
-							{{ contacts.codeName }}</li>
-					{% endfor %}
-				</ul>
-
+				{#Sur la page contact ?#}
+				{% if "contact" in pageName|lower %}
+					<ul>
+						{% for contacts in items %}
+							<li>Mission :
+								{{ contacts.codeName }}</li>
+						{% endfor %}
+					</ul>
+				{% else %}
+					<ul>
+						{% for contacts in items %}
+							<li>Contact :
+								{{ contacts.codeName }}</li>
+						{% endfor %}
+					</ul>
+				{% endif %}
 				{# utilisé pour spécialités ? #}
 			{% elseif tableName == 'AgentsSpecialities' and tableName is not empty %}
 				<ul>
@@ -295,7 +304,12 @@
 						<th>Pays</th>
 
 					{% endif %}
-					<th>Modifier</th>
+
+					{# rien à modifier dans contact #}
+					{% if "contact" not in pageName|lower  %}
+						<th>Modifier</th>
+					{% endif %}
+
 					<th>Supprimer</th>
 				</tr>
 			</thead>
@@ -334,13 +348,17 @@
 							<td>{{ element.countryName }}</td>
 
 						{% endif %}
-						<td>
-							<form method="get" action="{{base_url}}{{updateUrl}}" enctype='multipart/form-data'>
-								<input type="hidden" name="UpdateElementId" value={{ element.id }}>
-								<input type="hidden" name="tok" value={{ token }}>
-								<button type="submit">Modifier</button>
-							</form>
-						</td>
+						{# rien à modifier dans contact #}
+						{% if "contact" not in pageName|lower  %}
+							<td>
+								<form method="get" action="{{base_url}}{{updateUrl}}" enctype='multipart/form-data'>
+									<input type="hidden" name="UpdateElementId" value={{ element.id }}>
+									<input type="hidden" name="tok" value={{ token }}>
+									<button type="submit">Modifier</button>
+								</form>
+							</td>
+						{% endif %}
+
 						<td>
 							<form method="post" action="{{base_url}}{{deleteUrl}}" enctype='multipart/form-data'>
 								<input type="hidden" name="deleteElementId" value={{ element.id }}>
@@ -446,14 +464,14 @@
 				<button type="submit">Soumettre</button>
 			</form>
 
-		{# Section add si on est sur la page contact #}
+			{# Section add si on est sur la page contact #}
 		{% elseif "contact" in pageName|lower%}
 			<form action="{{base_url}}{{addUrl}}" method="post" enctype='multipart/form-data'>
 
 				<label for="addElementId">Nom de code du nouveau contact (si manquant le créer dans 'cible inactive' puis l'ajouter):
 				</label><br>
 				<select name="addElementId">
-				<option value="">Sélectionner une personne</option>
+					<option value="">Sélectionner une personne</option>
 					{% for item in cibles %}
 						<option value="{{ item.id }}">{{ item.valeur }}</option>
 					{% endfor %}

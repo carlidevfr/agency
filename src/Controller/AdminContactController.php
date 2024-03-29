@@ -142,26 +142,11 @@ class AdminContactController
 
         // on récupère la planque ajoutée et le token
         if (isset ($_POST['tok']) and $this->Security->verifyToken($token, $_POST['tok'])) {
-            // le nom de code
-            (isset ($_POST['addElementName']) and !empty ($_POST['addElementName'])) ? $contactName = $this->Security->filter_form($_POST['addElementName']) : $contactName = '';
+            // l id
+            (isset ($_POST['addElementId']) and !empty ($_POST['addElementId'])) ? $contactName = $this->Security->filter_form($_POST['addElementId']) : $contactName = '';
 
-            //le prénom
-            (isset ($_POST['addElementFirstName']) and !empty ($_POST['addElementFirstName'])) ? $contactFirstName = $this->Security->filter_form($_POST['addElementFirstName']) : $contactFirstName = '';
-
-            //le nom
-            (isset ($_POST['addElementLastName']) and !empty ($_POST['addElementLastName'])) ? $contactLastName = $this->Security->filter_form($_POST['addElementLastName']) : $contactLastName = '';
-
-            //la date de naissance
-            (isset ($_POST['addElementBirthDate']) and !empty ($_POST['addElementBirthDate'])) ? $contactBirthDate = $this->Security->filter_form($_POST['addElementBirthDate']) : $contactBirthDate = null;
-
-            //le pays
-            (isset ($_POST['addElementCountry']) and !empty ($_POST['addElementCountry'])) ? $contactCountry = $this->Security->filter_form($_POST['addElementCountry']) : $contactCountry = '';
-           
-            //contact active ?
-            (isset ($_POST['addElementActive']) and $_POST['addElementActive'] === '1') ? $contactActive = $this->Security->filter_form($_POST['addElementActive']) : $contactActive = '0';
-            
             // on fait l'ajout en BDD et on récupère le résultat
-            $res = $this->Contact->addContact($contactName, $contactFirstName, $contactLastName, $contactBirthDate, $contactCountry, $contactActive);
+            $res = $this->Contact->addContact($contactName);
 
             // Stockage des résultats dans la session puis redirection pour éviter renvoi au rafraichissement
             $_SESSION['resultat'] = $res;
@@ -202,98 +187,5 @@ class AdminContactController
 
     }
 
-    public function adminUpdateContactPage()
-    // Page permettant la saisie pour la modification de contact
-    {
-        //On vérifie si on a le droit d'être là (admin)
-        $this->Security->verifyAccess();
-
-        // On récupère le token
-        $token = $this->Security->getToken();
-
-        //Récupère l'id du contact à modifier
-        (isset ($_GET['UpdateElementId']) and !empty ($_GET['UpdateElementId']) and isset ($_GET['tok']) and $this->Security->verifyToken($token, $_GET['tok'])) ? $contactAction = $this->Security->filter_form($_GET['UpdateElementId']) : $contactAction = '';
-
-        // Récupère le contact à modifier
-        $contact = $this->Contact->getByContactId($contactAction);
-        $modifySection = true;
-
-        // on regénère le token
-        $this->Security->regenerateToken();
-
-        // On récupère le token pour le nouveau form
-        $token = $this->Security->getToken();
-
-        // On récupère la liste des pays
-        $countries = $this->Country->getAllCountryNames();
-
-        //twig
-        $loader = new Twig\Loader\FilesystemLoader('./src/templates');
-        $twig = new Twig\Environment($loader);
-        $template = $twig->load('adminManageElement.twig');
-
-        echo $template->render([
-            'base_url' => BASE_URL,
-            'pageName' => 'contacts',
-            'elements' => $contact,
-            'countries' => $countries,
-            'modifySection' => $modifySection,
-            'deleteUrl' => '/admin/manage-contact/delete',
-            'addUrl' => '/admin/manage-contact/add',
-            'updateUrl' => '/admin/manage-contact/update',
-            'previousUrl' => '/admin/manage-contact',
-            'token' => $token
-        ]);
-
-    }
-
-    public function adminUpdateContact()
-    // Modification de contact
-    {
-        //On vérifie si on a le droit d'être là (admin)
-        $this->Security->verifyAccess();
-
-        // On récupère le token
-        $token = $this->Security->getToken();
-
-        // on récupère la planque ajoutée et le token
-        if (isset ($_POST['tok']) and $this->Security->verifyToken($token, $_POST['tok'])) {
-            // l'id
-            (isset ($_POST['updateElementId']) and !empty ($_POST['updateElementId'])) ? $contactId = $this->Security->filter_form($_POST['updateElementId']) : $contactId = '';
-
-            // le nom de code
-            (isset ($_POST['updateElementName']) and !empty ($_POST['updateElementName'])) ? $contactName = $this->Security->filter_form($_POST['updateElementName']) : $contactName = '';
-
-            //le prénom
-            (isset ($_POST['updateElementFirstName']) and !empty ($_POST['updateElementFirstName'])) ? $contactFirstName = $this->Security->filter_form($_POST['updateElementFirstName']) : $contactFirstName = '';
-
-            //le nom
-            (isset ($_POST['updateElementLastName']) and !empty ($_POST['updateElementLastName'])) ? $contactLastName = $this->Security->filter_form($_POST['updateElementLastName']) : $contactLastName = '';
-
-            //la date de naissance
-            (isset ($_POST['updateElementBirthDate']) and !empty ($_POST['updateElementBirthDate'])) ? $contactBirthDate = $this->Security->filter_form($_POST['updateElementBirthDate']) : $contactBirthDate = null;
-
-            //le pays
-            (isset ($_POST['updateElementCountry']) and !empty ($_POST['updateElementCountry'])) ? $contactCountry = $this->Security->filter_form($_POST['updateElementCountry']) : $contactCountry = '';
-           
-            //contact active ?
-            (isset ($_POST['updateElementActive']) and $_POST['updateElementActive'] === '1') ? $contactActive = $this->Security->filter_form($_POST['updateElementActive']) : $contactActive = '0';
-            
-
-            // on fait la modification en BDD et on récupère le résultat
-            $res = $this->Contact->updateContact($contactId, $contactName, $contactFirstName, $contactLastName, $contactBirthDate, $contactCountry, $contactActive);
-
-            // Stockage des résultats dans la session puis redirection pour éviter renvoi au rafraichissement
-            $_SESSION['resultat'] = $res;
-        }
-
-        // on regénère le token
-        $this->Security->regenerateToken();
-
-        header('Location: ' . BASE_URL . '/admin/manage-contact/action/success');
-        exit;
-
-
-    }
 
 }
