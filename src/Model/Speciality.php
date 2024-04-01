@@ -5,10 +5,9 @@ require_once './src/Model/Common/Security.php';
 class Speciality extends Model
 {
     public function getAllSpecialityNames()
+    // retourne toutes les specialités de missions
     {
         try {
-            // retourne tous les speciality de missions
-
             $bdd = $this->connexionPDO();
             $req = '
         SELECT idSpeciality AS id, speName AS valeur
@@ -39,12 +38,10 @@ class Speciality extends Model
     }
 
     public function getSearchSpecialityNames($speName, $page, $itemsPerPage)
+    // retourne les specialités recherchées
+    // si vide retourne tout
     {
         try {
-
-            // retourne les speciality recherchés
-            // si vide tous les speciality
-
             // Calculez l'offset pour la requête : Page 1,2 etc
             $offset = ($page - 1) * $itemsPerPage;
 
@@ -89,10 +86,9 @@ class Speciality extends Model
     }
 
     public function getPaginationAllSpecialityNames($page, $itemsPerPage)
+    // retourne toutes les specialités triées par page
     {
         try {
-            // retourne tous les speciality triés par page
-
             // Calculez l'offset pour la requête : Page 1,2 etc
             $offset = ($page - 1) * $itemsPerPage;
 
@@ -135,10 +131,9 @@ class Speciality extends Model
     }
 
     public function getBySpecialityId($SpecialityId)
+    // retourne la specialité en fonction de son id
     {
         try {
-            // retourne le speciality en fonction de son id
-
             $bdd = $this->connexionPDO();
             $req = '
             SELECT idSpeciality AS id, speName AS valeur
@@ -175,7 +170,7 @@ class Speciality extends Model
     }
 
     public function getRelatedSpeciality($specialityId)
-    // Récupère tous les éléments liés à un speciality
+    // Récupère tous les éléments liés à une specialité
     {
         try {
 
@@ -245,10 +240,9 @@ class Speciality extends Model
     }
 
     public function addSpeciality($specialityName)
+    // Ajoute une specialité
     {
         try {
-            // Ajoute un speciality
-
             $bdd = $this->connexionPDO();
             $req = '
             INSERT INTO Speciality (speName)
@@ -282,10 +276,9 @@ class Speciality extends Model
     }
 
     public function deleteSpeciality($specialityId)
+    // Supprime la specialité selon l'id
     {
         try {
-            // Supprime le speciality selon l'id
-
             $bdd = $this->connexionPDO();
             $req = '
             DELETE FROM Speciality
@@ -319,10 +312,9 @@ class Speciality extends Model
     }
 
     public function updateSpeciality($SpecialityId, $newName)
+    // Modifie la specialité selon l'id
     {
         try {
-            // Modifie le speciality selon l'id
-
             $bdd = $this->connexionPDO();
             $req = '
             UPDATE Speciality

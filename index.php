@@ -27,6 +27,7 @@ require_once './src/Controller/AdminTypeController.php';
 require_once './src/Controller/AdminSpecialityController.php';
 require_once './src/Controller/AdminPlanqueController.php';
 require_once './src/Controller/AdminCibleController.php';
+require_once './src/Controller/AdminAgentController.php';
 require_once './src/Controller/AdminContactController.php';
 require_once './src/Model/Common/Security.php';
 
@@ -99,6 +100,11 @@ $router->addRoute('GET', BASE_URL . '/admin/manage-contact', 'AdminContactContro
 $router->addRoute('POST', BASE_URL . '/admin/manage-contact/add', 'AdminContactController', 'adminAddContact');
 $router->addRoute('GET', BASE_URL . '/admin/manage-contact/action/success', 'AdminContactController', 'adminSuccessActionContact');
 $router->addRoute('POST', BASE_URL . '/admin/manage-contact/delete', 'AdminContactController', 'adminDeleteContact');
+
+$router->addRoute('GET', BASE_URL . '/admin/manage-agent', 'AdminAgentController', 'adminAgentPage');
+$router->addRoute('POST', BASE_URL . '/admin/manage-agent/add', 'AdminAgentController', 'adminAddAgent');
+$router->addRoute('GET', BASE_URL . '/admin/manage-agent/action/success', 'AdminAgentController', 'adminSuccessActionAgent');
+$router->addRoute('POST', BASE_URL . '/admin/manage-agent/delete', 'AdminAgentController', 'adminDeleteAgent');
 
 $method = $_SERVER['REQUEST_METHOD'];
 $uri = strtolower($_SERVER['REQUEST_URI']); // gère les minuscules et les majuscules

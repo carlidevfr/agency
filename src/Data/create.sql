@@ -206,7 +206,7 @@ INSERT INTO agentsspecialities(agent_id, speciality_id) VALUES
 
 INSERT INTO Missions (title, codeName, description, beginDate, endDate, missionCountry, missionType, missionStatus, missionSpeciality) VALUES
     ('Un plan presque parfait <script> alert("hello") </script>','KLURX','Une mission de suivi dans un cardre chalereux','2023-11-28', '2023-12-31', 1, 1, 2, 3),
-    ('Un tout petit trou','RODOX','Une mission pour petits et grands','2023-11-25', '2023-12-31', 1, 2, 2, 1),
+    ('Un tout petit couteau','RODOX','Une mission pour tous','2023-11-25', '2023-12-31', 1, 2, 2, 1),
     ('Un voyage agréable','INDA','Une mission de surveillance','2023-11-25', '2026-12-31', 2, 1, 2, 3),
     ('Un petit souvenir','OUPS','On a besoin de son sac','2023-11-25', '2024-12-31', 4, 3, 2, 3);
 

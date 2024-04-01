@@ -296,12 +296,23 @@
 						</th>
 						<th>Pays</th>
 
+						{# Colonnes supp si contact #}
 					{% elseif "contact" in pageName|lower  %}
 						<th>Prénom</th>
 						<th>Nom</th>
 						<th>Date de naissance
 						</th>
 						<th>Pays</th>
+
+
+						{# Colonnes supp si agent #}
+					{% elseif "agent" in pageName|lower  %}
+						<th>Prénom</th>
+						<th>Nom</th>
+						<th>Date de naissance</th>
+						<th>Pays</th>
+						<th>Spécialités</th>
+
 
 					{% endif %}
 
@@ -313,190 +324,229 @@
 					<th>Supprimer</th>
 				</tr>
 			</thead>
-			<tbody>
-				{% for element in elements %}
-					<tr>
-						<td>{{ element.valeur }}</td>
+		</tr>
+	</thead>
+	<tbody>
+		{% for element in elements %}
+			<tr>
+				<td>{{ element.valeur }}</td>
 
-						{# Colonnes supp si planque #}
-						{% if "planque" in pageName|lower %}
-							<td>{{ element.location }}</td>
-							<td>{{ element.planqueCountry }}</td>
-							<td>{{ element.type }}</td>
-							<td>{{ element.missionName }}</td>
-						{% endif %}
-
-						{# Colonnes supp si cible #}
-						{% if "cible" in pageName|lower %}
-							<td>
-								{% if element.isActive ==1 %}
-									Oui
-								{% endif %}
-							</td>
-							<td>{{ element.firstname }}</td>
-							<td>{{ element.lastname }}</td>
-							<td>{{ element.formattedBirthdate }}</td>
-							<td>{{ element.countryName }}</td>
-
-						{% endif %}
-
-						{# Colonnes supp si CONTACT #}
-						{% if "contact" in pageName|lower %}
-							<td>{{ element.firstname }}</td>
-							<td>{{ element.lastname }}</td>
-							<td>{{ element.formattedBirthdate }}</td>
-							<td>{{ element.countryName }}</td>
-
-						{% endif %}
-						{# rien à modifier dans contact #}
-						{% if "contact" not in pageName|lower  %}
-							<td>
-								<form method="get" action="{{base_url}}{{updateUrl}}" enctype='multipart/form-data'>
-									<input type="hidden" name="UpdateElementId" value={{ element.id }}>
-									<input type="hidden" name="tok" value={{ token }}>
-									<button type="submit">Modifier</button>
-								</form>
-							</td>
-						{% endif %}
-
-						<td>
-							<form method="post" action="{{base_url}}{{deleteUrl}}" enctype='multipart/form-data'>
-								<input type="hidden" name="deleteElementId" value={{ element.id }}>
-								<input type="hidden" name="tok" value={{ token }}>
-								<button type="submit">Supprimer</button>
-							</form>
-						</td>
-					</tr>
-				{% endfor %}
-			</tbody>
-		</table>
-
-		{# Pagination #}
-		<div class="pagination">
-			page
-			<br>
-			{% if activePage > 1 %}
-				<a href="?page={{ activePage - 1 }}&search={{search}}">Page précédente</a>
-			{% endif %}
-
-			{% for page in 1..pageMax %}
-				{% if page == activePage %}
-					<span class="current-page">{{ page }}</span>
-				{% else %}
-					<a href="?page={{ page }}&search={{search}}">{{ page }}</a>
+				{# Colonnes supp si planque #}
+				{% if "planque" in pageName|lower %}
+					<td>{{ element.location }}</td>
+					<td>{{ element.planqueCountry }}</td>
+					<td>{{ element.type }}</td>
+					<td>{{ element.missionName }}</td>
 				{% endif %}
-			{% endfor %}
 
-			{% if activePage < pageMax %}
-				<a href="?page={{ activePage + 1 }}&search={{search}}">Page suivante</a>
-			{% endif %}
-		</div><br>
+				{# Colonnes supp si cible #}
+				{% if "cible" in pageName|lower %}
+					<td>
+						{% if element.isActive ==1 %}
+							Oui
+						{% endif %}
+					</td>
+					<td>{{ element.firstname }}</td>
+					<td>{{ element.lastname }}</td>
+					<td>{{ element.formattedBirthdate }}</td>
+					<td>{{ element.countryName }}</td>
 
-		{# Section add ------------------------------------------------------------------------------------------#}
+				{% endif %}
 
-		<h2>Souhaitez vous faire un ajout :
-			{{pageName}}
-			?</h2>
+				{# Colonnes supp si CONTACT #}
+				{% if "contact" in pageName|lower %}
+					<td>{{ element.firstname }}</td>
+					<td>{{ element.lastname }}</td>
+					<td>{{ element.formattedBirthdate }}</td>
+					<td>{{ element.countryName }}</td>
 
-		{# Section add si on est sur la page planque #}
-		{% if "planque" in pageName|lower %}
-			<form action="{{base_url}}{{addUrl}}" method="post" enctype='multipart/form-data'>
-				<label for="addElementName">Nom de la nouvelle planque :
-				</label><br>
-				<input required type="text" name="addElementName" id="" placeholder="nom">
-				<br><br>
+				{% endif %}
 
-				<label for="addElementAdress">Adresse de la nouvelle planque :
-				</label><br>
-				<input required type="text" name="addElementAdress" id="" placeholder="adresse"><br><br>
+				{# Colonnes supp si Agent #}
+				{% if "agent" in pageName|lower %}
+					<td>{{ element.firstname }}</td>
+					<td>{{ element.lastname }}</td>
+					<td>{{ element.formattedBirthdate }}</td>
+					<td>{{ element.countryName }}</td>
+					<td>{{ element.specialties }}</td>
 
-				<label for="addElementCountry">Pays de la nouvelle planque :
-				</label><br>
-				<select name="addElementCountry">
-					{% for item in countries %}
-						<option value="{{ item.id }}">{{ item.valeur }}</option>
-					{% endfor %}
-				</select><br><br>
 
-				<label for="addElementType">Type de planque :
-				</label><br>
-				<input required type="text" name="addElementType" id="" placeholder="maison/appartement"><br><br>
+				{% endif %}
+				{# rien à modifier dans contact #}
+				{% if "contact" not in pageName|lower  %}
+					<td>
+						<form method="get" action="{{base_url}}{{updateUrl}}" enctype='multipart/form-data'>
+							<input type="hidden" name="UpdateElementId" value={{ element.id }}>
+							<input type="hidden" name="tok" value={{ token }}>
+							<button type="submit">Modifier</button>
+						</form>
+					</td>
+				{% endif %}
 
-				<input type="hidden" name="tok" value={{ token }}>
-				<button type="submit">Soumettre</button>
-			</form>
+				<td>
+					<form method="post" action="{{base_url}}{{deleteUrl}}" enctype='multipart/form-data'>
+						<input type="hidden" name="deleteElementId" value={{ element.id }}>
+						<input type="hidden" name="tok" value={{ token }}>
+						<button type="submit">Supprimer</button>
+					</form>
+				</td>
+			</tr>
+		{% endfor %}
+	</tbody>
+</table>
 
-			{# Section add si on est sur la page cible #}
-		{% elseif "cible" in pageName|lower%}
-			<form action="{{base_url}}{{addUrl}}" method="post" enctype='multipart/form-data'>
-				<label for="addElementName">Nom de code de la nouvelle cible :
-				</label><br>
-				<input required type="text" name="addElementName" id="" placeholder="Code">
-				<br><br>
-
-				<label for="addElementFirstName">Prénom de la nouvelle cible :
-				</label><br>
-				<input required type="text" name="addElementFirstName" id="" placeholder="prénom">
-				<br><br>
-
-				<label for="addElementLastName">Nom de la nouvelle cible :
-				</label><br>
-				<input required type="text" name="addElementLastName" id="" placeholder="nom">
-				<br><br>
-
-				<label for="addElementBirthDate">Date de naissance de la nouvelle cible :
-				</label><br>
-				<input required type="date" name="addElementBirthDate" id=""><br><br>
-
-				<label for="addElementCountry">Pays de la nouvelle cible :
-				</label><br>
-				<select name="addElementCountry">
-					{% for item in countries %}
-						<option value="{{ item.id }}">{{ item.valeur }}</option>
-					{% endfor %}
-				</select><br><br>
-
-				<label for="addElementActive">La cible est active ? (Si non, il s'agit d'un agent, contact ou autre) :
-				</label><br>
-				<input type="checkbox" name="addElementActive" value='1' id=""><br><br>
-
-				<input type="hidden" name="tok" value={{ token }}>
-				<button type="submit">Soumettre</button>
-			</form>
-
-			{# Section add si on est sur la page contact #}
-		{% elseif "contact" in pageName|lower%}
-			<form action="{{base_url}}{{addUrl}}" method="post" enctype='multipart/form-data'>
-
-				<label for="addElementId">Nom de code du nouveau contact (si manquant le créer dans 'cible inactive' puis l'ajouter):
-				</label><br>
-				<select name="addElementId">
-					<option value="">Sélectionner une personne</option>
-					{% for item in cibles %}
-						<option value="{{ item.id }}">{{ item.valeur }}</option>
-					{% endfor %}
-				</select><br><br>
-
-				<input type="hidden" name="tok" value={{ token }}>
-				<button type="submit">Soumettre</button>
-			</form>
-
-		{% else %}
-			{# Section add pour les autres éléments #}
-
-			<form action="{{base_url}}{{addUrl}}" method="post" enctype='multipart/form-data'>
-				<label for="addElementName">Nom du nouvel élément :
-				</label>
-				<input type="text" name="addElementName" id="" placeholder="{{pageName}}">
-				<input type="hidden" name="tok" value={{ token }}>
-				<button type="submit">Soumettre</button>
-			</form>
-		{% endif %}
-
-		<br>
-		<br>
-
-		{# Retour vers page d'accueil admin #}
-		<a href="{{base_url}}/admin">Retour</a>
+{# Pagination #}
+<div class="pagination">
+	page
+	<br>
+	{% if activePage > 1 %}
+		<a href="?page={{ activePage - 1 }}&search={{search}}">Page précédente</a>
 	{% endif %}
+
+	{% for page in 1..pageMax %}
+		{% if page == activePage %}
+			<span class="current-page">{{ page }}</span>
+		{% else %}
+			<a href="?page={{ page }}&search={{search}}">{{ page }}</a>
+		{% endif %}
+	{% endfor %}
+
+	{% if activePage < pageMax %}
+		<a href="?page={{ activePage + 1 }}&search={{search}}">Page suivante</a>
+	{% endif %}
+</div><br>
+
+{# Section add ------------------------------------------------------------------------------------------#}
+
+<h2>Souhaitez vous faire un ajout :
+	{{pageName}}
+	?</h2>
+
+{# Section add si on est sur la page planque #}
+{% if "planque" in pageName|lower %}
+	<form action="{{base_url}}{{addUrl}}" method="post" enctype='multipart/form-data'>
+		<label for="addElementName">Nom de la nouvelle planque :
+		</label><br>
+		<input required type="text" name="addElementName" id="" placeholder="nom">
+		<br><br>
+
+		<label for="addElementAdress">Adresse de la nouvelle planque :
+		</label><br>
+		<input required type="text" name="addElementAdress" id="" placeholder="adresse"><br><br>
+
+		<label for="addElementCountry">Pays de la nouvelle planque :
+		</label><br>
+		<select name="addElementCountry">
+			{% for item in countries %}
+				<option value="{{ item.id }}">{{ item.valeur }}</option>
+			{% endfor %}
+		</select><br><br>
+
+		<label for="addElementType">Type de planque :
+		</label><br>
+		<input required type="text" name="addElementType" id="" placeholder="maison/appartement"><br><br>
+
+		<input type="hidden" name="tok" value={{ token }}>
+		<button type="submit">Soumettre</button>
+	</form>
+
+{# Section add si on est sur la page cible #}
+{% elseif "cible" in pageName|lower%}
+	<form action="{{base_url}}{{addUrl}}" method="post" enctype='multipart/form-data'>
+		<label for="addElementName">Nom de code de la nouvelle cible :
+		</label><br>
+		<input required type="text" name="addElementName" id="" placeholder="Code">
+		<br><br>
+
+		<label for="addElementFirstName">Prénom de la nouvelle cible :
+		</label><br>
+		<input required type="text" name="addElementFirstName" id="" placeholder="prénom">
+		<br><br>
+
+		<label for="addElementLastName">Nom de la nouvelle cible :
+		</label><br>
+		<input required type="text" name="addElementLastName" id="" placeholder="nom">
+		<br><br>
+
+		<label for="addElementBirthDate">Date de naissance de la nouvelle cible :
+		</label><br>
+		<input required type="date" name="addElementBirthDate" id=""><br><br>
+
+		<label for="addElementCountry">Pays de la nouvelle cible :
+		</label><br>
+		<select name="addElementCountry">
+			{% for item in countries %}
+				<option value="{{ item.id }}">{{ item.valeur }}</option>
+			{% endfor %}
+		</select><br><br>
+
+		<label for="addElementActive">La cible est active ? (Si non, il s'agit d'un agent, contact ou autre) :
+		</label><br>
+		<input type="checkbox" name="addElementActive" value='1' id=""><br><br>
+
+		<input type="hidden" name="tok" value={{ token }}>
+		<button type="submit">Soumettre</button>
+	</form>
+
+{# Section add si on est sur la page contact #}
+{% elseif "contact" in pageName|lower%}
+	<form action="{{base_url}}{{addUrl}}" method="post" enctype='multipart/form-data'>
+
+		<label for="addElementId">Nom de code du nouveau contact (si manquant le créer dans 'cible inactive' puis l'ajouter):
+		</label><br>
+		<select name="addElementId">
+			<option value="">Sélectionner une personne</option>
+			{% for item in cibles %}
+				<option value="{{ item.id }}">{{ item.valeur }}</option>
+			{% endfor %}
+		</select><br><br>
+
+		<input type="hidden" name="tok" value={{ token }}>
+		<button type="submit">Soumettre</button>
+	</form>
+
+{# Section add si on est sur la page agent #}
+{% elseif "agent" in pageName|lower%}
+	<form action="{{base_url}}{{addUrl}}" method="post" enctype='multipart/form-data'>
+
+		<label for="addElementId">Ajouter le rôle agent à : <br>
+		(si manquant le créer dans 'cible inactive' puis l'ajouter):
+		</label><br>
+		<select name="addElementId">
+			<option value="">Sélectionner une personne</option>
+			{% for item in cibles %}
+				<option value="{{ item.id }}">{{ item.valeur }}</option>
+			{% endfor %}
+		</select><br><br>
+
+		<label for="addElementCodeName">Nom de code :
+		</label><br>
+		<input required type="text" name="addElementCodeName" id="" placeholder="nom">
+		<br><br>
+
+		<label for="addElementSpe">Sélectionner les spécialités de l'agent :
+		</label><br>
+		
+		{% for item in spe %}
+				<input type="checkbox" name="addElementSpe" value="{{ item.id }}" id="">{{ item.valeur }}<br>
+		{% endfor %}<br>
+		<input type="hidden" name="tok" value={{ token }}>
+		<button type="submit">Soumettre</button>
+	</form>
+{% else %}
+{# Section add pour les autres éléments #}
+
+	<form action="{{base_url}}{{addUrl}}" method="post" enctype='multipart/form-data'>
+		<label for="addElementName">Nom du nouvel élément :
+		</label>
+		<input type="text" name="addElementName" id="" placeholder="{{pageName}}">
+		<input type="hidden" name="tok" value={{ token }}>
+		<button type="submit">Soumettre</button>
+	</form>
 {% endif %}
+
+<br>
+<br>
+
+{# Retour vers page d'accueil admin #}
+<a href="{{base_url}}/admin">Retour</a>{% endif %}{% endif %}
