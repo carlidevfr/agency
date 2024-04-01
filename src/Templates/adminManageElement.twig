@@ -90,6 +90,12 @@
 							{{ agent.codeAgent }}</li>
 					{% endfor %}
 				</ul>
+				<ul>
+					{% for agent in items %}
+						<li>Mission :
+							{{ agent.codeName }}</li>
+					{% endfor %}
+				</ul>
 				{# utilisé pour Contacts ? #}
 			{% elseif tableName == 'Contacts' and tableName is not empty %}
 				{#Sur la page contact ?#}
@@ -309,6 +315,7 @@
 					{% elseif "agent" in pageName|lower  %}
 						<th>Prénom</th>
 						<th>Nom</th>
+						<th>Ancien code contact</th>
 						<th>Date de naissance</th>
 						<th>Pays</th>
 						<th>Spécialités</th>
@@ -366,6 +373,7 @@
 				{% if "agent" in pageName|lower %}
 					<td>{{ element.firstname }}</td>
 					<td>{{ element.lastname }}</td>
+					<td>{{element.codeName}}</td>
 					<td>{{ element.formattedBirthdate }}</td>
 					<td>{{ element.countryName }}</td>
 					<td>{{ element.specialties }}</td>

@@ -135,6 +135,7 @@ class Agent extends Model
             Agents.codeAgent AS valeur,
             Cibles.firstname,
             Cibles.lastname,
+            Cibles.codeName,
             DATE_FORMAT(Cibles.birthdate, '%d/%m/%Y') AS formattedBirthdate,
             Country.countryName AS countryName,
             GROUP_CONCAT(Speciality.speName SEPARATOR ', ') AS specialties
@@ -202,6 +203,7 @@ class Agent extends Model
             Agents.codeAgent AS valeur,
             Cibles.firstname,
             Cibles.lastname,
+            Cibles.codeName,
             DATE_FORMAT(Cibles.birthdate, '%d/%m/%Y') AS formattedBirthdate,
             Country.countryName AS countryName,
             GROUP_CONCAT(Speciality.speName SEPARATOR ', ') AS specialties
@@ -267,7 +269,8 @@ class Agent extends Model
             foreach ($tables as $tableName => $foreignKey) {
 
                 $bdd = $this->connexionPDO();
-                $req = "SELECT Missions.codeName
+                $req = "SELECT Missions.codeName,
+                Agents.codeAgent
                 FROM Agents
                 INNER JOIN AgentsInMission ON Agents.idAgent = AgentsInMission.idAgent
                 INNER JOIN Missions ON AgentsInMission.idMission = Missions.idMission
@@ -377,24 +380,40 @@ class Agent extends Model
     {
         try {
             $bdd = $this->connexionPDO();
-            $req = '
-            DELETE FROM Agents
-            WHERE idAgent  = :agentId';
-
             // on teste si la connexion pdo a réussi
             if (is_object($bdd)) {
-                $stmt = $bdd->prepare($req);
 
-                if (!empty($agentId)) {
-                    $stmt->bindValue(':agentId', $agentId, PDO::PARAM_STR);
-                    if ($stmt->execute()) {
-                        return 'Le agent a bien été supprimé ';
-                    }
+                // Commencer les requêtes (lot)
+                $bdd->beginTransaction();
+
+                // Supprimer la ligne correspondante dans la table AgentsSpecialities
+                $stmtDeleteSpecialities = $bdd->prepare('DELETE FROM AgentsSpecialities WHERE agent_id = :agentId');
+                $stmtDeleteSpecialities->bindValue(':agentId', $agentId, PDO::PARAM_INT);
+                if (!$stmtDeleteSpecialities->execute()) {
+                    $bdd->rollBack();
+                    return 'Une erreur est survenue lors de la suppression des spécialités de l\'agent.';
                 }
+
+                $stmtDeleteAgent = $bdd->prepare('DELETE FROM Agents WHERE idAgent = :agentId');
+                $stmtDeleteAgent->bindValue(':agentId', $agentId, PDO::PARAM_INT);
+
+                if (!$stmtDeleteAgent->execute()) {
+                    $bdd->rollBack();
+                    return 'Une erreur est survenue lors de la suppression de l\'agent.';
+                }
+
+                // Valider la transaction
+                $bdd->commit();
+                return 'Cet agent a été supprimé avec succès.';
+
             } else {
                 return 'une erreur est survenue';
             }
         } catch (Exception $e) {
+
+            // En cas d'erreur, rollback de la transaction
+            $bdd->rollBack();
+
             $log = sprintf(
                 "%s %s %s %s %s",
                 date('Y-m-d- H:i:s'),
