@@ -311,7 +311,7 @@ class Agent extends Model
     }
 
     public function addAgent($agentId, $agentName, $agentSpeList)
-    /// Ajoute un agent et lie les spécialités correspondantes
+    // Ajoute un agent et lie les spécialités correspondantes
     {
         try {
             $bdd = $this->connexionPDO();
