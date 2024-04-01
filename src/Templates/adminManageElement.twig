@@ -239,6 +239,40 @@
 
 		</form>
 
+	{% elseif "agent" in pageName|lower%}
+		{# Section 'update' si on est sur la page agent #}
+		Ancien nom de code de l'agent:
+		{{elements.valeur}}<br>
+		Anciennes spécialités de l'agent:
+		{{elements.specialties}}<br>
+
+
+		<br><br>
+		Nouveau :
+		<br><br>
+
+		<form action="{{base_url}}{{updateUrl}}" method="post" enctype="multipart/form-data">
+			<input type="hidden" name="updateElementId" value={{ elements.id }}>
+			<input type="hidden" name="tok" value={{ token }}>
+
+			<label for="updateElementName">Nom de code modifié :
+			</label><br>
+			<input type="text" name="updateElementName" id="" placeholder="Code"><br><br>
+
+			<label for="updateElementSpe">Sélectionner les spécialités de l'agent (toutes ou laisser vide pour ne rien modifier):
+			</label><br>
+
+			{% for item in spe %}
+				<input type="checkbox" name="updateElementSpe[]" value="{{ item.id }}" id="">{{ item.valeur }}<br>
+			{% endfor %}<br>
+			<br><br>
+
+
+
+			<button type="submit">Soumettre</button>
+
+		</form>
+
 	{% else %}
 		{# Section 'update' pour les autres éléments #}
 
@@ -458,7 +492,7 @@
 		<button type="submit">Soumettre</button>
 	</form>
 
-{# Section add si on est sur la page cible #}
+	{# Section add si on est sur la page cible #}
 {% elseif "cible" in pageName|lower%}
 	<form action="{{base_url}}{{addUrl}}" method="post" enctype='multipart/form-data'>
 		<label for="addElementName">Nom de code de la nouvelle cible :
@@ -496,7 +530,7 @@
 		<button type="submit">Soumettre</button>
 	</form>
 
-{# Section add si on est sur la page contact #}
+	{# Section add si on est sur la page contact #}
 {% elseif "contact" in pageName|lower%}
 	<form action="{{base_url}}{{addUrl}}" method="post" enctype='multipart/form-data'>
 
@@ -513,12 +547,13 @@
 		<button type="submit">Soumettre</button>
 	</form>
 
-{# Section add si on est sur la page agent #}
+	{# Section add si on est sur la page agent #}
 {% elseif "agent" in pageName|lower%}
 	<form action="{{base_url}}{{addUrl}}" method="post" enctype='multipart/form-data'>
 
-		<label for="addElementId">Ajouter le rôle agent à : <br>
-		(si manquant le créer dans 'cible inactive' puis l'ajouter):
+		<label for="addElementId">Ajouter le rôle agent à :
+			<br>
+			(si manquant le créer dans 'cible inactive' puis l'ajouter):
 		</label><br>
 		<select name="addElementId">
 			<option value="">Sélectionner une personne</option>
@@ -534,15 +569,15 @@
 
 		<label for="addElementSpe">Sélectionner les spécialités de l'agent :
 		</label><br>
-		
+
 		{% for item in spe %}
-				<input type="checkbox" name="addElementSpe[]" value="{{ item.id }}" id="">{{ item.valeur }}<br>
+			<input type="checkbox" name="addElementSpe[]" value="{{ item.id }}" id="">{{ item.valeur }}<br>
 		{% endfor %}<br>
 		<input type="hidden" name="tok" value={{ token }}>
 		<button type="submit">Soumettre</button>
 	</form>
 {% else %}
-{# Section add pour les autres éléments #}
+	{# Section add pour les autres éléments #}
 
 	<form action="{{base_url}}{{addUrl}}" method="post" enctype='multipart/form-data'>
 		<label for="addElementName">Nom du nouvel élément :

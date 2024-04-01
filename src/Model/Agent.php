@@ -253,6 +253,56 @@ class Agent extends Model
         }
     }
 
+    public function getByAgentId($id)
+    // l'agent selon son id
+    {
+        try {
+            $bdd = $this->connexionPDO();
+            $req = "
+            SELECT
+            Agents.idAgent AS id,
+            Agents.codeAgent AS valeur,
+            GROUP_CONCAT(Speciality.speName SEPARATOR ', ') AS specialties
+        FROM
+            Agents
+        LEFT JOIN
+            AgentsSpecialities ON Agents.idAgent = AgentsSpecialities.agent_id
+        LEFT JOIN
+            Speciality ON AgentsSpecialities.speciality_id = Speciality.idSpeciality
+        WHERE idAgent  = :idAgent
+        GROUP BY
+            Agents.idAgent";
+
+            if (is_object($bdd)) {
+                // on teste si la connexion pdo a réussi
+                $stmt = $bdd->prepare($req);
+
+                if (!empty($id)) {
+                    $stmt->bindValue(':idAgent', $id, PDO::PARAM_INT);
+
+                    if ($stmt->execute()) {
+                        $agent = $stmt->fetch(PDO::FETCH_ASSOC);
+                        $stmt->closeCursor();
+                        return $agent;
+                    }
+                }
+
+            } else {
+                return 'une erreur est survenue';
+            }
+        } catch (Exception $e) {
+            $log = sprintf(
+                "%s %s %s %s %s",
+                date('Y-m-d- H:i:s'),
+                $e->getMessage(),
+                $e->getCode(),
+                $e->getFile(),
+                $e->getLine()
+            );
+            error_log($log . "\n\r", 3, './src/error.log');
+        }
+    }
+
     public function getRelatedAgent($agentId)
     /// Récupère tous les éléments liés à un agent
     {
@@ -426,4 +476,75 @@ class Agent extends Model
             return 'Une erreur est survenue';
         }
     }
+
+    public function updateAgent($agentId, $agentName, $agentSpeList)
+    /// Met à jour l'agent, supprime ses spécialités et les remplace par les nouvelles
+    {
+        try {
+            $bdd = $this->connexionPDO();
+            // on teste si la connexion pdo a réussi
+            if (is_object($bdd)) {
+
+                // Commencer les requêtes (lot)
+                $bdd->beginTransaction();
+
+                // Modifier l'agent dans la table Agents
+                $stmtUpdateAgent = $bdd->prepare('UPDATE Agents SET codeAgent = :agentName WHERE idAgent = :agentId');
+                $stmtUpdateAgent->bindValue(':agentId', $agentId, PDO::PARAM_INT);
+                $stmtUpdateAgent->bindValue(':agentName', $agentName, PDO::PARAM_STR);
+
+                if (!$stmtUpdateAgent->execute()) {
+                    $bdd->rollBack();
+                    return 'Une erreur est survenue lors de la mise à jour de cet agent';
+                }
+
+                // On modifie la table AgentsSpecialities que s'il y a eu une modification (on a pu changer que le nom)
+                if (!empty($agentSpeList)) {
+                    // Supprimer les anciennes spécialités de l'agent de la table AgentsSpecialities
+                    $reqDeleteSpecialities = 'DELETE FROM AgentsSpecialities WHERE agent_id = :agentId';
+                    $stmtDeleteSpecialities = $bdd->prepare($reqDeleteSpecialities);
+                    $stmtDeleteSpecialities->bindValue(':agentId', $agentId, PDO::PARAM_INT);
+                    if (!$stmtDeleteSpecialities->execute()) {
+                        $bdd->rollBack();
+                        return 'Une erreur est survenue lors de la suppression des anciennes spécialités de l\'agent.';
+                    }
+
+                    // Ajouter les nouvelles spécialités de l'agent dans la table AgentsSpecialities
+                    foreach ($agentSpeList as $specialityId) {
+                        $reqAddSpeciality = 'INSERT INTO AgentsSpecialities (agent_id, speciality_id) VALUES (:agentId, :specialityId)';
+                        $stmtAddSpeciality = $bdd->prepare($reqAddSpeciality);
+                        $stmtAddSpeciality->bindValue(':agentId', $agentId, PDO::PARAM_INT);
+                        $stmtAddSpeciality->bindValue(':specialityId', $specialityId, PDO::PARAM_INT);
+                        if (!$stmtAddSpeciality->execute()) {
+                            $bdd->rollBack();
+                            return 'Une erreur est survenue lors de l\'ajout des nouvelles spécialités de l\'agent.';
+                        }
+                    }
+                }
+
+                // Valider la transaction
+                $bdd->commit();
+                return 'Cet agent a été modifié avec succès.';
+
+            } else {
+                return 'une erreur est survenue';
+            }
+        } catch (Exception $e) {
+
+            // En cas d'erreur, rollback de la transaction
+            $bdd->rollBack();
+
+            $log = sprintf(
+                "%s %s %s %s %s",
+                date('Y-m-d- H:i:s'),
+                $e->getMessage(),
+                $e->getCode(),
+                $e->getFile(),
+                $e->getLine()
+            );
+            error_log($log . "\n\r", 3, './src/error.log');
+            return 'Une erreur est survenue';
+        }
+    }
+
 }

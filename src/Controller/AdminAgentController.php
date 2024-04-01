@@ -211,5 +211,89 @@ class AdminAgentController
 
     }
 
+    public function adminUpdateAgentPage()
+    // Page permettant la saisie pour la modification de agent
+    {
+        //On vérifie si on a le droit d'être là (admin)
+        $this->Security->verifyAccess();
+
+        // On récupère le token
+        $token = $this->Security->getToken();
+
+        //Récupère l'id du agent à modifier
+        (isset($_GET['UpdateElementId']) and !empty($_GET['UpdateElementId']) and isset($_GET['tok']) and $this->Security->verifyToken($token, $_GET['tok'])) ? $agentAction = $this->Security->filter_form($_GET['UpdateElementId']) : $agentAction = '';
+
+        // Récupère l'e 'agent à modifier
+        $agent = $this->Agent->getByAgentId($agentAction);
+        $modifySection = true;
+
+        // on regénère le token
+        $this->Security->regenerateToken();
+
+        // On récupère le token pour le nouveau form
+        $token = $this->Security->getToken();
+
+        // On récupère la liste des spécialités
+        $spe = $this->speciality->getAllSpecialityNames();
+
+        //twig
+        $loader = new Twig\Loader\FilesystemLoader('./src/templates');
+        $twig = new Twig\Environment($loader);
+        $template = $twig->load('adminManageElement.twig');
+
+        echo $template->render([
+            'base_url' => BASE_URL,
+            'pageName' => 'agents',
+            'elements' => $agent,
+            'spe' => $spe,
+            'modifySection' => $modifySection,
+            'deleteUrl' => '/admin/manage-agent/delete',
+            'addUrl' => '/admin/manage-agent/add',
+            'updateUrl' => '/admin/manage-agent/update',
+            'previousUrl' => '/admin/manage-agent',
+            'token' => $token
+        ]);
+
+    }
+
+    public function adminUpdateAgent()
+    // Modification de agent
+    {
+        //On vérifie si on a le droit d'être là (admin)
+        $this->Security->verifyAccess();
+
+        // On récupère le token
+        $token = $this->Security->getToken();
+
+        // on récupère la planque ajoutée et le token
+        if (isset($_POST['tok']) and $this->Security->verifyToken($token, $_POST['tok'])) {
+            // l'id
+            (isset($_POST['updateElementId']) and !empty($_POST['updateElementId'])) ? $agentId = $this->Security->filter_form($_POST['updateElementId']) : $agentId = '';
+
+            // le nom de code
+            (isset($_POST['updateElementName']) and !empty($_POST['updateElementName'])) ? $agentName = $this->Security->filter_form($_POST['updateElementName']) : $agentName = '';
+
+            // la liste des spécialités
+            (isset($_POST['updateElementSpe']) and !empty($_POST['updateElementSpe'])) ? $agentSpeList = $this->Security->filter_form_array($_POST['updateElementSpe']) : $agentSpeList = '';
+
+            if (isset($agentId) && isset($agentName) && isset($agentSpeList) && !empty($agentId)) {
+                // Les variables $agentId, $agentName et $agentSpeList existent
+
+                // on fait la modification en BDD et on récupère le résultat
+                $res = $this->Agent->updateAgent($agentId, $agentName, $agentSpeList);
+
+                // Stockage des résultats dans la session puis redirection pour éviter renvoi au rafraichissement
+                $_SESSION['resultat'] = $res;
+            }
+        }
+
+        // on regénère le token
+        $this->Security->regenerateToken();
+
+        header('Location: ' . BASE_URL . '/admin/manage-agent/action/success');
+        exit;
+
+
+    }
 
 }

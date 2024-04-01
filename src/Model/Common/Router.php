@@ -23,7 +23,7 @@ class Router
             $uriParts = explode('?', $uri);
             $uri = $uriParts[0];
             
-            if ($route['method'] === $method && $route['path'] === $uri) {
+            if($route['method'] === $method && ($route['path'] === $uri || $route['path'] === $uri.'/')) {
                 return [
                     'method' => $route['method'],
                     'controller' => $route['controller'],

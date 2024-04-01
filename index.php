@@ -105,6 +105,8 @@ $router->addRoute('GET', BASE_URL . '/admin/manage-agent', 'AdminAgentController
 $router->addRoute('POST', BASE_URL . '/admin/manage-agent/add', 'AdminAgentController', 'adminAddAgent');
 $router->addRoute('GET', BASE_URL . '/admin/manage-agent/action/success', 'AdminAgentController', 'adminSuccessActionAgent');
 $router->addRoute('POST', BASE_URL . '/admin/manage-agent/delete', 'AdminAgentController', 'adminDeleteAgent');
+$router->addRoute('GET', BASE_URL . '/admin/manage-agent/update', 'AdminAgentController', 'adminUpdateAgentPage');
+$router->addRoute('POST', BASE_URL . '/admin/manage-agent/update', 'AdminAgentController', 'adminUpdateAgent');
 
 $method = $_SERVER['REQUEST_METHOD'];
 $uri = strtolower($_SERVER['REQUEST_URI']); // gère les minuscules et les majuscules
