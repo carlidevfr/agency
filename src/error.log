@@ -404,4 +404,20 @@
 2024-03-29- 10:40:52 SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`secret_agency`.`contactsinmission`, CONSTRAINT `contactsinmission_ibfk_1` FOREIGN KEY (`idContact`) REFERENCES `contacts` (`idContact`)) 23000 C:\wamp64\www\Agency\src\Model\Contact.php 407
 2024-03-29- 10:41:12 SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`secret_agency`.`contactsinmission`, CONSTRAINT `contactsinmission_ibfk_1` FOREIGN KEY (`idContact`) REFERENCES `contacts` (`idContact`)) 23000 C:\wamp64\www\Agency\src\Model\Contact.php 407
 2024-03-29- 10:43:41 SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`secret_agency`.`contactsinmission`, CONSTRAINT `contactsinmission_ibfk_1` FOREIGN KEY (`idContact`) REFERENCES `contacts` (`idContact`)) 23000 C:\wamp64\www\Agency\src\Model\Contact.php 407
+2024-04-01- 09:30:36 SQLSTATE[HY000]: General error: 1364 Field 'codeAgent' doesn't have a default value HY000 C:\wamp64\www\Agency\src\Model\Agent.php 328
+2024-04-01- 09:34:54 SQLSTATE[HY000]: General error: 1364 Field 'codeAgent' doesn't have a default value HY000 C:\wamp64\www\Agency\src\Model\Agent.php 328
+2024-04-01- 09:35:15 SQLSTATE[HY000]: General error: 1364 Field 'codeAgent' doesn't have a default value HY000 C:\wamp64\www\Agency\src\Model\Agent.php 328
+2024-04-01- 09:40:47 SQLSTATE[HY000]: General error: 1364 Field 'codeAgent' doesn't have a default value HY000 C:\wamp64\www\Agency\src\Model\Agent.php 328
+2024-04-01- 09:41:12 SQLSTATE[HY000]: General error: 1364 Field 'codeAgent' doesn't have a default value HY000 C:\wamp64\www\Agency\src\Model\Agent.php 328
+2024-04-01- 09:41:18 SQLSTATE[HY000]: General error: 1364 Field 'codeAgent' doesn't have a default value HY000 C:\wamp64\www\Agency\src\Model\Agent.php 328
+2024-04-01- 09:42:03 SQLSTATE[HY000]: General error: 1364 Field 'codeAgent' doesn't have a default value HY000 C:\wamp64\www\Agency\src\Model\Agent.php 328
+2024-04-01- 09:42:09 SQLSTATE[HY000]: General error: 1364 Field 'codeAgent' doesn't have a default value HY000 C:\wamp64\www\Agency\src\Model\Agent.php 328
+2024-04-01- 09:44:11 SQLSTATE[HY000]: General error: 1364 Field 'codeAgent' doesn't have a default value HY000 C:\wamp64\www\Agency\src\Model\Agent.php 328
+2024-04-01- 09:44:18 SQLSTATE[HY000]: General error: 1364 Field 'codeAgent' doesn't have a default value HY000 C:\wamp64\www\Agency\src\Model\Agent.php 328
+2024-04-01- 09:53:07 SQLSTATE[HY000]: General error: 1364 Field 'codeAgent' doesn't have a default value HY000 C:\wamp64\www\Agency\src\Model\Agent.php 328
+2024-04-01- 09:53:12 SQLSTATE[HY000]: General error: 1364 Field 'codeAgent' doesn't have a default value HY000 C:\wamp64\www\Agency\src\Model\Agent.php 328
+2024-04-01- 10:00:37 SQLSTATE[23000]: Integrity constraint violation: 1452 Cannot add or update a child row: a foreign key constraint fails (`secret_agency`.`agents`, CONSTRAINT `agents_ibfk_1` FOREIGN KEY (`idAgent`) REFERENCES `cibles` (`idCible`) ON DELETE CASCADE) 23000 C:\wamp64\www\Agency\src\Model\Agent.php 329
+2024-04-01- 10:28:34 SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicata du champ '1-1' pour la clef 'PRIMARY' 23000 C:\wamp64\www\Agency\src\Model\Agent.php 356
+2024-04-01- 10:32:31 SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicata du champ '1-1' pour la clef 'PRIMARY' 23000 C:\wamp64\www\Agency\src\Model\Agent.php 356
+2024-04-01- 10:32:57 SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicata du champ '1-1' pour la clef 'PRIMARY' 23000 C:\wamp64\www\Agency\src\Model\Agent.php 356
 

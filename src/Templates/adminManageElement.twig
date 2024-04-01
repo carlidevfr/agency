@@ -528,7 +528,7 @@
 		</label><br>
 		
 		{% for item in spe %}
-				<input type="checkbox" name="addElementSpe" value="{{ item.id }}" id="">{{ item.valeur }}<br>
+				<input type="checkbox" name="addElementSpe[]" value="{{ item.id }}" id="">{{ item.valeur }}<br>
 		{% endfor %}<br>
 		<input type="hidden" name="tok" value={{ token }}>
 		<button type="submit">Soumettre</button>

@@ -11,6 +11,27 @@ class Security
         return $data;
     }
 
+
+    public static function filter_form_array($data)
+{
+    // Vérifie si $data est un tableau
+    if (!is_array($data)) {
+        return self::filter_form($data);
+    }
+
+    // Initialiser un tableau pour stocker les données nettoyées
+    $cleaned_data = array();
+
+    // Itérer sur chaque élément du tableau d'entrée
+    foreach ($data as $key => $value) {
+        // Appliquer la fonction filter_form() à chaque valeur
+        $cleaned_data[$key] = self::filter_form($value);
+    }
+
+    // Retourne le tableau nettoyé
+    return $cleaned_data;
+}
+
     public static function verifyAccess()
     // on vérifie si l'utilisateur a le droit d'être là, sinon on détruit la session et on le redirige vers l'accueil
     {

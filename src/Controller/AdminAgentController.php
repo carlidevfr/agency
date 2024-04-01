@@ -34,13 +34,13 @@ class AdminAgentController
         $token = $this->Security->getToken();
 
         //Récupère  la pagination
-        (isset ($_GET['page']) and !empty ($_GET['page'])) ? $page = max(1, $this->Security->filter_form($_GET['page'])) : $page = 1;
+        (isset($_GET['page']) and !empty($_GET['page'])) ? $page = max(1, $this->Security->filter_form($_GET['page'])) : $page = 1;
 
         // Nombre d'éléments par page
         $itemsPerPage = 10;
 
         //Récupère le résultat de la recherche et la valeur de search pour permettre un get sur le search avec la pagination
-        if (isset ($_GET['search']) and !empty ($_GET['search']) and isset ($_GET['tok']) and $this->Security->verifyToken($token, $_GET['tok'])) {
+        if (isset($_GET['search']) and !empty($_GET['search']) and isset($_GET['tok']) and $this->Security->verifyToken($token, $_GET['tok'])) {
             $agents = $this->Agent->getSearchAgentNames($this->Security->filter_form($_GET['search']), $page, $itemsPerPage);
             $search = $this->Security->filter_form($_GET['search']);
 
@@ -55,7 +55,7 @@ class AdminAgentController
         }
 
         // Récupère le nombre de pages, on arrondi au dessus
-        if (!empty ($this->Agent->getAllAgentNames())) {
+        if (!empty($this->Agent->getAllAgentNames())) {
             $pageMax = ceil(count($this->Agent->getAllAgentNames()) / $itemsPerPage);
         } else {
             $pageMax = 1;
@@ -99,14 +99,14 @@ class AdminAgentController
         $missions = null;
 
         // On récupère le résultat de la requête
-        if (isset ($_SESSION['resultat']) and !empty ($_SESSION['resultat'])) {
+        if (isset($_SESSION['resultat']) and !empty($_SESSION['resultat'])) {
             $res = $this->Security->filter_form($_SESSION['resultat']);
 
             // Si l'id est en variable session on le récupère
-            (isset ($_SESSION['idElement']) and !empty ($_SESSION['idElement'])) ? $idElement = $this->Security->filter_form($_SESSION['idElement']) : $idElement = '';
+            (isset($_SESSION['idElement']) and !empty($_SESSION['idElement'])) ? $idElement = $this->Security->filter_form($_SESSION['idElement']) : $idElement = '';
 
             // On récupère la liste des éléments liés pouvant empêcher la suppression
-            (isset ($idElement) and !empty ($idElement) ? $data = $this->Agent->getRelatedAgent($idElement) : $data = '');
+            (isset($idElement) and !empty($idElement) ? $data = $this->Agent->getRelatedAgent($idElement) : $data = '');
 
             // Efface les résultats de la session pour éviter de les conserver plus longtemps que nécessaire
             unset($_SESSION['resultat']);
@@ -147,15 +147,33 @@ class AdminAgentController
         $token = $this->Security->getToken();
 
         // on récupère la planque ajoutée et le token
-        if (isset ($_POST['tok']) and $this->Security->verifyToken($token, $_POST['tok'])) {
+        if (isset($_POST['tok']) and $this->Security->verifyToken($token, $_POST['tok'])) {
             // l id
-            (isset ($_POST['addElementId']) and !empty ($_POST['addElementId'])) ? $agentName = $this->Security->filter_form($_POST['addElementId']) : $agentName = '';
+            (isset($_POST['addElementId']) and !empty($_POST['addElementId'])) ? $agentId = $this->Security->filter_form($_POST['addElementId']) : $agentId = '';
 
-            // on fait l'ajout en BDD et on récupère le résultat
-            $res = $this->Agent->addAgent($agentName);
+            // le nom de code
+            (isset($_POST['addElementCodeName']) and !empty($_POST['addElementCodeName'])) ? $agentName = $this->Security->filter_form($_POST['addElementCodeName']) : $agentName = '';
 
-            // Stockage des résultats dans la session puis redirection pour éviter renvoi au rafraichissement
-            $_SESSION['resultat'] = $res;
+            // la liste des spécialités
+            (isset($_POST['addElementSpe']) and !empty($_POST['addElementSpe'])) ? $agentSpeList = $this->Security->filter_form_array($_POST['addElementSpe']) : $agentSpeList = '';
+
+            if (isset($agentId) && isset($agentName) && isset($agentSpeList) && !empty($agentId) && !empty($agentName) && !empty($agentSpeList)) {
+                // Les variables $agentId, $agentName et $agentSpeList existent et ne sont pas vides
+
+                // on fait l'ajout en BDD et on récupère le résultat
+                $res = $this->Agent->addAgent($agentId, $agentName, $agentSpeList);
+                if (empty($res)) {
+                    $res = 'Cet agent a bien été ajouté';
+                }
+                // Stockage des résultats dans la session puis redirection pour éviter renvoi au rafraichissement
+                $_SESSION['resultat'] = $res;
+            } else {
+                // on indique qu'il y a une erreur
+                $res = 'une erreur est survenue';
+
+                // Stockage des résultats dans la session puis redirection pour éviter renvoi au rafraichissement
+                $_SESSION['resultat'] = $res;
+            }
         }
 
         // on regénère le token
@@ -175,7 +193,7 @@ class AdminAgentController
         $token = $this->Security->getToken();
 
         // on récupère l'id agent à supprimer
-        (isset ($_POST['deleteElementId']) and !empty ($_POST['deleteElementId']) and isset ($_POST['tok']) and $this->Security->verifyToken($token, $_POST['tok'])) ? $agentAction = $this->Security->filter_form($_POST['deleteElementId']) : $agentAction = '';
+        (isset($_POST['deleteElementId']) and !empty($_POST['deleteElementId']) and isset($_POST['tok']) and $this->Security->verifyToken($token, $_POST['tok'])) ? $agentAction = $this->Security->filter_form($_POST['deleteElementId']) : $agentAction = '';
 
         // on fait la suppression en BDD et on récupère le résultat
         $res = $this->Agent->deleteAgent($agentAction);

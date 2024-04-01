@@ -29,8 +29,8 @@ class Agent extends Model
                 $e->getCode(),
                 $e->getFile(),
                 $e->getLine()
-                );
-                error_log($log . "\n\r", 3, './src/error.log');
+            );
+            error_log($log . "\n\r", 3, './src/error.log');
         }
     }
 
@@ -84,7 +84,7 @@ class Agent extends Model
     }
 
     public function getNotAgentNames()
-    /// retourne toutes les personnes qui ne sont pas des agents
+    // retourne toutes les personnes qui ne sont pas des agents
     {
         try {
             $bdd = $this->connexionPDO();
@@ -190,7 +190,7 @@ class Agent extends Model
     // retourne tous les agent triés par page
     {
         try {
-            
+
 
             // Calculez l'offset pour la requête : Page 1,2 etc
             $offset = ($page - 1) * $itemsPerPage;
@@ -255,7 +255,7 @@ class Agent extends Model
     /// Récupère tous les éléments liés à un agent
     {
         try {
-           // Initialisation de la liste des éléments liés
+            // Initialisation de la liste des éléments liés
             $relatedElements = array();
 
             // Liste des tables avec des clés étrangères vers Cible
@@ -277,7 +277,7 @@ class Agent extends Model
                 if (is_object($bdd)) {
                     $stmt = $bdd->prepare($req);
 
-                    if (!empty ($agentId) and !empty ($agentId)) {
+                    if (!empty($agentId) and !empty($agentId)) {
                         $stmt->bindValue(':AgentId', $agentId, PDO::PARAM_INT);
                         if ($stmt->execute()) {
                             $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -310,23 +310,49 @@ class Agent extends Model
 
     }
 
-    public function addAgent($agentName)
-    /// Ajoute un agent
+    public function addAgent($agentId, $agentName, $agentSpeList)
+    /// Ajoute un agent et lie les spécialités correspondantes
     {
         try {
             $bdd = $this->connexionPDO();
             $req = '
-            INSERT INTO Agents (idAgent)
-            VALUES (:agentName)';
+            INSERT INTO Agents (idAgent, codeAgent)
+            VALUES (:agentId, :agentName)';
 
             if (is_object($bdd)) {
                 // on teste si la connexion pdo a réussi
                 $stmt = $bdd->prepare($req);
 
-                if (!empty($agentName)) {
+                // on fait l'ajout dans la table Agents
+                if (!empty($agentName) and !empty($agentId)) {
+                    $stmt->bindValue(':agentId', $agentId, PDO::PARAM_INT);
                     $stmt->bindValue(':agentName', $agentName, PDO::PARAM_STR);
+
                     if ($stmt->execute()) {
-                        return 'Le agent a bien été ajouté ';
+                        // Ajout des spécialités dans la table AgentsSpecialities
+                        if (is_array($agentSpeList)) {
+
+                            // On parcours la liste des id spécialités et fait la requête
+                            foreach ($agentSpeList as $specialityId) {
+                                $reqSpecialities = '
+                                INSERT INTO AgentsSpecialities (agent_id, speciality_id) VALUES (:agentId, :specialityId)';
+                                if (is_object($bdd)) {
+                                    // on teste si la connexion pdo a réussi
+                                    $stmt = $bdd->prepare($reqSpecialities);
+
+                                    // on fait l'ajout dans la table AgentsSpecialities
+                                    if (!empty($agentName) and !empty($agentId)) {
+                                        $stmt->bindValue(':agentId', $agentId, PDO::PARAM_INT);
+                                        $stmt->bindValue(':specialityId', $specialityId, PDO::PARAM_STR);
+                                        if (!$stmt->execute()) {
+                                            return 'une erreur est survenue';
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        return 'une erreur est survenue';
                     }
                 }
             } else {
