@@ -313,7 +313,7 @@ class Contact extends Model
 
     }
 
-    public function addContact($contactName)
+    public function addContact($contactId)
     // Ajoute un contact
     {
         try {
@@ -326,8 +326,8 @@ class Contact extends Model
                 // on teste si la connexion pdo a réussi
                 $stmt = $bdd->prepare($req);
 
-                if (!empty($contactName)) {
-                    $stmt->bindValue(':contactName', $contactName, PDO::PARAM_STR);
+                if (!empty($contactId)) {
+                    $stmt->bindValue(':contactName', $contactId, PDO::PARAM_INT);
                     if ($stmt->execute()) {
                         return 'Le contact a bien été ajouté ';
                     }
