@@ -141,10 +141,10 @@ class Mission extends Model
             // Ajout de la clause WHERE à la requête si nécessaire
             if (!empty($conditions)) {
                 $req .= " WHERE " . implode(" AND ", $conditions);
-            } 
-            $req .= " GROUP BY Missions.idMission" ;
+            }
+            $req .= " GROUP BY Missions.idMission";
 
-            
+
             // Préparation de la requête
             $stmt = $bdd->prepare($req);
 
@@ -259,4 +259,324 @@ class Mission extends Model
             error_log($log . "\n\r", 3, './src/error.log');
         }
     }
+
+    public function getPaginationAllMissionNames($page, $itemsPerPage)
+    {
+        try {
+            // retourne toutes les missions triées par page
+
+            // Calculez l'offset pour la requête : Page 1,2 etc
+            $offset = ($page - 1) * $itemsPerPage;
+
+            $bdd = $this->connexionPDO();
+            $req = "SELECT
+            Missions.idMission AS id,
+            Missions.title,
+            Missions.codeName AS valeur,
+            Missions.description,
+            DATE_FORMAT(Missions.beginDate, '%d/%m/%Y') AS dateBegin,
+            DATE_FORMAT(Missions.endDate, '%d/%m/%Y') AS dateEnd,
+            Country.countryName AS missionCountryName,
+            Types.typeName AS missionTypeName,
+            Status.statusName AS missionStatusName,
+            Speciality.speName AS missionSpecialityName,
+            GROUP_CONCAT(DISTINCT Agents.codeAgent) AS agentNames,
+            GROUP_CONCAT(DISTINCT Cibles.idCible) AS cibleIds,
+            GROUP_CONCAT(DISTINCT Cibles.codeName) AS cibleNames,
+            GROUP_CONCAT(DISTINCT Contacts.idContact) AS contactIds,
+            GROUP_CONCAT(DISTINCT Planques.planqueName) AS planqueNames,
+            GROUP_CONCAT(DISTINCT CONCAT(Cibles.firstname, ' ', Cibles.lastname)) AS contactNames
+        FROM
+            Missions
+        JOIN
+            Country ON Missions.missionCountry = Country.idCountry
+        JOIN
+            Types ON Missions.missionType = Types.idType
+        JOIN
+            Status ON Missions.missionStatus = Status.idStatus
+        JOIN
+            Speciality ON Missions.missionSpeciality = Speciality.idSpeciality
+        JOIN
+            AgentsInMission ON Missions.idMission = AgentsInMission.idMission
+        JOIN
+            Agents ON AgentsInMission.idAgent = Agents.idAgent
+        LEFT JOIN
+            CiblesInMission ON Missions.idMission = CiblesInMission.idMission
+        LEFT JOIN
+            Cibles ON CiblesInMission.idCible = Cibles.idCible
+        LEFT JOIN
+            (SELECT idContact, idMission FROM ContactsInMission GROUP BY idContact, idMission) AS MissionContacts ON Missions.idMission = MissionContacts.idMission
+        LEFT JOIN
+            Contacts ON MissionContacts.idContact = Contacts.idContact
+        LEFT JOIN
+            Planques ON Missions.idMission = Planques.actuallyMission
+        GROUP BY
+            Missions.idMission
+        ORDER BY
+            Missions.idMission
+        LIMIT
+            :offset, :itemsPerPage";
+
+            if (is_object($bdd)) {
+                // on teste si la connexion pdo a réussi
+                $stmt = $bdd->prepare($req);
+
+                if (!empty($page) and !empty($itemsPerPage)) {
+                    $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+                    $stmt->bindValue(':itemsPerPage', $itemsPerPage, PDO::PARAM_INT);
+
+                    if ($stmt->execute()) {
+                        $country = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                        $stmt->closeCursor();
+                        return $country;
+                    }
+                }
+            } else {
+                return 'une erreur est survenue';
+            }
+        } catch (Exception $e) {
+            $log = sprintf(
+                "%s %s %s %s %s",
+                date('Y-m-d- H:i:s'),
+                $e->getMessage(),
+                $e->getCode(),
+                $e->getFile(),
+                $e->getLine()
+            );
+            error_log($log . "\n\r", 3, './src/error.log');
+        }
+    }
+
+    public function getSearchMissionNames($missionName, $page, $itemsPerPage)
+    // retourne les missions recherchées
+    // si vide toutes les missions
+    {
+        try {
+            // Calculer l'offset pour la requête : Page 1,2 etc
+            $offset = ($page - 1) * $itemsPerPage;
+
+            $bdd = $this->connexionPDO();
+            $req = "SELECT
+            Missions.idMission AS id,
+            Missions.title,
+            Missions.codeName AS valeur,
+            Missions.description,
+            DATE_FORMAT(Missions.beginDate, '%d/%m/%Y') AS dateBegin,
+            DATE_FORMAT(Missions.endDate, '%d/%m/%Y') AS dateEnd,
+            Country.countryName AS missionCountryName,
+            Types.typeName AS missionTypeName,
+            Status.statusName AS missionStatusName,
+            Speciality.speName AS missionSpecialityName,
+            GROUP_CONCAT(DISTINCT Agents.codeAgent) AS agentNames,
+            GROUP_CONCAT(DISTINCT Cibles.idCible) AS cibleIds,
+            GROUP_CONCAT(DISTINCT Cibles.codeName) AS cibleNames,
+            GROUP_CONCAT(DISTINCT Contacts.idContact) AS contactIds,
+            GROUP_CONCAT(DISTINCT Planques.planqueName) AS planqueNames,
+            GROUP_CONCAT(DISTINCT CONCAT(Cibles.firstname, ' ', Cibles.lastname)) AS contactNames
+        FROM
+            Missions
+        JOIN
+            Country ON Missions.missionCountry = Country.idCountry
+        JOIN
+            Types ON Missions.missionType = Types.idType
+        JOIN
+            Status ON Missions.missionStatus = Status.idStatus
+        JOIN
+            Speciality ON Missions.missionSpeciality = Speciality.idSpeciality
+        JOIN
+            AgentsInMission ON Missions.idMission = AgentsInMission.idMission
+        JOIN
+            Agents ON AgentsInMission.idAgent = Agents.idAgent
+        LEFT JOIN
+            CiblesInMission ON Missions.idMission = CiblesInMission.idMission
+        LEFT JOIN
+            Cibles ON CiblesInMission.idCible = Cibles.idCible
+        LEFT JOIN
+            (SELECT idContact, idMission FROM ContactsInMission GROUP BY idContact, idMission) AS MissionContacts ON Missions.idMission = MissionContacts.idMission
+        LEFT JOIN
+            Contacts ON MissionContacts.idContact = Contacts.idContact
+        LEFT JOIN
+            Planques ON Missions.idMission = Planques.actuallyMission
+        WHERE 
+            Missions.title LIKE :searchTerm OR
+            Missions.codeName LIKE :searchTerm OR
+            Agents.codeAgent LIKE :searchTerm OR
+            Types.typeName LIKE :searchTerm OR
+            Status.statusName LIKE :searchTerm OR
+            Speciality.speName LIKE :searchTerm OR
+            Cibles.codeName LIKE :searchTerm OR
+            Country.countryName LIKE :searchTerm
+        GROUP BY
+            Missions.idMission
+        LIMIT
+            :offset, :itemsPerPage";
+
+            // on teste si la connexion pdo a réussi
+            if (is_object($bdd)) {
+                $stmt = $bdd->prepare($req);
+
+                if (!empty($missionName) and !empty($page) and !empty($itemsPerPage)) {
+                    $stmt->bindValue(':searchTerm', '%' . $missionName . '%', PDO::PARAM_STR);
+                    $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+                    $stmt->bindValue(':itemsPerPage', $itemsPerPage, PDO::PARAM_INT);
+
+                    if ($stmt->execute()) {
+                        $mission = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                        $stmt->closeCursor();
+                        return $mission;
+                    }
+                } else {
+                    return $this->getAllMissionNames();
+                }
+            } else {
+                return 'une erreur est survenue';
+            }
+
+        } catch (Exception $e) {
+            $log = sprintf(
+                "%s %s %s %s %s",
+                date('Y-m-d- H:i:s'),
+                $e->getMessage(),
+                $e->getCode(),
+                $e->getFile(),
+                $e->getLine()
+            );
+            error_log($log . "\n\r", 3, './src/error.log');
+        }
+    }
+
+    public function getAllMissionNames()
+    // retourne toutes les missions
+    {
+        try {
+
+            $bdd = $this->connexionPDO();
+            $req = "SELECT
+            Missions.idMission AS id,
+            Missions.title,
+            Missions.codeName AS valeur,
+            Missions.description,
+            DATE_FORMAT(Missions.beginDate, '%d/%m/%Y') AS dateBegin,
+            DATE_FORMAT(Missions.endDate, '%d/%m/%Y') AS dateEnd,
+            Country.countryName AS missionCountryName,
+            Types.typeName AS missionTypeName,
+            Status.statusName AS missionStatusName,
+            Speciality.speName AS missionSpecialityName,
+            GROUP_CONCAT(DISTINCT Agents.codeAgent) AS agentNames,
+            GROUP_CONCAT(DISTINCT Cibles.idCible) AS cibleIds,
+            GROUP_CONCAT(DISTINCT Cibles.codeName) AS cibleNames,
+            GROUP_CONCAT(DISTINCT Contacts.idContact) AS contactIds,
+            GROUP_CONCAT(DISTINCT Planques.planqueName) AS planqueNames,
+            GROUP_CONCAT(DISTINCT CONCAT(Cibles.firstname, ' ', Cibles.lastname)) AS contactNames
+        FROM
+            Missions
+        JOIN
+            Country ON Missions.missionCountry = Country.idCountry
+        JOIN
+            Types ON Missions.missionType = Types.idType
+        JOIN
+            Status ON Missions.missionStatus = Status.idStatus
+        JOIN
+            Speciality ON Missions.missionSpeciality = Speciality.idSpeciality
+        JOIN
+            AgentsInMission ON Missions.idMission = AgentsInMission.idMission
+        JOIN
+            Agents ON AgentsInMission.idAgent = Agents.idAgent
+        LEFT JOIN
+            CiblesInMission ON Missions.idMission = CiblesInMission.idMission
+        LEFT JOIN
+            Cibles ON CiblesInMission.idCible = Cibles.idCible
+        LEFT JOIN
+            (SELECT idContact, idMission FROM ContactsInMission GROUP BY idContact, idMission) AS MissionContacts ON Missions.idMission = MissionContacts.idMission
+        LEFT JOIN
+            Contacts ON MissionContacts.idContact = Contacts.idContact
+        LEFT JOIN
+            Planques ON Missions.idMission = Planques.actuallyMission
+        GROUP BY
+            Missions.idMission
+        ORDER BY
+            Missions.idMission";
+
+            if (is_object($bdd)) {
+                // on teste si la connexion pdo a réussi
+                $stmt = $bdd->prepare($req);
+
+
+                if ($stmt->execute()) {
+                    $missions = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    $stmt->closeCursor();
+                    return $missions;
+                }
+
+            } else {
+                return 'une erreur est survenue';
+            }
+        } catch (Exception $e) {
+            $log = sprintf(
+                "%s %s %s %s %s",
+                date('Y-m-d- H:i:s'),
+                $e->getMessage(),
+                $e->getCode(),
+                $e->getFile(),
+                $e->getLine()
+            );
+            error_log($log . "\n\r", 3, './src/error.log');
+        }
+    }
+
+    public function deleteMission($idMission) {
+        try {
+            $bdd = $this->connexionPDO();
+            
+            // Démarre une transaction
+            $bdd->beginTransaction();
+            
+            // Suppression des liens avec les contacts
+            $stmt = $bdd->prepare("DELETE FROM ContactsInMission WHERE idMission = :idMission");
+            $stmt->bindValue(':idMission', $idMission, PDO::PARAM_INT);
+            $stmt->execute();
+            
+            // Suppression des liens avec les cibles
+            $stmt = $bdd->prepare("DELETE FROM CiblesInMission WHERE idMission = :idMission");
+            $stmt->bindValue(':idMission', $idMission, PDO::PARAM_INT);
+            $stmt->execute();
+            
+            // Suppression des liens avec les agents
+            $stmt = $bdd->prepare("DELETE FROM AgentsInMission WHERE idMission = :idMission");
+            $stmt->bindValue(':idMission', $idMission, PDO::PARAM_INT);
+            $stmt->execute();
+            
+            // Mise à jour des planques
+            $stmt = $bdd->prepare("UPDATE Planques SET actuallyMission = NULL WHERE actuallyMission = :idMission");
+            $stmt->bindValue(':idMission', $idMission, PDO::PARAM_INT);
+            $stmt->execute();
+            
+            // Suppression de la mission
+            $stmt = $bdd->prepare("DELETE FROM Missions WHERE idMission = :idMission");
+            $stmt->bindValue(':idMission', $idMission, PDO::PARAM_INT);
+            $stmt->execute();
+            
+            // Valide la transaction
+            $bdd->commit();
+            
+            return "Mission supprimée avec succès.";
+        } catch (Exception $e) {
+            // En cas d'erreur, annule la transaction
+            $bdd->rollBack();
+            
+            // Gestion des erreurs
+            $log = sprintf(
+                "%s %s %s %s %s",
+                date('Y-m-d- H:i:s'),
+                $e->getMessage(),
+                $e->getCode(),
+                $e->getFile(),
+                $e->getLine()
+            );
+            error_log($log . "\n\r", 3, './src/error.log');
+            return "Une erreur est survenue lors de la suppression de la mission.";
+        }
+    }
+    
+    
 }

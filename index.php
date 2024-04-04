@@ -29,6 +29,7 @@ require_once './src/Controller/AdminPlanqueController.php';
 require_once './src/Controller/AdminCibleController.php';
 require_once './src/Controller/AdminAgentController.php';
 require_once './src/Controller/AdminContactController.php';
+require_once './src/Controller/AdminMissionController.php';
 require_once './src/Model/Common/Security.php';
 
 $router = new Router();
@@ -108,6 +109,12 @@ $router->addRoute('POST', BASE_URL . '/admin/manage-agent/delete', 'AdminAgentCo
 $router->addRoute('GET', BASE_URL . '/admin/manage-agent/update', 'AdminAgentController', 'adminUpdateAgentPage');
 $router->addRoute('POST', BASE_URL . '/admin/manage-agent/update', 'AdminAgentController', 'adminUpdateAgent');
 
+$router->addRoute('GET', BASE_URL . '/admin/manage-mission', 'AdminMissionController', 'adminMissionPage');
+$router->addRoute('POST', BASE_URL . '/admin/manage-mission/add', 'AdminMissionController', 'adminAddMission');
+$router->addRoute('GET', BASE_URL . '/admin/manage-mission/action/success', 'AdminMissionController', 'adminSuccessActionMission');
+$router->addRoute('POST', BASE_URL . '/admin/manage-mission/delete', 'AdminMissionController', 'adminDeleteMission');
+$router->addRoute('GET', BASE_URL . '/admin/manage-mission/update', 'AdminMissionController', 'adminUpdateMissionPage');
+$router->addRoute('POST', BASE_URL . '/admin/manage-mission/update', 'AdminMissionController', 'adminUpdateMission');
 $method = $_SERVER['REQUEST_METHOD'];
 $uri = strtolower($_SERVER['REQUEST_URI']); // gère les minuscules et les majuscules
 

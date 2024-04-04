@@ -354,6 +354,18 @@
 						<th>Pays</th>
 						<th>Spécialités</th>
 
+					{# Colonnes supp si mission #}
+					{% elseif "mission" in pageName|lower  %}
+						<th>Statut</th>
+						<th>Spécialité requise</th>
+						<th>Type</th>
+						<th>Cibles</th>
+						<th>Agents</th>
+						<th>Contacts</th>
+						<th>Pays</th>
+						<th>Date de début</th>
+						<th>Date de fin</th>
+						<th>Planques</th>
 
 					{% endif %}
 
@@ -411,6 +423,21 @@
 					<td>{{ element.formattedBirthdate }}</td>
 					<td>{{ element.countryName }}</td>
 					<td>{{ element.specialties }}</td>
+				{% endif %}
+
+				{# Colonnes supp si mission #}
+				{% if "mission" in pageName|lower %}
+					<td>{{ element.missionStatusName }}</td>
+					<td>{{element.missionSpecialityName}}</td>
+					<td>{{ element.missionTypeName }}</td>
+					<td>{{element.cibleNames}}</td>
+					<td>{{ element.agentNames }}</td>
+					<td>{{ element.contactNames }}</td>
+					<td>{{ element.missionCountryName }}</td>
+					<td>{{ element.dateBegin }}</td>
+					<td>{{ element.dateEnd }}</td>
+					<td>{{ element.planqueNames }}</td>
+
 
 
 				{% endif %}
@@ -442,19 +469,19 @@
 	page
 	<br>
 	{% if activePage > 1 %}
-		<a href="?page={{ activePage - 1 }}&search={{search}}">Page précédente</a>
+		<a href="?page={{ activePage - 1 }}&search={{search}}&tok={{token}}">Page précédente</a>
 	{% endif %}
 
 	{% for page in 1..pageMax %}
 		{% if page == activePage %}
 			<span class="current-page">{{ page }}</span>
 		{% else %}
-			<a href="?page={{ page }}&search={{search}}">{{ page }}</a>
+			<a href="?page={{ page }}&search={{search}}&tok={{token}}">{{ page }}</a>
 		{% endif %}
 	{% endfor %}
 
 	{% if activePage < pageMax %}
-		<a href="?page={{ activePage + 1 }}&search={{search}}">Page suivante</a>
+		<a href="?page={{ activePage + 1 }}&search={{search}}&tok={{token}}">Page suivante</a>
 	{% endif %}
 </div><br>
 
