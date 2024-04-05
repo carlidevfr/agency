@@ -57,7 +57,7 @@ class Planque extends Model
 
             $bdd = $this->connexionPDO();
             $req = '
-            SELECT idPlanque AS id, planqueName AS valeur, Planques.location, Planques.type, Country.countryName AS planqueCountry, Missions.title AS missionName
+            SELECT idPlanque AS id, planqueName AS valeur, Planques.location, Planques.type, Country.countryName AS planqueCountry, Country.idCountry AS planqueCountryId, Missions.title AS missionName
             FROM Planques
             JOIN Country ON planqueCountry = Country.idCountry
             LEFT JOIN Missions ON Planques.actuallyMission = Missions.idMission';

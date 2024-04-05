@@ -84,7 +84,7 @@ CREATE TABLE Missions
     idMission INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(250) NOT NULL,
     codeName VARCHAR(250) NOT NULL,
-    description VARCHAR(250) NOT NULL,
+    description TEXT  NOT NULL,
     beginDate DATE NOT NULL,
     endDate DATE NOT NULL,
     missionCountry INT NOT NULL,

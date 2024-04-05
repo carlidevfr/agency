@@ -67,6 +67,7 @@ class Contact extends Model
         Cibles.lastname,
         DATE_FORMAT(Cibles.birthdate, '%d/%m/%Y') AS formattedBirthdate,
         Cibles.codeName AS valeur,
+        Country.idCountry AS contactCountryId,
         Country.countryName AS countryName
     FROM
         Contacts

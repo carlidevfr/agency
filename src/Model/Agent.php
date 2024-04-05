@@ -11,14 +11,45 @@ class Agent extends Model
 
             $bdd = $this->connexionPDO();
             $req = '
-                SELECT idAgent AS id, codeAgent AS valeur
-                FROM Agents';
+                SELECT idAgent AS id,
+                codeAgent AS valeur,
+                Country.countryName AS countryName,
+                Country.idCountry AS agentCountryId,
+                GROUP_CONCAT(Speciality.speName) AS speName,
+                GROUP_CONCAT(Speciality.idSpeciality) AS speId
+                FROM Agents
+                JOIN 
+                Cibles ON Agents.idAgent = Cibles.idCible
+                JOIN
+                Country ON Cibles.countryCible = Country.idCountry
+                LEFT JOIN 
+                AgentsSpecialities ON Agents.idAgent = AgentsSpecialities.agent_id
+                JOIN 
+                Speciality ON AgentsSpecialities.speciality_id = Speciality.idSpeciality
+                GROUP BY 
+                Agents.idAgent';
 
             $stmt = $bdd->prepare($req);
 
             if ($stmt->execute()) {
                 $Agents = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 $stmt->closeCursor();
+                foreach ($Agents as &$row) {
+                    // Séparer les valeurs speId et speName en tableaux
+                    $speIds = explode(',', $row['speId']);
+                    $speNames = explode(',', $row['speName']);
+                
+                    // Créer un tableau associatif pour stocker les spécialités
+                    $specialities = [];
+                    for ($i = 0; $i < count($speIds); $i++) {
+                        // Ajouter chaque spécialité au tableau associatif
+                        $specialities[] = ['id' => $speIds[$i], 'name' => $speNames[$i]];
+                    }
+                
+                    // Remplacer les champs speId et speName par le tableau associatif des spécialités
+                    $row['specialities'] = $specialities;
+                    unset($row['speId'], $row['speName']); // Supprimer les champs speId et speName originaux
+                }
                 return $Agents;
             }
         } catch (Exception $e) {

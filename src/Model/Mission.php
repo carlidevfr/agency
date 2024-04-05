@@ -524,46 +524,47 @@ class Mission extends Model
         }
     }
 
-    public function deleteMission($idMission) {
+    public function deleteMission($idMission)
+    {
         try {
             $bdd = $this->connexionPDO();
-            
+
             // Démarre une transaction
             $bdd->beginTransaction();
-            
+
             // Suppression des liens avec les contacts
             $stmt = $bdd->prepare("DELETE FROM ContactsInMission WHERE idMission = :idMission");
             $stmt->bindValue(':idMission', $idMission, PDO::PARAM_INT);
             $stmt->execute();
-            
+
             // Suppression des liens avec les cibles
             $stmt = $bdd->prepare("DELETE FROM CiblesInMission WHERE idMission = :idMission");
             $stmt->bindValue(':idMission', $idMission, PDO::PARAM_INT);
             $stmt->execute();
-            
+
             // Suppression des liens avec les agents
             $stmt = $bdd->prepare("DELETE FROM AgentsInMission WHERE idMission = :idMission");
             $stmt->bindValue(':idMission', $idMission, PDO::PARAM_INT);
             $stmt->execute();
-            
+
             // Mise à jour des planques
             $stmt = $bdd->prepare("UPDATE Planques SET actuallyMission = NULL WHERE actuallyMission = :idMission");
             $stmt->bindValue(':idMission', $idMission, PDO::PARAM_INT);
             $stmt->execute();
-            
+
             // Suppression de la mission
             $stmt = $bdd->prepare("DELETE FROM Missions WHERE idMission = :idMission");
             $stmt->bindValue(':idMission', $idMission, PDO::PARAM_INT);
             $stmt->execute();
-            
+
             // Valide la transaction
             $bdd->commit();
-            
+
             return "Mission supprimée avec succès.";
         } catch (Exception $e) {
             // En cas d'erreur, annule la transaction
             $bdd->rollBack();
-            
+
             // Gestion des erreurs
             $log = sprintf(
                 "%s %s %s %s %s",
@@ -577,6 +578,182 @@ class Mission extends Model
             return "Une erreur est survenue lors de la suppression de la mission.";
         }
     }
-    
-    
+
+    public function addMission($title, $codeName, $description, $beginDate, $endDate, $missionCountry, $missionType, $missionStatus, $missionSpeciality, $cibleIds, $contactIds, $agentIds, $planqueIds)
+    {
+        try {
+            $bdd = $this->connexionPDO();
+
+            // Début de la transaction
+            $bdd->beginTransaction();
+
+            // Requête SQL pour insérer une nouvelle mission
+            $req = "INSERT INTO Missions (title, codeName, description, beginDate, endDate, missionCountry, missionType, missionStatus, missionSpeciality) 
+                VALUES (:title, :codeName, :description, :beginDate, :endDate, :missionCountry, :missionType, :missionStatus, :missionSpeciality)";
+
+            // Préparation de la requête
+            $stmt = $bdd->prepare($req);
+
+            // Liaison des paramètres
+            $stmt->bindValue(':title', $title, PDO::PARAM_STR);
+            $stmt->bindValue(':codeName', $codeName, PDO::PARAM_STR);
+            $stmt->bindValue(':description', $description, PDO::PARAM_STR);
+            $stmt->bindValue(':beginDate', $beginDate, PDO::PARAM_STR);
+            $stmt->bindValue(':endDate', $endDate, PDO::PARAM_STR);
+            $stmt->bindValue(':missionCountry', $missionCountry, PDO::PARAM_INT);
+            $stmt->bindValue(':missionType', $missionType, PDO::PARAM_INT);
+            $stmt->bindValue(':missionStatus', $missionStatus, PDO::PARAM_INT);
+            $stmt->bindValue(':missionSpeciality', $missionSpeciality, PDO::PARAM_INT);
+
+            // Exécution de la requête
+            if ($stmt->execute()) {
+                // Récupération de l'ID de la mission nouvellement créée
+                $missionId = $bdd->lastInsertId();
+
+                // Ajout des cibles associées à la mission dans la table CiblesInMission
+                foreach ($cibleIds as $cibleId) {
+                    $reqCible = "INSERT INTO CiblesInMission (idCible, idMission) VALUES (:idCible, :idMission)";
+                    $stmtCible = $bdd->prepare($reqCible);
+                    $stmtCible->bindValue(':idCible', $cibleId, PDO::PARAM_INT);
+                    $stmtCible->bindValue(':idMission', $missionId, PDO::PARAM_INT);
+                    if (!$stmtCible->execute()) {
+                        $bdd->rollBack(); // Annuler la transaction en cas d'échec
+                        return "Une erreur est survenue lors de la création de mission.";
+                    }
+                }
+
+                // Ajout des contacts associés à la mission dans la table ContactsInMission
+                foreach ($contactIds as $contactId) {
+                    $reqContact = "INSERT INTO ContactsInMission (idContact, idMission) VALUES (:idContact, :idMission)";
+                    $stmtContact = $bdd->prepare($reqContact);
+                    $stmtContact->bindValue(':idContact', $contactId, PDO::PARAM_INT);
+                    $stmtContact->bindValue(':idMission', $missionId, PDO::PARAM_INT);
+                    if (!$stmtContact->execute()) {
+                        $bdd->rollBack(); // Annuler la transaction en cas d'échec
+                        return "Une erreur est survenue lors de la création de mission.";
+                    }
+                }
+
+                // Ajout des agents associés à la mission dans la table AgentsInMission
+                foreach ($agentIds as $agentId) {
+                    $reqAgent = "INSERT INTO AgentsInMission (idAgent, idMission) VALUES (:idAgent, :idMission)";
+                    $stmtAgent = $bdd->prepare($reqAgent);
+                    $stmtAgent->bindValue(':idAgent', $agentId, PDO::PARAM_INT);
+                    $stmtAgent->bindValue(':idMission', $missionId, PDO::PARAM_INT);
+                    if (!$stmtAgent->execute()) {
+                        $bdd->rollBack(); // Annuler la transaction en cas d'échec
+                        return "Une erreur est survenue lors de la création de mission.";
+                    }
+                }
+
+                // Ajout des identifiants de mission sur les planques associées à la mission
+                foreach ($planqueIds as $planqueId) {
+                    $reqPlanque = "UPDATE Planques SET actuallyMission = :idMission WHERE idPlanque = :idPlanque";
+                    $stmtPlanque = $bdd->prepare($reqPlanque);
+                    $stmtPlanque->bindValue(':idMission', $missionId, PDO::PARAM_INT);
+                    $stmtPlanque->bindValue(':idPlanque', $planqueId, PDO::PARAM_INT);
+                    if (!$stmtPlanque->execute()) {
+                        $bdd->rollBack(); // Annuler la transaction en cas d'échec
+                        return "Une erreur est survenue lors de la création de mission.";
+                    }
+                }
+
+                // Si tout s'est bien passé, on valide la transaction
+                $bdd->commit();
+                return "La mission a bien été créée.";
+            } else {
+                // Annuler la transaction en cas d'échec
+                $bdd->rollBack();
+                return "Une erreur est survenue lors de la création de mission.";
+            }
+        } catch (Exception $e) {
+            // Gestion des erreurs
+            $log = sprintf(
+                "%s %s %s %s %s",
+                date('Y-m-d- H:i:s'),
+                $e->getMessage(),
+                $e->getCode(),
+                $e->getFile(),
+                $e->getLine()
+            );
+            error_log($log . "\n\r", 3, './src/error.log');
+            // Annuler la transaction en cas d'erreur
+            $bdd->rollBack();
+            return "Une erreur est survenue lors de la création de mission.";
+        }
+    }
+
+    public function verifyMissionConstraints($missionCountry, $missionSpeciality, $cibleIds, $contactIds, $agentIds, $planqueIds)
+    {
+        try {
+            $bdd = $this->connexionPDO();
+
+            // Vérifier si les cibles ont une nationalité différente de celle des agents
+            $reqCheckCiblesAgents = "SELECT COUNT(*) AS count
+                                 FROM Cibles
+                                 JOIN Agents ON Cibles.countryCible = Agents.countryCible
+                                 WHERE Cibles.idCible IN (" . implode(",", $cibleIds) . ")";
+            $stmtCheckCiblesAgents = $bdd->query($reqCheckCiblesAgents);
+            $resultCheckCiblesAgents = $stmtCheckCiblesAgents->fetch(PDO::FETCH_ASSOC);
+            if ($resultCheckCiblesAgents['count'] > 0) {
+                return false; // Contrainte violée
+            }
+
+            // Vérifier si les contacts ont la nationalité du pays de la mission
+            $reqCheckContacts = "SELECT COUNT(*) AS count
+                             FROM Contacts
+                             JOIN Country ON Contacts.countryCible = Country.idCountry
+                             WHERE Contacts.idContact IN (" . implode(",", $contactIds) . ") AND Country.idCountry != :missionCountry";
+            $stmtCheckContacts = $bdd->prepare($reqCheckContacts);
+            $stmtCheckContacts->bindValue(':missionCountry', $missionCountry, PDO::PARAM_INT);
+            $stmtCheckContacts->execute();
+            $resultCheckContacts = $stmtCheckContacts->fetch(PDO::FETCH_ASSOC);
+            if ($resultCheckContacts['count'] > 0) {
+                return false; // Contrainte violée
+            }
+
+            // Vérifier si la planque est dans le même pays que la mission
+            $reqCheckPlanque = "SELECT COUNT(*) AS count
+                            FROM Planques
+                            WHERE Planques.idPlanque IN (" . implode(",", $planqueIds) . ") AND Planques.planqueCountry != :missionCountry";
+            $stmtCheckPlanque = $bdd->prepare($reqCheckPlanque);
+            $stmtCheckPlanque->bindValue(':missionCountry', $missionCountry, PDO::PARAM_INT);
+            $stmtCheckPlanque->execute();
+            $resultCheckPlanque = $stmtCheckPlanque->fetch(PDO::FETCH_ASSOC);
+            if ($resultCheckPlanque['count'] > 0) {
+                return false; // Contrainte violée
+            }
+
+            // Vérifier s'il y a au moins un agent avec la spécialité de mission requise
+            $reqCheckAgentsSpeciality = "SELECT COUNT(*) AS count
+                                      FROM Agents
+                                      JOIN AgentsSpecialities ON Agents.idAgent = AgentsSpecialities.agent_id
+                                      WHERE Agents.idAgent IN (" . implode(",", $agentIds) . ") AND AgentsSpecialities.speciality_id = :missionSpeciality";
+            $stmtCheckAgentsSpeciality = $bdd->prepare($reqCheckAgentsSpeciality);
+            $stmtCheckAgentsSpeciality->bindValue(':missionSpeciality', $missionSpeciality, PDO::PARAM_INT);
+            $stmtCheckAgentsSpeciality->execute();
+            $resultCheckAgentsSpeciality = $stmtCheckAgentsSpeciality->fetch(PDO::FETCH_ASSOC);
+            if ($resultCheckAgentsSpeciality['count'] == 0) {
+                return false; // Contrainte violée
+            }
+
+            // Si toutes les contraintes sont respectées, retourner true
+            return true;
+
+        } catch (Exception $e) {
+            // Gestion des erreurs
+            $log = sprintf(
+                "%s %s %s %s %s",
+                date('Y-m-d- H:i:s'),
+                $e->getMessage(),
+                $e->getCode(),
+                $e->getFile(),
+                $e->getLine()
+            );
+            error_log($log . "\n\r", 3, './src/error.log');
+            return false;
+        }
+    }
+
+
 }

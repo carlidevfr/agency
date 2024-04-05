@@ -1,20 +1,45 @@
 <?php
-use PHPUnit\Framework\Constraint\IsEmpty;
 
 require_once './src/Model/Mission.php';
+require_once './src/Model/Agent.php';
+require_once './src/Model/Country.php';
+require_once './src/Model/Planque.php';
+require_once './src/Model/Contact.php';
+require_once './src/Model/Cible.php';
+require_once './src/Model/Type.php';
+require_once './src/Model/Speciality.php';
 require_once './src/Model/Common/Security.php';
 
 class AdminMissionController
 {
     private $Mission;
+    private $Agent;
+    private $Country;
+    private $Cible;
+    private $Contact;
+    private $Planque;
+    private $Status;
+    private $Type;
+    private $Speciality;
+
+
+
+
+
+
     private $Security;
-
-
 
     public function __construct()
     {
         $this->Mission = new Mission();
-        $this->Mission = new Mission();
+        $this->Agent = new Agent();
+        $this->Country = new Country();
+        $this->Cible = new Cible();
+        $this->Contact = new Contact();
+        $this->Planque = new Planque();
+        $this->Status = new Status();
+        $this->Type = new Type();
+        $this->Speciality = new Speciality();
         $this->Security = new Security();
     }
 
@@ -56,6 +81,22 @@ class AdminMissionController
             $pageMax = 1;
         }
 
+        // Récupère le json des éléments pour traitement dans le form add
+        $listAgents = json_encode($this->Agent->getAllAgentNames(), JSON_HEX_QUOT);
+        $listCountries = json_encode($this->Country->getAllCountryNames(), JSON_HEX_QUOT);
+        $countries = $this->Country->getAllCountryNames();
+        $listCibles = json_encode($this->Cible->getAllCibleNames(), JSON_HEX_QUOT);
+        $listContacts = json_encode($this->Contact->getAllContactNames(), JSON_HEX_QUOT);
+        $listPlanques = json_encode($this->Planque->getAllPlanqueNames(), JSON_HEX_QUOT);
+        $listStatus = json_encode($this->Status->getAllStatusNames(), JSON_HEX_QUOT);
+        $status = $this->Status->getAllStatusNames();
+        $listTypes = json_encode($this->Type->getAllTypeNames(), JSON_HEX_QUOT);
+        $types = $this->Type->getAllTypeNames();
+        $listSpeciality = json_encode($this->Speciality->getAllSpecialityNames(), JSON_HEX_QUOT);
+        $speciality = $this->Speciality->getAllSpecialityNames();
+        $cibles = $this->Cible->getAllCibleNames();
+
+        var_dump($listCibles);
         //twig
         $loader = new Twig\Loader\FilesystemLoader('./src/templates');
         $twig = new Twig\Environment($loader);
@@ -68,6 +109,19 @@ class AdminMissionController
             'pageMax' => $pageMax,
             'activePage' => $page,
             'search' => $search,
+            'listAgents' => $listAgents,
+            'listCountries' => $listCountries,
+            'countries' => $countries,
+            'status' => $status,
+            'spe' => $speciality,
+            'type' => $types,
+            'cibles' => $cibles,
+            'listCibles' => $listCibles,
+            'listContacts' => $listContacts,
+            'listPlanques' => $listPlanques,
+            'listStatus' => $listStatus,
+            'listTypes' => $listTypes,
+            'listSpeciality' => $listSpeciality,
             'deleteUrl' => '/admin/manage-mission/delete',
             'addUrl' => '/admin/manage-mission/add',
             'updateUrl' => '/admin/manage-mission/update',

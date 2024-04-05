@@ -268,7 +268,6 @@
 			<br><br>
 
 
-
 			<button type="submit">Soumettre</button>
 
 		</form>
@@ -354,7 +353,7 @@
 						<th>Pays</th>
 						<th>Spécialités</th>
 
-					{# Colonnes supp si mission #}
+						{# Colonnes supp si mission #}
 					{% elseif "mission" in pageName|lower  %}
 						<th>Statut</th>
 						<th>Spécialité requise</th>
@@ -437,7 +436,6 @@
 					<td>{{ element.dateBegin }}</td>
 					<td>{{ element.dateEnd }}</td>
 					<td>{{ element.planqueNames }}</td>
-
 
 
 				{% endif %}
@@ -603,6 +601,118 @@
 		<input type="hidden" name="tok" value={{ token }}>
 		<button type="submit">Soumettre</button>
 	</form>
+
+	{# Section add si on est sur la page mission #}
+{% elseif "mission" in pageName|lower%}
+	<div id="listPlanques" data="{{ listPlanques }}"></div>
+	<div id="listAgents" data="{{ listAgents }}"></div>
+	<div id="listCountries" data="{{ listCountries }}"></div>
+	<div id="listCibles" data="{{ listCibles }}"></div>
+	<div id="listContacts" data="{{ listContacts }}"></div>
+	<div id="listSpeciality" data="{{ listSpeciality }}"></div>
+
+
+	<form action="{{base_url}}{{addUrl}}" method="post" enctype='multipart/form-data'>
+
+		<label for="addElementName">Nom de code de la mission :
+		</label>
+		<input type="text" name="addElementName" id="" placeholder="{{pageName}}"><br><br>
+
+		<label for="addElementTitle">Titre de la mission :
+		</label>
+		<input type="text" name="addElementTitle" id="" placeholder="{{pageName}}"><br><br>
+
+		<label for="addElementTitle">Description de la mission :
+		</label>
+		<textarea name="addElementTitle" id="" placeholder="{{pageName}}"></textarea><br><br>
+
+		<label for="updateElementBeginDate">Date de début :
+		</label><br>
+		<input type="date" name="updateElementBeginDate" id=""><br><br>
+
+		<label for="updateElementEndDate">Date de fin :
+		</label><br>
+		<input type="date" name="updateElementEndDate" id=""><br><br>
+
+		<label for="addElementCountry">Pays de la mission :
+		</label><br>
+		<select name="addElementCountry" id="addElementCountry" onchange="updatePlanques(this), updateContacts(this)">
+			<option value=""></option>
+			{% for item in countries %}
+				<option value="{{ item.id }}">{{ item.valeur }}</option>
+			{% endfor %}
+		</select><br><br>
+
+		<label for="addElementStatus">Statut de mission :
+		</label><br>
+		<select name="addElementStatus">
+			<option value=""></option>
+			{% for item in status %}
+				<option value="{{ item.id }}">{{ item.valeur }}</option>
+			{% endfor %}
+		</select><br><br>
+
+		<label for="addElementType">Type de mission :
+		</label><br>
+		<select name="addElementType">
+			<option value=""></option>
+			{% for item in type %}
+				<option value="{{ item.id }}">{{ item.valeur }}</option>
+			{% endfor %}
+		</select><br><br>
+
+		<label for="addElementSpe">Spécialité requise pour la mission :
+		</label><br>
+		<select name="addElementSpe" onchange="getIdSpe(this), updateMainAgents(this)">
+			<option value=""></option>
+			{% for item in spe %}
+				<option value="{{ item.id }}">{{ item.valeur }}</option>
+			{% endfor %}
+		</select><br><br>
+
+		<label for="addElementPlanque">Planque de la mission :
+		</label><br>
+		<select name="addElementPlanque" id="addElementPlanque">
+			<option value=""></option>
+		</select><br><br>
+
+		<label for="addElementContact">Sélectionner les contacts de mission:
+			<br>
+			Ils sont filtrés selon le pays
+		</label><br>
+
+		<div id="addElementContact"></div>
+
+
+		<p>Sélectionner les cibles actives :</p>
+		{% for cible in cibles %}
+			{% if cible.isActive %}
+				<input class="cible-checkbox" type="checkbox" name="cibles[]" value="{{ cible.id }}" onchange="updateMainAgents(this)">
+				<label for="cible_{{ cible.id }}">{{ cible.valeur }}</label><br>
+			{% endif %}
+		{% endfor %}
+		<br>
+
+		<label for="addElementMainAgent">Agent principal de mission:
+			<br>
+			Spécialité requise par la mission et pays différent de la cible
+		</label><br>
+
+		<div id="addElementMainAgent"></div>
+		<br>
+
+		<label for="addElementOtherAgents">Agents secondaires de mission:
+			<br>
+			pays différent de la cible
+		</label><br>
+
+		<div id="addElementOtherAgents"></div>
+		<br><br>
+
+		<input type="hidden" name="tok" value={{ token }}>
+		<button type="submit">Soumettre</button>
+	</form>
+	<script src="../public/js/adminMisson.js"></script>
 {% else %}
 	{# Section add pour les autres éléments #}
 
