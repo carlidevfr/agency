@@ -284,7 +284,7 @@ class AdminMissionController
         (isset($_GET['UpdateElementId']) and !empty($_GET['UpdateElementId']) and isset($_GET['tok']) and $this->Security->verifyToken($token, $_GET['tok'])) ? $missionAction = $this->Security->filter_form($_GET['UpdateElementId']) : $missionAction = '';
 
         // Récupère l'e 'mission à modifier
-        $mission = $this->Mission->getByMissionId($missionAction);
+        $mission = $this->Mission->getMission($missionAction);
         $modifySection = true;
 
         // on regénère le token
@@ -292,9 +292,21 @@ class AdminMissionController
 
         // On récupère le token pour le nouveau form
         $token = $this->Security->getToken();
-
-        // On récupère la liste des spécialités
-        $spe = $this->speciality->getAllSpecialityNames();
+        
+        // Récupère le json des éléments pour traitement dans le form add
+        $listAgents = json_encode($this->Agent->getAllAgentNames(), JSON_HEX_QUOT);
+        $listCountries = json_encode($this->Country->getAllCountryNames(), JSON_HEX_QUOT);
+        $countries = $this->Country->getAllCountryNames();
+        $listCibles = json_encode($this->Cible->getAllCibleNames(), JSON_HEX_QUOT);
+        $listContacts = json_encode($this->Contact->getAllContactNames(), JSON_HEX_QUOT);
+        $listPlanques = json_encode($this->Planque->getAllPlanqueNames(), JSON_HEX_QUOT);
+        $listStatus = json_encode($this->Status->getAllStatusNames(), JSON_HEX_QUOT);
+        $status = $this->Status->getAllStatusNames();
+        $listTypes = json_encode($this->Type->getAllTypeNames(), JSON_HEX_QUOT);
+        $types = $this->Type->getAllTypeNames();
+        $listSpeciality = json_encode($this->Speciality->getAllSpecialityNames(), JSON_HEX_QUOT);
+        $speciality = $this->Speciality->getAllSpecialityNames();
+        $cibles = $this->Cible->getAllCibleNames();
 
         //twig
         $loader = new Twig\Loader\FilesystemLoader('./src/templates');
@@ -305,12 +317,23 @@ class AdminMissionController
             'base_url' => BASE_URL,
             'pageName' => 'missions',
             'elements' => $mission,
-            'spe' => $spe,
             'modifySection' => $modifySection,
             'deleteUrl' => '/admin/manage-mission/delete',
-            'addUrl' => '/admin/manage-mission/add',
             'updateUrl' => '/admin/manage-mission/update',
             'previousUrl' => '/admin/manage-mission',
+            'listAgents' => $listAgents,
+            'listCountries' => $listCountries,
+            'countries' => $countries,
+            'status' => $status,
+            'spe' => $speciality,
+            'type' => $types,
+            'cibles' => $cibles,
+            'listCibles' => $listCibles,
+            'listContacts' => $listContacts,
+            'listPlanques' => $listPlanques,
+            'listStatus' => $listStatus,
+            'listTypes' => $listTypes,
+            'listSpeciality' => $listSpeciality,
             'token' => $token
         ]);
 
@@ -325,28 +348,67 @@ class AdminMissionController
         // On récupère le token
         $token = $this->Security->getToken();
 
-        // on récupère la planque ajoutée et le token
-        if (isset($_POST['tok']) and $this->Security->verifyToken($token, $_POST['tok'])) {
-            // l'id
+         // on récupère la planque ajoutée et le token
+         if (isset($_POST['tok']) and $this->Security->verifyToken($token, $_POST['tok'])) {
+
+            // l'id'
             (isset($_POST['updateElementId']) and !empty($_POST['updateElementId'])) ? $missionId = $this->Security->filter_form($_POST['updateElementId']) : $missionId = '';
 
             // le nom de code
-            (isset($_POST['updateElementName']) and !empty($_POST['updateElementName'])) ? $missionName = $this->Security->filter_form($_POST['updateElementName']) : $missionName = '';
+            (isset($_POST['addElementName']) and !empty($_POST['addElementName'])) ? $missionName = $this->Security->filter_form($_POST['addElementName']) : $missionName = '';
 
-            // la liste des spécialités
-            (isset($_POST['updateElementSpe']) and !empty($_POST['updateElementSpe'])) ? $missionSpeList = $this->Security->filter_form_array($_POST['updateElementSpe']) : $missionSpeList = '';
+            // le titre
+            (isset($_POST['addElementTitle']) and !empty($_POST['addElementTitle'])) ? $missionTitle = $this->Security->filter_form($_POST['addElementTitle']) : $missionTitle = '';
 
-            if (isset($missionId) && isset($missionName) && isset($missionSpeList) && !empty($missionId)) {
-                // Les variables $missionId, $missionName et $missionSpeList existent
+            // la description
+            (isset($_POST['addElementDesc']) and !empty($_POST['addElementDesc'])) ? $missionDesc = $this->Security->filter_form($_POST['addElementDesc']) : $missionDesc = '';
 
-                // on fait la modification en BDD et on récupère le résultat
-                $res = $this->Mission->updateMission($missionId, $missionName, $missionSpeList);
+            // la date de début
+            (isset($_POST['updateElementBeginDate']) and !empty($_POST['updateElementBeginDate'])) ? $missionBeginDate = $this->Security->filter_form($_POST['updateElementBeginDate']) : $missionBeginDate = '';
+
+            // la date de fin
+            (isset($_POST['updateElementEndDate']) and !empty($_POST['updateElementEndDate'])) ? $missionEndDate = $this->Security->filter_form($_POST['updateElementEndDate']) : $missionEndDate = '';
+
+            // le pays
+            (isset($_POST['addElementCountry']) and !empty($_POST['addElementCountry'])) ? $missionCountry = $this->Security->filter_form($_POST['addElementCountry']) : $missionCountry = '';
+
+            // le status
+            (isset($_POST['addElementStatus']) and !empty($_POST['addElementStatus'])) ? $missionStatus = $this->Security->filter_form($_POST['addElementStatus']) : $missionStatus = '';
+
+            // le type
+            (isset($_POST['addElementType']) and !empty($_POST['addElementType'])) ? $missionType = $this->Security->filter_form($_POST['addElementType']) : $missionType = '';
+
+            // la spécialité
+            (isset($_POST['addElementSpe']) and !empty($_POST['addElementSpe'])) ? $missionSpe = $this->Security->filter_form($_POST['addElementSpe']) : $missionSpe = '';
+
+            // la planque
+            (isset($_POST['addElementPlanque']) and !empty($_POST['addElementPlanque'])) ? $missionPlanque = $this->Security->filter_form($_POST['addElementPlanque']) : $missionPlanque = '';
+
+            // la liste des contacts
+            (isset($_POST['addContacts']) and !empty($_POST['addContacts'])) ? $missionContact = $this->Security->filter_form_array($_POST['addContacts']) : $missionContact = '';
+
+            // la liste des cibles
+            (isset($_POST['cibles']) and !empty($_POST['cibles'])) ? $missionCibles = $this->Security->filter_form_array($_POST['cibles']) : $missionCibles = '';
+
+            // la liste des agents
+            (isset($_POST['addAgent']) and !empty($_POST['addAgent'])) ? $missionAgents = $this->Security->filter_form_array($_POST['addAgent']) : $missionAgents = '';
+
+
+            if (!empty($missionCountry) && !empty($missionStatus) && !empty($missionId) && !empty($missionType) && !empty($missionSpe) && !empty($missionPlanque) && !empty($missionContact) && !empty($missionCibles) && !empty($missionAgents) && $this->Mission->verifyMissionConstraints($missionCountry, $missionSpe, $missionCibles, $missionContact, $missionAgents, $missionPlanque)) {
+                // Si les variables ne sont pas vides et les conditions sont respectées
+                // on fait l'ajout en BDD et on récupère le résultat
+                $res = $this->Mission->updateMission($missionId, $missionTitle, $missionName, $missionDesc, $missionBeginDate, $missionEndDate, $missionCountry, $missionType, $missionStatus, $missionSpe, $missionCibles, $missionContact, $missionAgents, $missionPlanque);
+                
+                // Stockage des résultats dans la session puis redirection pour éviter renvoi au rafraichissement
+                $_SESSION['resultat'] = $res;
+            } else {
+                // on indique qu'il y a une erreur
+                $res = 'une erreur est survenueeeeee';
 
                 // Stockage des résultats dans la session puis redirection pour éviter renvoi au rafraichissement
                 $_SESSION['resultat'] = $res;
             }
         }
-
         // on regénère le token
         $this->Security->regenerateToken();
 

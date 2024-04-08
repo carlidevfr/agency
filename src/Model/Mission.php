@@ -38,26 +38,56 @@ class Mission extends Model
     public function getMission($idMission)
     {
         try {
-            // retourne toutes les missions
+            // retourne la mission selon l'id
 
             $bdd = $this->connexionPDO();
-            $req = '
+            $req = "
         SELECT Missions.idMission,
         Missions.title,
         Missions.codeName,
         Missions.description,
         Missions.beginDate,
         Missions.endDate,
+        DATE_FORMAT(Missions.beginDate, '%d/%m/%Y') AS dateBegin,
+        DATE_FORMAT(Missions.endDate, '%d/%m/%Y') AS dateEnd,
         Country.countryName,
         Types.typeName,
         Status.statusName,
-        Speciality.speName
+        Speciality.speName,
+        GROUP_CONCAT(DISTINCT Agents.codeAgent) AS agentNames,
+        GROUP_CONCAT(DISTINCT Cibles.idCible) AS cibleIds,
+        GROUP_CONCAT(DISTINCT Cibles.codeName) AS cibleNames,
+        GROUP_CONCAT(DISTINCT Contacts.idContact) AS contactIds,
+        GROUP_CONCAT(DISTINCT Planques.planqueName) AS planqueNames,
+        GROUP_CONCAT(DISTINCT CONCAT(Cibles.firstname, ' ', Cibles.lastname)) AS contactNames
         FROM Missions
-        JOIN Country ON Missions.missionCountry = Country.idCountry
-        JOIN Types ON Missions.missionType = Types.idType
-        JOIN Status ON Missions.missionStatus = Status.idStatus
-        JOIN Speciality ON Missions.missionSpeciality = Speciality.idSpeciality
-        WHERE Missions.idMission = :idMission';
+        JOIN
+            Country ON Missions.missionCountry = Country.idCountry
+        JOIN
+            Types ON Missions.missionType = Types.idType
+        JOIN
+            Status ON Missions.missionStatus = Status.idStatus
+        JOIN
+            Speciality ON Missions.missionSpeciality = Speciality.idSpeciality
+        JOIN
+            AgentsInMission ON Missions.idMission = AgentsInMission.idMission
+        JOIN
+            Agents ON AgentsInMission.idAgent = Agents.idAgent
+        LEFT JOIN
+            CiblesInMission ON Missions.idMission = CiblesInMission.idMission
+        LEFT JOIN
+            Cibles ON CiblesInMission.idCible = Cibles.idCible
+        LEFT JOIN
+            (SELECT idContact, idMission FROM ContactsInMission GROUP BY idContact, idMission) AS MissionContacts ON Missions.idMission = MissionContacts.idMission
+        LEFT JOIN
+            Contacts ON MissionContacts.idContact = Contacts.idContact
+        LEFT JOIN
+            Planques ON Missions.idMission = Planques.actuallyMission
+        WHERE Missions.idMission = :idMission
+        GROUP BY
+            Missions.idMission
+        ORDER BY
+            Missions.idMission";
 
             $stmt = $bdd->prepare($req);
 
@@ -799,5 +829,147 @@ class Mission extends Model
         }
     }
 
+    public function updateMission($missionId, $title, $codeName, $description, $beginDate, $endDate, $missionCountry, $missionType, $missionStatus, $missionSpeciality, $cibleIds, $contactIds, $agentIds, $planqueIds)
+{
+    try {
+        $bdd = $this->connexionPDO();
+
+        // Début de la transaction
+        $bdd->beginTransaction();
+
+        // Requête SQL pour mettre à jour une mission existante. Dynamique car on peut laisser des éléments vide
+        $req = "UPDATE Missions SET";
+        $params = array();
+
+        if (!empty($title)) {
+            $req .= " title = :title,";
+            $params[':title'] = $title;
+        }
+
+        if (!empty($codeName)) {
+            $req .= " codeName = :codeName,";
+            $params[':codeName'] = $codeName;
+        }
+
+        if (!empty($description)) {
+            $req .= " description = :description,";
+            $params[':description'] = $description;
+        }
+
+        if (!empty($beginDate)) {
+            $req .= " beginDate = :beginDate,";
+            $params[':beginDate'] = $beginDate;
+        }
+
+        if (!empty($endDate)) {
+            $req .= " endDate = :endDate,";
+            $params[':endDate'] = $endDate;
+        }
+
+        $req .= " missionCountry = :missionCountry,
+                 missionType = :missionType,
+                 missionStatus = :missionStatus,
+                 missionSpeciality = :missionSpeciality
+                 WHERE idMission = :missionId";
+
+        // Préparation de la requête
+        $stmt = $bdd->prepare($req);
+
+        // Liaison des paramètres
+        $stmt->bindValue(':missionId', $missionId, PDO::PARAM_INT);
+        $stmt->bindValue(':missionCountry', $missionCountry, PDO::PARAM_INT);
+        $stmt->bindValue(':missionType', $missionType, PDO::PARAM_INT);
+        $stmt->bindValue(':missionStatus', $missionStatus, PDO::PARAM_INT);
+        $stmt->bindValue(':missionSpeciality', $missionSpeciality, PDO::PARAM_INT);
+
+        // Liaison des paramètres optionnels
+        foreach ($params as $param => $value) {
+            $stmt->bindValue($param, $value);
+        }
+
+        // Exécution de la requête
+        if ($stmt->execute()) {
+            // Suppression des anciennes associations de cibles avec la mission
+            $reqDeleteCibles = "DELETE FROM CiblesInMission WHERE idMission = :missionId";
+            $stmtDeleteCibles = $bdd->prepare($reqDeleteCibles);
+            $stmtDeleteCibles->bindValue(':missionId', $missionId, PDO::PARAM_INT);
+            $stmtDeleteCibles->execute();
+
+            // Suppression des anciennes associations de contacts avec la mission
+            $reqDeleteContacts = "DELETE FROM ContactsInMission WHERE idMission = :missionId";
+            $stmtDeleteContacts = $bdd->prepare($reqDeleteContacts);
+            $stmtDeleteContacts->bindValue(':missionId', $missionId, PDO::PARAM_INT);
+            $stmtDeleteContacts->execute();
+
+            // Suppression des anciennes associations d'agents avec la mission
+            $reqDeleteAgents = "DELETE FROM AgentsInMission WHERE idMission = :missionId";
+            $stmtDeleteAgents = $bdd->prepare($reqDeleteAgents);
+            $stmtDeleteAgents->bindValue(':missionId', $missionId, PDO::PARAM_INT);
+            $stmtDeleteAgents->execute();
+
+            // Suppression des associations de planques avec la mission
+            $reqDeletePlanques = "UPDATE Planques SET actuallyMission = NULL WHERE actuallyMission = :missionId";
+            $stmtDeletePlanques = $bdd->prepare($reqDeletePlanques);
+            $stmtDeletePlanques->bindValue(':missionId', $missionId, PDO::PARAM_INT);
+            $stmtDeletePlanques->execute();
+
+            // Ajout des nouvelles associations de cibles avec la mission
+            foreach ($cibleIds as $cibleId) {
+                $reqCible = "INSERT INTO CiblesInMission (idCible, idMission) VALUES (:idCible, :idMission)";
+                $stmtCible = $bdd->prepare($reqCible);
+                $stmtCible->bindValue(':idCible', $cibleId, PDO::PARAM_INT);
+                $stmtCible->bindValue(':idMission', $missionId, PDO::PARAM_INT);
+                $stmtCible->execute();
+            }
+
+            // Ajout des nouvelles associations de contacts avec la mission
+            foreach ($contactIds as $contactId) {
+                $reqContact = "INSERT INTO ContactsInMission (idContact, idMission) VALUES (:idContact, :idMission)";
+                $stmtContact = $bdd->prepare($reqContact);
+                $stmtContact->bindValue(':idContact', $contactId, PDO::PARAM_INT);
+                $stmtContact->bindValue(':idMission', $missionId, PDO::PARAM_INT);
+                $stmtContact->execute();
+            }
+
+            // Ajout des nouvelles associations d'agents avec la mission
+            foreach ($agentIds as $agentId) {
+                $reqAgent = "INSERT INTO AgentsInMission (idAgent, idMission) VALUES (:idAgent, :idMission)";
+                $stmtAgent = $bdd->prepare($reqAgent);
+                $stmtAgent->bindValue(':idAgent', $agentId, PDO::PARAM_INT);
+                $stmtAgent->bindValue(':idMission', $missionId, PDO::PARAM_INT);
+                $stmtAgent->execute();
+            }
+
+            // Attribution des nouvelles planques à la mission
+            $reqPlanque = "UPDATE Planques SET actuallyMission = :idMission WHERE idPlanque = :idPlanque";
+            $stmtPlanque = $bdd->prepare($reqPlanque);
+            $stmtPlanque->bindValue(':idMission', $missionId, PDO::PARAM_INT);
+            $stmtPlanque->bindValue(':idPlanque', $planqueIds, PDO::PARAM_INT);
+            $stmtPlanque->execute();
+
+            // Valider la transaction
+            $bdd->commit();
+            return "La mission a bien été mise à jour.";
+        } else {
+            // En cas d'erreur, annuler la transaction
+            $bdd->rollBack();
+            return "Une erreur est survenue lors de la mise à jour de la mission.";
+        }
+    } catch (Exception $e) {
+        // Gestion des exceptions
+        $log = sprintf(
+            "%s %s %s %s %s",
+            date('Y-m-d- H:i:s'),
+            $e->getMessage(),
+            $e->getCode(),
+            $e->getFile(),
+            $e->getLine()
+        );
+        error_log($log . "\n\r", 3, './src/error.log');
+        // En cas d'erreur, annuler la transaction
+        $bdd->rollBack();
+        return "Une erreur est survenue lors de la mise à jour de la mission.";
+    }
+}
 
 }

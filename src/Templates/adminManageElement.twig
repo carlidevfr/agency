@@ -271,7 +271,131 @@
 			<button type="submit">Soumettre</button>
 
 		</form>
+	{% elseif "mission" in pageName|lower%}
+		{# Section 'update' si on est sur la page mission #}
+	Ancien codename de la mission : {{elements.codeName}}<br>
+	Ancien titre de la mission : {{elements.title}}<br>
+	Ancienne description de la mission : {{elements.description}}<br>
+	Ancienne date de début de la mission : {{elements.dateBegin}}<br>
+	Ancienne date de fin de la mission : {{elements.dateEnd}}<br>
+	Ancien pays de la mission : {{elements.countryName}}<br>
+	Ancien statut de la mission : {{elements.statusName}}<br>
+	Ancien type de la mission : {{elements.typeName}}<br>
+	Ancienne spécialité de la mission : {{elements.speName}}<br>
+	Ancienne planque de la mission : {{elements.planqueNames}}<br>
+	Contacts de mission : {{elements.contactNames}}<br>
+	Agents de mission : {{elements.agentNames}}<br>
+	Cibles de missions : {{elements.cibleNames}}<br><br>
 
+	<div id="listPlanques" data="{{ listPlanques }}"></div>
+	<div id="listAgents" data="{{ listAgents }}"></div>
+	<div id="listCibles" data="{{ listCibles }}"></div>
+	<div id="listContacts" data="{{ listContacts }}"></div>
+	<div id="listSpeciality" data="{{ listSpeciality }}"></div>
+
+
+	<form action="{{base_url}}{{updateUrl}}" method="post" enctype='multipart/form-data'>
+
+		<label for="addElementName">Nom de code de la mission : (laisser vide pour ne pas changer)
+		</label>
+		<input  type="text" name="addElementName" id="" placeholder="{{pageName}}"><br><br>
+
+		<label for="addElementTitle">Titre de la mission : (laisser vide pour ne pas changer)
+		</label>
+		<input  type="text" name="addElementTitle" id="" placeholder="{{pageName}}"><br><br>
+
+		<label for="addElementDesc">Description de la mission : (laisser vide pour ne pas changer)
+		</label>
+		<textarea  name="addElementDesc" id="" placeholder="{{pageName}}"></textarea><br><br>
+
+		<label for="updateElementBeginDate">Date de début : (laisser vide pour ne pas changer)
+		</label><br>
+		<input  type="date" name="updateElementBeginDate" id=""><br><br>
+
+		<label for="updateElementEndDate">Date de fin : (laisser vide pour ne pas changer)
+		</label><br>
+		<input  type="date" name="updateElementEndDate" id=""><br><br>
+
+		<label for="addElementCountry">Pays de la mission :
+		</label><br>
+		<select required name="addElementCountry" id="addElementCountry" onchange="updatePlanques(this), updateContacts(this)">
+			<option value=""></option>
+			{% for item in countries %}
+				<option value="{{ item.id }}">{{ item.valeur }}</option>
+			{% endfor %}
+		</select><br><br>
+
+		<label for="addElementStatus">Statut de mission : (laisser vide pour ne pas changer)
+		</label><br>
+		<select  required name="addElementStatus">
+			<option value=""></option>
+			{% for item in status %}
+				<option value="{{ item.id }}">{{ item.valeur }}</option>
+			{% endfor %}
+		</select><br><br>
+
+		<label for="addElementType">Type de mission : (laisser vide pour ne pas changer)
+		</label><br>
+		<select  required name="addElementType">
+			<option value=""></option>
+			{% for item in type %}
+				<option value="{{ item.id }}">{{ item.valeur }}</option>
+			{% endfor %}
+		</select><br><br>
+
+		<label for="addElementSpe">Spécialité requise pour la mission :
+		</label><br>
+		<select required name="addElementSpe" onchange="getIdSpe(this), updateMainAgents(this)">
+			<option value=""></option>
+			{% for item in spe %}
+				<option value="{{ item.id }}">{{ item.valeur }}</option>
+			{% endfor %}
+		</select><br><br>
+
+		<label for="addElementPlanque">Planque de la mission :
+		</label><br>
+		<select required name="addElementPlanque" id="addElementPlanque">
+			<option value=""></option>
+		</select><br><br>
+
+		<label for="addElementContact">Sélectionner les contacts de mission:
+			<br>
+			Ils sont filtrés selon le pays
+		</label><br>
+
+		<div id="addElementContact"></div>
+
+
+		<p>Sélectionner les cibles actives :</p>
+		{% for cible in cibles %}
+			{% if cible.isActive %}
+				<input class="cible-checkbox" type="checkbox" name="cibles[]" value="{{ cible.id }}" onchange="updateMainAgents(this)">
+				<label for="cible_{{ cible.id }}">{{ cible.valeur }}</label><br>
+			{% endif %}
+		{% endfor %}
+		<br>
+
+		<label for="addElementMainAgent">Agent principal de mission:
+			<br>
+			Spécialité requise par la mission et pays différent de la cible
+		</label><br>
+
+		<div id="addElementMainAgent"></div>
+		<br>
+
+		<label for="addElementOtherAgents">Agents secondaires de mission:
+			<br>
+			pays différent de la cible
+		</label><br>
+
+		<div id="addElementOtherAgents"></div>
+		<br><br>
+
+		<input type="hidden" name="updateElementId" value={{ elements.idMission }}>
+		<input type="hidden" name="tok" value={{ token }}>
+		<button type="submit">Soumettre</button>
+	</form>
+	<script src="../../public/js/adminMisson.js"></script>
 	{% else %}
 		{# Section 'update' pour les autres éléments #}
 
