@@ -270,7 +270,7 @@ function updateMainAgents(element)
 
     //On filtre les agents qui ont la spécialité requise
     let agentsWithSpe = getAgentsBySpecialityId(agentsNotInCibleCountry, idSpe)
-    displayCheckbox(agentsWithSpe, selectAddMainAgent, 'addAgent[]', 'updateOthersAgents')
+    displayCheckbox(agentsWithSpe, selectAddMainAgent, 'addAgent[]', 'updateOthersAgents(this)')
 }
 
 function updateOthersAgents()

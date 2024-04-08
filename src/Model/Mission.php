@@ -647,16 +647,16 @@ class Mission extends Model
                 }
 
                 // Ajout des identifiants de mission sur les planques associées à la mission
-                foreach ($planqueIds as $planqueId) {
+                
                     $reqPlanque = "UPDATE Planques SET actuallyMission = :idMission WHERE idPlanque = :idPlanque";
                     $stmtPlanque = $bdd->prepare($reqPlanque);
                     $stmtPlanque->bindValue(':idMission', $missionId, PDO::PARAM_INT);
-                    $stmtPlanque->bindValue(':idPlanque', $planqueId, PDO::PARAM_INT);
+                    $stmtPlanque->bindValue(':idPlanque', $planqueIds, PDO::PARAM_INT);
                     if (!$stmtPlanque->execute()) {
                         $bdd->rollBack(); // Annuler la transaction en cas d'échec
                         return "Une erreur est survenue lors de la création de mission.";
                     }
-                }
+                
 
                 // Si tout s'est bien passé, on valide la transaction
                 $bdd->commit();
@@ -686,23 +686,66 @@ class Mission extends Model
     public function verifyMissionConstraints($missionCountry, $missionSpeciality, $cibleIds, $contactIds, $agentIds, $planqueIds)
     {
         try {
-            $bdd = $this->connexionPDO();
-
             // Vérifier si les cibles ont une nationalité différente de celle des agents
-            $reqCheckCiblesAgents = "SELECT COUNT(*) AS count
-                                 FROM Cibles
-                                 JOIN Agents ON Cibles.countryCible = Agents.countryCible
-                                 WHERE Cibles.idCible IN (" . implode(",", $cibleIds) . ")";
-            $stmtCheckCiblesAgents = $bdd->query($reqCheckCiblesAgents);
-            $resultCheckCiblesAgents = $stmtCheckCiblesAgents->fetch(PDO::FETCH_ASSOC);
-            if ($resultCheckCiblesAgents['count'] > 0) {
-                return false; // Contrainte violée
+
+            $bdd = $this->connexionPDO();
+            $reqCheckCibles = null;
+            $reqCheckAgents = null;
+
+            if (is_array($agentIds)) {
+                // Si $agentIds est une liste d'identifiants, construire la clause WHERE
+                $reqCheckAgents = "SELECT Country.idCountry AS agentCountryId
+                FROM Agents
+                JOIN Cibles ON Agents.idAgent = Cibles.idCible
+                JOIN Country ON Cibles.countryCible = Country.idCountry
+                WHERE idAgent IN (" . implode(",", $agentIds) . ")";
+            } else {
+                // Si $agentIds est un seul identifiant, construire la clause WHERE
+                $reqCheckAgents = "SELECT Country.idCountry AS agentCountryId
+                FROM Agents
+                JOIN Cibles ON Agents.idAgent = Cibles.idCible
+                JOIN Country ON Cibles.countryCible = Country.idCountry
+                WHERE idAgent = $agentIds";
             }
 
+            if (is_array($cibleIds)) {
+                // Si $cibleIds est une liste d'identifiants, construire la clause WHERE
+                $reqCheckCibles = "SELECT Country.idCountry AS cibleCountryId
+                FROM Cibles
+                JOIN Country ON Cibles.countryCible = Country.idCountry
+                WHERE idCible IN (" . implode(",", $cibleIds) . ")";
+            } else {
+                // Si $cibleIds est un seul identifiant, construire la clause WHERE
+                $reqCheckCibles = "SELECT Country.idCountry AS cibleCountryId
+                FROM Cibles
+                JOIN Country ON Cibles.countryCible = Country.idCountry
+                WHERE idCible = $cibleIds";
+            }
+
+            $stmtCheckCibles = $bdd->query($reqCheckCibles);
+            $resultCheckCibles = $stmtCheckCibles->fetchAll(PDO::FETCH_ASSOC);
+
+            $stmtCheckAgents = $bdd->query($reqCheckAgents);
+            $resultCheckAgents = $stmtCheckAgents->fetchAll(PDO::FETCH_ASSOC);
+
+            // Utilisation de array_column pour extraire les valeurs de agentCountryId
+            $agentCountryIds = array_column($resultCheckAgents, "agentCountryId");
+            $CibleCountryIds = array_column($resultCheckCibles, "cibleCountryId");
+
+            // Vérifier s'il y a des pays en commun
+            $commonCountries = array_intersect($agentCountryIds, $CibleCountryIds);
+
+            // Retourner true s'il n'y a aucun pays en commun
+            if (!empty($commonCountries)) {
+                return false;
+            }
+            ;
+            
             // Vérifier si les contacts ont la nationalité du pays de la mission
             $reqCheckContacts = "SELECT COUNT(*) AS count
                              FROM Contacts
-                             JOIN Country ON Contacts.countryCible = Country.idCountry
+                             JOIN Cibles ON Contacts.idContact = Cibles.idCible
+                             JOIN Country ON Cibles.countryCible = Country.idCountry
                              WHERE Contacts.idContact IN (" . implode(",", $contactIds) . ") AND Country.idCountry != :missionCountry";
             $stmtCheckContacts = $bdd->prepare($reqCheckContacts);
             $stmtCheckContacts->bindValue(':missionCountry', $missionCountry, PDO::PARAM_INT);
@@ -715,9 +758,10 @@ class Mission extends Model
             // Vérifier si la planque est dans le même pays que la mission
             $reqCheckPlanque = "SELECT COUNT(*) AS count
                             FROM Planques
-                            WHERE Planques.idPlanque IN (" . implode(",", $planqueIds) . ") AND Planques.planqueCountry != :missionCountry";
+                            WHERE Planques.idPlanque = :planqueIds AND Planques.planqueCountry != :missionCountry";
             $stmtCheckPlanque = $bdd->prepare($reqCheckPlanque);
             $stmtCheckPlanque->bindValue(':missionCountry', $missionCountry, PDO::PARAM_INT);
+            $stmtCheckPlanque->bindValue(':planqueIds', $planqueIds, PDO::PARAM_INT);
             $stmtCheckPlanque->execute();
             $resultCheckPlanque = $stmtCheckPlanque->fetch(PDO::FETCH_ASSOC);
             if ($resultCheckPlanque['count'] > 0) {

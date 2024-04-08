@@ -21,12 +21,6 @@ class AdminMissionController
     private $Status;
     private $Type;
     private $Speciality;
-
-
-
-
-
-
     private $Security;
 
     public function __construct()
@@ -96,7 +90,6 @@ class AdminMissionController
         $speciality = $this->Speciality->getAllSpecialityNames();
         $cibles = $this->Cible->getAllCibleNames();
 
-        var_dump($listCibles);
         //twig
         $loader = new Twig\Loader\FilesystemLoader('./src/templates');
         $twig = new Twig\Environment($loader);
@@ -185,23 +178,51 @@ class AdminMissionController
 
         // on récupère la planque ajoutée et le token
         if (isset($_POST['tok']) and $this->Security->verifyToken($token, $_POST['tok'])) {
-            // l id
-            (isset($_POST['addElementId']) and !empty($_POST['addElementId'])) ? $missionId = $this->Security->filter_form($_POST['addElementId']) : $missionId = '';
 
             // le nom de code
-            (isset($_POST['addElementCodeName']) and !empty($_POST['addElementCodeName'])) ? $missionName = $this->Security->filter_form($_POST['addElementCodeName']) : $missionName = '';
+            (isset($_POST['addElementName']) and !empty($_POST['addElementName'])) ? $missionName = $this->Security->filter_form($_POST['addElementName']) : $missionName = '';
 
-            // la liste des spécialités
-            (isset($_POST['addElementSpe']) and !empty($_POST['addElementSpe'])) ? $missionSpeList = $this->Security->filter_form_array($_POST['addElementSpe']) : $missionSpeList = '';
+            // le titre
+            (isset($_POST['addElementTitle']) and !empty($_POST['addElementTitle'])) ? $missionTitle = $this->Security->filter_form($_POST['addElementTitle']) : $missionTitle = '';
 
-            if (isset($missionId) && isset($missionName) && isset($missionSpeList) && !empty($missionId) && !empty($missionName) && !empty($missionSpeList)) {
-                // Les variables $missionId, $missionName et $missionSpeList existent et ne sont pas vides
+            // la description
+            (isset($_POST['addElementDesc']) and !empty($_POST['addElementDesc'])) ? $missionDesc = $this->Security->filter_form($_POST['addElementDesc']) : $missionDesc = '';
 
+            // la date de début
+            (isset($_POST['updateElementBeginDate']) and !empty($_POST['updateElementBeginDate'])) ? $missionBeginDate = $this->Security->filter_form($_POST['updateElementBeginDate']) : $missionBeginDate = '';
+
+            // la date de fin
+            (isset($_POST['updateElementEndDate']) and !empty($_POST['updateElementEndDate'])) ? $missionEndDate = $this->Security->filter_form($_POST['updateElementEndDate']) : $missionEndDate = '';
+
+            // le pays
+            (isset($_POST['addElementCountry']) and !empty($_POST['addElementCountry'])) ? $missionCountry = $this->Security->filter_form($_POST['addElementCountry']) : $missionCountry = '';
+
+            // le status
+            (isset($_POST['addElementStatus']) and !empty($_POST['addElementStatus'])) ? $missionStatus = $this->Security->filter_form($_POST['addElementStatus']) : $missionStatus = '';
+
+            // le type
+            (isset($_POST['addElementType']) and !empty($_POST['addElementType'])) ? $missionType = $this->Security->filter_form($_POST['addElementType']) : $missionType = '';
+
+            // la spécialité
+            (isset($_POST['addElementSpe']) and !empty($_POST['addElementSpe'])) ? $missionSpe = $this->Security->filter_form($_POST['addElementSpe']) : $missionSpe = '';
+
+            // la planque
+            (isset($_POST['addElementPlanque']) and !empty($_POST['addElementPlanque'])) ? $missionPlanque = $this->Security->filter_form($_POST['addElementPlanque']) : $missionPlanque = '';
+
+            // la liste des contacts
+            (isset($_POST['addContacts']) and !empty($_POST['addContacts'])) ? $missionContact = $this->Security->filter_form_array($_POST['addContacts']) : $missionContact = '';
+
+            // la liste des cibles
+            (isset($_POST['cibles']) and !empty($_POST['cibles'])) ? $missionCibles = $this->Security->filter_form_array($_POST['cibles']) : $missionCibles = '';
+
+            // la liste des agents
+            (isset($_POST['addAgent']) and !empty($_POST['addAgent'])) ? $missionAgents = $this->Security->filter_form_array($_POST['addAgent']) : $missionAgents = '';
+
+
+            if (!empty($missionName) && !empty($missionTitle) && !empty($missionBeginDate) && !empty($missionEndDate) && !empty($missionCountry) && !empty($missionStatus) && !empty($missionType) && !empty($missionSpe) && !empty($missionPlanque) && !empty($missionContact) && !empty($missionCibles) && !empty($missionAgents) && !empty($missionDesc) && $this->Mission->verifyMissionConstraints($missionCountry, $missionSpe, $missionCibles, $missionContact, $missionAgents, $missionPlanque)) {
+                // Si les variables ne sont pas vides et les conditions sont respectées
                 // on fait l'ajout en BDD et on récupère le résultat
-                $res = $this->Mission->addMission($missionId, $missionName, $missionSpeList);
-                if (empty($res)) {
-                    $res = 'Cet mission a bien été ajouté';
-                }
+                $res = $this->Mission->addMission($missionTitle, $missionName, $missionDesc, $missionBeginDate, $missionEndDate, $missionCountry, $missionType, $missionStatus, $missionSpe, $missionCibles, $missionContact, $missionAgents, $missionPlanque);
                 // Stockage des résultats dans la session puis redirection pour éviter renvoi au rafraichissement
                 $_SESSION['resultat'] = $res;
             } else {
@@ -210,14 +231,16 @@ class AdminMissionController
 
                 // Stockage des résultats dans la session puis redirection pour éviter renvoi au rafraichissement
                 $_SESSION['resultat'] = $res;
+
+
             }
         }
+                // on regénère le token
+                $this->Security->regenerateToken();
 
-        // on regénère le token
-        $this->Security->regenerateToken();
+                header('Location: ' . BASE_URL . '/admin/manage-mission/action/success');
+                exit;
 
-        header('Location: ' . BASE_URL . '/admin/manage-mission/action/success');
-        exit;
     }
 
     public function adminDeleteMission()

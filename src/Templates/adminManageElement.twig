@@ -606,7 +606,6 @@
 {% elseif "mission" in pageName|lower%}
 	<div id="listPlanques" data="{{ listPlanques }}"></div>
 	<div id="listAgents" data="{{ listAgents }}"></div>
-	<div id="listCountries" data="{{ listCountries }}"></div>
 	<div id="listCibles" data="{{ listCibles }}"></div>
 	<div id="listContacts" data="{{ listContacts }}"></div>
 	<div id="listSpeciality" data="{{ listSpeciality }}"></div>
@@ -616,27 +615,27 @@
 
 		<label for="addElementName">Nom de code de la mission :
 		</label>
-		<input type="text" name="addElementName" id="" placeholder="{{pageName}}"><br><br>
+		<input required type="text" name="addElementName" id="" placeholder="{{pageName}}"><br><br>
 
 		<label for="addElementTitle">Titre de la mission :
 		</label>
-		<input type="text" name="addElementTitle" id="" placeholder="{{pageName}}"><br><br>
+		<input required type="text" name="addElementTitle" id="" placeholder="{{pageName}}"><br><br>
 
-		<label for="addElementTitle">Description de la mission :
+		<label for="addElementDesc">Description de la mission :
 		</label>
-		<textarea name="addElementTitle" id="" placeholder="{{pageName}}"></textarea><br><br>
+		<textarea required name="addElementDesc" id="" placeholder="{{pageName}}"></textarea><br><br>
 
 		<label for="updateElementBeginDate">Date de début :
 		</label><br>
-		<input type="date" name="updateElementBeginDate" id=""><br><br>
+		<input required type="date" name="updateElementBeginDate" id=""><br><br>
 
 		<label for="updateElementEndDate">Date de fin :
 		</label><br>
-		<input type="date" name="updateElementEndDate" id=""><br><br>
+		<input required type="date" name="updateElementEndDate" id=""><br><br>
 
 		<label for="addElementCountry">Pays de la mission :
 		</label><br>
-		<select name="addElementCountry" id="addElementCountry" onchange="updatePlanques(this), updateContacts(this)">
+		<select required name="addElementCountry" id="addElementCountry" onchange="updatePlanques(this), updateContacts(this)">
 			<option value=""></option>
 			{% for item in countries %}
 				<option value="{{ item.id }}">{{ item.valeur }}</option>
@@ -645,7 +644,7 @@
 
 		<label for="addElementStatus">Statut de mission :
 		</label><br>
-		<select name="addElementStatus">
+		<select required name="addElementStatus">
 			<option value=""></option>
 			{% for item in status %}
 				<option value="{{ item.id }}">{{ item.valeur }}</option>
@@ -654,7 +653,7 @@
 
 		<label for="addElementType">Type de mission :
 		</label><br>
-		<select name="addElementType">
+		<select required name="addElementType">
 			<option value=""></option>
 			{% for item in type %}
 				<option value="{{ item.id }}">{{ item.valeur }}</option>
@@ -663,7 +662,7 @@
 
 		<label for="addElementSpe">Spécialité requise pour la mission :
 		</label><br>
-		<select name="addElementSpe" onchange="getIdSpe(this), updateMainAgents(this)">
+		<select required name="addElementSpe" onchange="getIdSpe(this), updateMainAgents(this)">
 			<option value=""></option>
 			{% for item in spe %}
 				<option value="{{ item.id }}">{{ item.valeur }}</option>
@@ -672,7 +671,7 @@
 
 		<label for="addElementPlanque">Planque de la mission :
 		</label><br>
-		<select name="addElementPlanque" id="addElementPlanque">
+		<select required name="addElementPlanque" id="addElementPlanque">
 			<option value=""></option>
 		</select><br><br>
 
