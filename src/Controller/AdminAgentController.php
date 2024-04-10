@@ -81,10 +81,10 @@ class AdminAgentController
             'search' => $search,
             'cibles' => $cibles,
             'spe' => $spe,
-            'deleteUrl' => '/admin/manage-agent/delete',
-            'addUrl' => '/admin/manage-agent/add',
-            'updateUrl' => '/admin/manage-agent/update',
-            'previousUrl' => '/admin/manage-agent',
+            'deleteUrl' => 'admin/manage-agent/delete',
+            'addUrl' => 'admin/manage-agent/add',
+            'updateUrl' => 'admin/manage-agent/update',
+            'previousUrl' => 'admin/manage-agent',
             'token' => $token
         ]);
     }
@@ -115,7 +115,7 @@ class AdminAgentController
         } else {
 
             //Si vide on retourne sur la page agent
-            header('Location: ' . BASE_URL . '/admin/manage-agent');
+            header('Location: ' . BASE_URL . 'admin/manage-agent');
             exit;
 
         }
@@ -129,10 +129,10 @@ class AdminAgentController
             'pageName' => 'agents',
             'addResult' => $res,
             'data' => $data,
-            'deleteUrl' => '/admin/manage-agent/delete',
-            'addUrl' => '/admin/manage-agent/add',
-            'updateUrl' => '/admin/manage-agent/update',
-            'previousUrl' => '/admin/manage-agent'
+            'deleteUrl' => 'admin/manage-agent/delete',
+            'addUrl' => 'admin/manage-agent/add',
+            'updateUrl' => 'admin/manage-agent/update',
+            'previousUrl' => 'admin/manage-agent'
         ]);
 
     }
@@ -179,7 +179,7 @@ class AdminAgentController
         // on regénère le token
         $this->Security->regenerateToken();
 
-        header('Location: ' . BASE_URL . '/admin/manage-agent/action/success');
+        header('Location: ' . BASE_URL . 'admin/manage-agent/action/success');
         exit;
     }
 
@@ -205,7 +205,7 @@ class AdminAgentController
         // on regénère le token
         $this->Security->regenerateToken();
 
-        header('Location: ' . BASE_URL . '/admin/manage-agent/action/success');
+        header('Location: ' . BASE_URL . 'admin/manage-agent/action/success');
         exit;
 
 
@@ -247,10 +247,10 @@ class AdminAgentController
             'elements' => $agent,
             'spe' => $spe,
             'modifySection' => $modifySection,
-            'deleteUrl' => '/admin/manage-agent/delete',
-            'addUrl' => '/admin/manage-agent/add',
-            'updateUrl' => '/admin/manage-agent/update',
-            'previousUrl' => '/admin/manage-agent',
+            'deleteUrl' => 'admin/manage-agent/delete',
+            'addUrl' => 'admin/manage-agent/add',
+            'updateUrl' => 'admin/manage-agent/update',
+            'previousUrl' => 'admin/manage-agent',
             'token' => $token
         ]);
 
@@ -290,7 +290,7 @@ class AdminAgentController
         // on regénère le token
         $this->Security->regenerateToken();
 
-        header('Location: ' . BASE_URL . '/admin/manage-agent/action/success');
+        header('Location: ' . BASE_URL . 'admin/manage-agent/action/success');
         exit;
 
 

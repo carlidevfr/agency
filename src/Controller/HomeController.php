@@ -7,6 +7,7 @@ require_once './src/Model/Speciality.php';
 require_once './src/Model/Status.php';
 require_once './src/Model/Type.php';
 require_once './src/Model/Common/Security.php';
+require_once './src/Model/Common/Regenerate.php';
 
 class HomeController
 {
@@ -17,6 +18,7 @@ class HomeController
     private $Status;
     private $Type;
     private $Security;
+    private $Regenerate;
 
     public function __construct(){
         $this->Missions = new Mission();
@@ -26,6 +28,7 @@ class HomeController
         $this->Type = new Type();
         $this->Status = new Status();
         $this->Security = new Security();
+        $this->Regenerate = new Regenerate();
     }
 
     public function index(){
@@ -97,5 +100,13 @@ class HomeController
         //récupération et envoi du résultat en json
         $res = $this->Missions->getSearchMissions($search);
         Model::sendJSON($res) ;
+    }
+
+    public function createBddProd(){
+        
+        // Création de la base de données prod
+        if ($this->Regenerate->regenerateSqlProd('./src/Data/prod.sql')) {
+            # code...
+        }
     }
 }

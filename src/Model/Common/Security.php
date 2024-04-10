@@ -56,7 +56,7 @@ class Security
         } else {
             session_unset();
             session_destroy();
-            header('Location: ' . BASE_URL . '/login');
+            header('Location: ' . BASE_URL . 'login');
             exit;
         }
     }
@@ -89,7 +89,7 @@ class Security
         } else {
             session_unset();
             session_destroy();
-            header('Location: ' . BASE_URL . '/login');
+            header('Location: ' . BASE_URL . 'login');
             exit;
         }
     }
@@ -104,7 +104,7 @@ class Security
         } else {
             session_unset();
             session_destroy();
-            header('Location: ' . BASE_URL . '/login');
+            header('Location: ' . BASE_URL . 'login');
             exit;
         }
     }
@@ -128,7 +128,7 @@ class Security
     {
             session_unset();
             session_destroy();
-            header('Location: ' . BASE_URL . '/login');
+            header('Location: ' . BASE_URL . 'login');
             exit;
     }
 }

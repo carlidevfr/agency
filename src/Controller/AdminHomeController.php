@@ -39,7 +39,7 @@ class AdminHomeController
             isset($_SESSION['role']) and $_SESSION['role'] === 'admin' and
             isset($_SESSION['csrf_token'])
         ) {
-            header('Location: ' . BASE_URL.'/admin');
+            header('Location: ' . BASE_URL .'admin');
             exit;
         }
         // Affiche le formulaire de connexion et traite ses données
@@ -80,7 +80,7 @@ class AdminHomeController
                     $_SESSION['last_id'] = time();
 
                     //on redirige vers la page admin
-                    header('Location: ' . BASE_URL . '/admin');
+                    header('Location: ' . BASE_URL . 'admin');
                     exit;
 
                 } else {

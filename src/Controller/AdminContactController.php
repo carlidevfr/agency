@@ -75,10 +75,10 @@ class AdminContactController
             'activePage' => $page,
             'search' => $search,
             'cibles' => $cibles,
-            'deleteUrl' => '/admin/manage-contact/delete',
-            'addUrl' => '/admin/manage-contact/add',
-            'updateUrl' => '/admin/manage-contact/update',
-            'previousUrl' => '/admin/manage-contact',
+            'deleteUrl' => 'admin/manage-contact/delete',
+            'addUrl' => 'admin/manage-contact/add',
+            'updateUrl' => 'admin/manage-contact/update',
+            'previousUrl' => 'admin/manage-contact',
             'token' => $token
         ]);
     }
@@ -109,7 +109,7 @@ class AdminContactController
         } else {
 
             //Si vide on retourne sur la page contact
-            header('Location: ' . BASE_URL . '/admin/manage-contact');
+            header('Location: ' . BASE_URL . 'admin/manage-contact');
             exit;
 
         }
@@ -123,10 +123,10 @@ class AdminContactController
             'pageName' => 'contacts',
             'addResult' => $res,
             'data' => $data,
-            'deleteUrl' => '/admin/manage-contact/delete',
-            'addUrl' => '/admin/manage-contact/add',
-            'updateUrl' => '/admin/manage-contact/update',
-            'previousUrl' => '/admin/manage-contact'
+            'deleteUrl' => 'admin/manage-contact/delete',
+            'addUrl' => 'admin/manage-contact/add',
+            'updateUrl' => 'admin/manage-contact/update',
+            'previousUrl' => 'admin/manage-contact'
         ]);
 
     }
@@ -155,7 +155,7 @@ class AdminContactController
         // on regénère le token
         $this->Security->regenerateToken();
 
-        header('Location: ' . BASE_URL . '/admin/manage-contact/action/success');
+        header('Location: ' . BASE_URL . 'admin/manage-contact/action/success');
         exit;
     }
 
@@ -181,7 +181,7 @@ class AdminContactController
         // on regénère le token
         $this->Security->regenerateToken();
 
-        header('Location: ' . BASE_URL . '/admin/manage-contact/action/success');
+        header('Location: ' . BASE_URL . 'admin/manage-contact/action/success');
         exit;
 
 

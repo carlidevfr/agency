@@ -65,10 +65,10 @@ class AdminTypeController
             'pageMax' => $pageMax,
             'activePage' => $page,
             'search' => $search,
-            'deleteUrl' => '/admin/manage-type/delete',
-            'addUrl' => '/admin/manage-type/add',
-            'updateUrl' => '/admin/manage-type/update',
-            'previousUrl' => '/admin/manage-type',
+            'deleteUrl' => 'admin/manage-type/delete',
+            'addUrl' => 'admin/manage-type/add',
+            'updateUrl' => 'admin/manage-type/update',
+            'previousUrl' => 'admin/manage-type',
             'token' => $token
         ]);
     }
@@ -99,7 +99,7 @@ class AdminTypeController
         } else {
 
             //Si vide on retourne sur la page type
-            header('Location: ' . BASE_URL . '/admin/manage-type');
+            header('Location: ' . BASE_URL . 'admin/manage-type');
         }
 
         $loader = new Twig\Loader\FilesystemLoader('./src/templates');
@@ -111,10 +111,10 @@ class AdminTypeController
             'pageName' => 'type',
             'addResult' => $res,
             'data' => $data,
-            'deleteUrl' => '/admin/manage-type/delete',
-            'addUrl' => '/admin/manage-type/add',
-            'updateUrl' => '/admin/manage-type/update',
-            'previousUrl' => '/admin/manage-type'
+            'deleteUrl' => 'admin/manage-type/delete',
+            'addUrl' => 'admin/manage-type/add',
+            'updateUrl' => 'admin/manage-type/update',
+            'previousUrl' => 'admin/manage-type'
         ]);
 
     }
@@ -140,7 +140,7 @@ class AdminTypeController
         // on regénère le token
         $this->Security->regenerateToken();
 
-        header('Location: ' . BASE_URL . '/admin/manage-type/action/success');
+        header('Location: ' . BASE_URL . 'admin/manage-type/action/success');
         exit;
 
     }
@@ -167,7 +167,7 @@ class AdminTypeController
         // on regénère le token
         $this->Security->regenerateToken();
 
-        header('Location: ' . BASE_URL . '/admin/manage-type/action/success');
+        header('Location: ' . BASE_URL . 'admin/manage-type/action/success');
         exit;
 
 
@@ -205,10 +205,10 @@ class AdminTypeController
             'pageName' => 'type',
             'elements' => $type,
             'modifySection' => $modifySection,
-            'deleteUrl' => '/admin/manage-type/delete',
-            'addUrl' => '/admin/manage-type/add',
-            'updateUrl' => '/admin/manage-type/update',
-            'previousUrl' => '/admin/manage-type',
+            'deleteUrl' => 'admin/manage-type/delete',
+            'addUrl' => 'admin/manage-type/add',
+            'updateUrl' => 'admin/manage-type/update',
+            'previousUrl' => 'admin/manage-type',
             'token' => $token
         ]);
 
@@ -238,7 +238,7 @@ class AdminTypeController
         // on regénère le token
         $this->Security->regenerateToken();
 
-        header('Location: ' . BASE_URL . '/admin/manage-type/action/success');
+        header('Location: ' . BASE_URL . 'admin/manage-type/action/success');
         exit;
     }
 

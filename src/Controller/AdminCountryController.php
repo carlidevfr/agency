@@ -69,10 +69,10 @@ class AdminCountryController
             'pageMax' => $pageMax,
             'activePage' => $page,
             'search' => $search,
-            'deleteUrl' => '/admin/manage-country/delete',
-            'addUrl' => '/admin/manage-country/add',
-            'updateUrl' => '/admin/manage-country/update',
-            'previousUrl' => '/admin/manage-country',
+            'deleteUrl' => 'admin/manage-country/delete',
+            'addUrl' => 'admin/manage-country/add',
+            'updateUrl' => 'admin/manage-country/update',
+            'previousUrl' => 'admin/manage-country',
             'token' => $token
         ]);
     }
@@ -103,7 +103,7 @@ class AdminCountryController
         } else {
 
             //Si vide on retourne sur la page pays
-            header('Location: ' . BASE_URL . '/admin/manage-country');
+            header('Location: ' . BASE_URL . 'admin/manage-country');
             exit;
 
         }
@@ -117,10 +117,10 @@ class AdminCountryController
             'pageName' => 'pays',
             'addResult' => $res,
             'data' => $data,
-            'deleteUrl' => '/admin/manage-country/delete',
-            'addUrl' => '/admin/manage-country/add',
-            'updateUrl' => '/admin/manage-country/update',
-            'previousUrl' => '/admin/manage-country'
+            'deleteUrl' => 'admin/manage-country/delete',
+            'addUrl' => 'admin/manage-country/add',
+            'updateUrl' => 'admin/manage-country/update',
+            'previousUrl' => 'admin/manage-country'
         ]);
 
     }
@@ -146,7 +146,7 @@ class AdminCountryController
         // on regénère le token
         $this->Security->regenerateToken();
 
-        header('Location: ' . BASE_URL . '/admin/manage-country/action/success');
+        header('Location: ' . BASE_URL . 'admin/manage-country/action/success');
         exit;
 
 
@@ -174,7 +174,7 @@ class AdminCountryController
         // on regénère le token
         $this->Security->regenerateToken();
 
-        header('Location: ' . BASE_URL . '/admin/manage-country/action/success');
+        header('Location: ' . BASE_URL . 'admin/manage-country/action/success');
         exit;
 
 
@@ -212,10 +212,10 @@ class AdminCountryController
             'pageName' => 'pays',
             'elements' => $country,
             'modifySection' => $modifySection,
-            'deleteUrl' => '/admin/manage-country/delete',
-            'addUrl' => '/admin/manage-country/add',
-            'updateUrl' => '/admin/manage-country/update',
-            'previousUrl' => '/admin/manage-country',
+            'deleteUrl' => 'admin/manage-country/delete',
+            'addUrl' => 'admin/manage-country/add',
+            'updateUrl' => 'admin/manage-country/update',
+            'previousUrl' => 'admin/manage-country',
             'token' => $token
         ]);
 
@@ -245,7 +245,7 @@ class AdminCountryController
         // on regénère le token
         $this->Security->regenerateToken();
 
-        header('Location: ' . BASE_URL . '/admin/manage-country/action/success');
+        header('Location: ' . BASE_URL . 'admin/manage-country/action/success');
         exit;
 
 

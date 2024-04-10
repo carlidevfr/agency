@@ -75,10 +75,10 @@ class AdminCibleController
             'activePage' => $page,
             'search' => $search,
             'countries' => $countries,
-            'deleteUrl' => '/admin/manage-cible/delete',
-            'addUrl' => '/admin/manage-cible/add',
-            'updateUrl' => '/admin/manage-cible/update',
-            'previousUrl' => '/admin/manage-cible',
+            'deleteUrl' => 'admin/manage-cible/delete',
+            'addUrl' => 'admin/manage-cible/add',
+            'updateUrl' => 'admin/manage-cible/update',
+            'previousUrl' => 'admin/manage-cible',
             'token' => $token
         ]);
     }
@@ -109,7 +109,7 @@ class AdminCibleController
         } else {
 
             //Si vide on retourne sur la page cible
-            header('Location: ' . BASE_URL . '/admin/manage-cible');
+            header('Location: ' . BASE_URL . 'admin/manage-cible');
             exit;
 
         }
@@ -123,10 +123,10 @@ class AdminCibleController
             'pageName' => 'cibles',
             'addResult' => $res,
             'data' => $data,
-            'deleteUrl' => '/admin/manage-cible/delete',
-            'addUrl' => '/admin/manage-cible/add',
-            'updateUrl' => '/admin/manage-cible/update',
-            'previousUrl' => '/admin/manage-cible'
+            'deleteUrl' => 'admin/manage-cible/delete',
+            'addUrl' => 'admin/manage-cible/add',
+            'updateUrl' => 'admin/manage-cible/update',
+            'previousUrl' => 'admin/manage-cible'
         ]);
 
     }
@@ -170,7 +170,7 @@ class AdminCibleController
         // on regénère le token
         $this->Security->regenerateToken();
 
-        header('Location: ' . BASE_URL . '/admin/manage-cible/action/success');
+        header('Location: ' . BASE_URL . 'admin/manage-cible/action/success');
         exit;
     }
 
@@ -196,7 +196,7 @@ class AdminCibleController
         // on regénère le token
         $this->Security->regenerateToken();
 
-        header('Location: ' . BASE_URL . '/admin/manage-cible/action/success');
+        header('Location: ' . BASE_URL . 'admin/manage-cible/action/success');
         exit;
 
 
@@ -238,10 +238,10 @@ class AdminCibleController
             'elements' => $cible,
             'countries' => $countries,
             'modifySection' => $modifySection,
-            'deleteUrl' => '/admin/manage-cible/delete',
-            'addUrl' => '/admin/manage-cible/add',
-            'updateUrl' => '/admin/manage-cible/update',
-            'previousUrl' => '/admin/manage-cible',
+            'deleteUrl' => 'admin/manage-cible/delete',
+            'addUrl' => 'admin/manage-cible/add',
+            'updateUrl' => 'admin/manage-cible/update',
+            'previousUrl' => 'admin/manage-cible',
             'token' => $token
         ]);
 
@@ -290,7 +290,7 @@ class AdminCibleController
         // on regénère le token
         $this->Security->regenerateToken();
 
-        header('Location: ' . BASE_URL . '/admin/manage-cible/action/success');
+        header('Location: ' . BASE_URL . 'admin/manage-cible/action/success');
         exit;
 
 

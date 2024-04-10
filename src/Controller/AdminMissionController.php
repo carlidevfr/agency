@@ -115,10 +115,10 @@ class AdminMissionController
             'listStatus' => $listStatus,
             'listTypes' => $listTypes,
             'listSpeciality' => $listSpeciality,
-            'deleteUrl' => '/admin/manage-mission/delete',
-            'addUrl' => '/admin/manage-mission/add',
-            'updateUrl' => '/admin/manage-mission/update',
-            'previousUrl' => '/admin/manage-mission',
+            'deleteUrl' => 'admin/manage-mission/delete',
+            'addUrl' => 'admin/manage-mission/add',
+            'updateUrl' => 'admin/manage-mission/update',
+            'previousUrl' => 'admin/manage-mission',
             'token' => $token
         ]);
     }
@@ -146,7 +146,7 @@ class AdminMissionController
         } else {
 
             //Si vide on retourne sur la page mission
-            header('Location: ' . BASE_URL . '/admin/manage-mission');
+            header('Location: ' . BASE_URL . 'admin/manage-mission');
             exit;
 
         }
@@ -159,10 +159,10 @@ class AdminMissionController
             'base_url' => BASE_URL,
             'pageName' => 'missions',
             'addResult' => $res,
-            'deleteUrl' => '/admin/manage-mission/delete',
-            'addUrl' => '/admin/manage-mission/add',
-            'updateUrl' => '/admin/manage-mission/update',
-            'previousUrl' => '/admin/manage-mission'
+            'deleteUrl' => 'admin/manage-mission/delete',
+            'addUrl' => 'admin/manage-mission/add',
+            'updateUrl' => 'admin/manage-mission/update',
+            'previousUrl' => 'admin/manage-mission'
         ]);
 
     }
@@ -238,7 +238,7 @@ class AdminMissionController
                 // on regénère le token
                 $this->Security->regenerateToken();
 
-                header('Location: ' . BASE_URL . '/admin/manage-mission/action/success');
+                header('Location: ' . BASE_URL . 'admin/manage-mission/action/success');
                 exit;
 
     }
@@ -265,7 +265,7 @@ class AdminMissionController
         // on regénère le token
         $this->Security->regenerateToken();
 
-        header('Location: ' . BASE_URL . '/admin/manage-mission/action/success');
+        header('Location: ' . BASE_URL . 'admin/manage-mission/action/success');
         exit;
 
 
@@ -318,9 +318,9 @@ class AdminMissionController
             'pageName' => 'missions',
             'elements' => $mission,
             'modifySection' => $modifySection,
-            'deleteUrl' => '/admin/manage-mission/delete',
-            'updateUrl' => '/admin/manage-mission/update',
-            'previousUrl' => '/admin/manage-mission',
+            'deleteUrl' => 'admin/manage-mission/delete',
+            'updateUrl' => 'admin/manage-mission/update',
+            'previousUrl' => 'admin/manage-mission',
             'listAgents' => $listAgents,
             'listCountries' => $listCountries,
             'countries' => $countries,
@@ -403,7 +403,7 @@ class AdminMissionController
                 $_SESSION['resultat'] = $res;
             } else {
                 // on indique qu'il y a une erreur
-                $res = 'une erreur est survenueeeeee';
+                $res = 'une erreur est survenue';
 
                 // Stockage des résultats dans la session puis redirection pour éviter renvoi au rafraichissement
                 $_SESSION['resultat'] = $res;
@@ -412,7 +412,7 @@ class AdminMissionController
         // on regénère le token
         $this->Security->regenerateToken();
 
-        header('Location: ' . BASE_URL . '/admin/manage-mission/action/success');
+        header('Location: ' . BASE_URL . 'admin/manage-mission/action/success');
         exit;
     }
 

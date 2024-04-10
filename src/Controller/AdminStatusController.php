@@ -65,10 +65,10 @@ class AdminStatusController
             'pageMax' => $pageMax,
             'activePage' => $page,
             'search' => $search,
-            'deleteUrl' => '/admin/manage-status/delete',
-            'addUrl' => '/admin/manage-status/add',
-            'updateUrl' => '/admin/manage-status/update',
-            'previousUrl' => '/admin/manage-status',
+            'deleteUrl' => 'admin/manage-status/delete',
+            'addUrl' => 'admin/manage-status/add',
+            'updateUrl' => 'admin/manage-status/update',
+            'previousUrl' => 'admin/manage-status',
             'token' => $token
         ]);
     }
@@ -99,7 +99,7 @@ class AdminStatusController
         } else {
 
             //Si vide on retourne sur la page status
-            header('Location: ' . BASE_URL . '/admin/manage-status');
+            header('Location: ' . BASE_URL . 'admin/manage-status');
         }
 
         $loader = new Twig\Loader\FilesystemLoader('./src/templates');
@@ -111,10 +111,10 @@ class AdminStatusController
             'pageName' => 'statut',
             'addResult' => $res,
             'data' => $data,
-            'deleteUrl' => '/admin/manage-status/delete',
-            'addUrl' => '/admin/manage-status/add',
-            'updateUrl' => '/admin/manage-status/update',
-            'previousUrl' => '/admin/manage-status'
+            'deleteUrl' => 'admin/manage-status/delete',
+            'addUrl' => 'admin/manage-status/add',
+            'updateUrl' => 'admin/manage-status/update',
+            'previousUrl' => 'admin/manage-status'
         ]);
 
     }
@@ -140,7 +140,7 @@ class AdminStatusController
         // on regénère le token
         $this->Security->regenerateToken();
 
-        header('Location: ' . BASE_URL . '/admin/manage-status/action/success');
+        header('Location: ' . BASE_URL . 'admin/manage-status/action/success');
         exit;
 
     }
@@ -167,7 +167,7 @@ class AdminStatusController
         // on regénère le token
         $this->Security->regenerateToken();
 
-        header('Location: ' . BASE_URL . '/admin/manage-status/action/success');
+        header('Location: ' . BASE_URL . 'admin/manage-status/action/success');
         exit;
 
 
@@ -205,10 +205,10 @@ class AdminStatusController
             'pageName' => 'status',
             'elements' => $status,
             'modifySection' => $modifySection,
-            'deleteUrl' => '/admin/manage-status/delete',
-            'addUrl' => '/admin/manage-status/add',
-            'updateUrl' => '/admin/manage-status/update',
-            'previousUrl' => '/admin/manage-status',
+            'deleteUrl' => 'admin/manage-status/delete',
+            'addUrl' => 'admin/manage-status/add',
+            'updateUrl' => 'admin/manage-status/update',
+            'previousUrl' => 'admin/manage-status',
             'token' => $token
         ]);
 
@@ -238,7 +238,7 @@ class AdminStatusController
         // on regénère le token
         $this->Security->regenerateToken();
 
-        header('Location: ' . BASE_URL . '/admin/manage-status/action/success');
+        header('Location: ' . BASE_URL . 'admin/manage-status/action/success');
         exit;
     }
 

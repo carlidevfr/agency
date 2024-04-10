@@ -78,10 +78,10 @@ class AdminPlanqueController
             'search' => $search,
             'countries' => $countries,
             'missions' => $missions,
-            'deleteUrl' => '/admin/manage-planque/delete',
-            'addUrl' => '/admin/manage-planque/add',
-            'updateUrl' => '/admin/manage-planque/update',
-            'previousUrl' => '/admin/manage-planque',
+            'deleteUrl' => 'admin/manage-planque/delete',
+            'addUrl' => 'admin/manage-planque/add',
+            'updateUrl' => 'admin/manage-planque/update',
+            'previousUrl' => 'admin/manage-planque',
             'token' => $token
         ]);
     }
@@ -108,7 +108,7 @@ class AdminPlanqueController
         } else {
 
             //Si vide on retourne sur la page planque
-            header('Location: ' . BASE_URL . '/admin/manage-planque');
+            header('Location: ' . BASE_URL . 'admin/manage-planque');
         }
 
         $loader = new Twig\Loader\FilesystemLoader('./src/templates');
@@ -119,10 +119,10 @@ class AdminPlanqueController
             'base_url' => BASE_URL,
             'pageName' => 'planques',
             'addResult' => $res,
-            'deleteUrl' => '/admin/manage-planque/delete',
-            'addUrl' => '/admin/manage-planque/add',
-            'updateUrl' => '/admin/manage-planque/update',
-            'previousUrl' => '/admin/manage-planque'
+            'deleteUrl' => 'admin/manage-planque/delete',
+            'addUrl' => 'admin/manage-planque/add',
+            'updateUrl' => 'admin/manage-planque/update',
+            'previousUrl' => 'admin/manage-planque'
         ]);
 
     }
@@ -165,7 +165,7 @@ class AdminPlanqueController
         // on regénère le token
         $this->Security->regenerateToken();
 
-        header('Location: ' . BASE_URL . '/admin/manage-planque/action/success');
+        header('Location: ' . BASE_URL . 'admin/manage-planque/action/success');
         exit;
 
     }
@@ -192,7 +192,7 @@ class AdminPlanqueController
         // on regénère le token
         $this->Security->regenerateToken();
 
-        header('Location: ' . BASE_URL . '/admin/manage-planque/action/success');
+        header('Location: ' . BASE_URL . 'admin/manage-planque/action/success');
         exit;
 
 
@@ -235,10 +235,10 @@ class AdminPlanqueController
             'elements' => $planque,
             'countries' => $countries,
             'modifySection' => $modifySection,
-            'deleteUrl' => '/admin/manage-planque/delete',
-            'addUrl' => '/admin/manage-planque/add',
-            'updateUrl' => '/admin/manage-planque/update',
-            'previousUrl' => '/admin/manage-planque',
+            'deleteUrl' => 'admin/manage-planque/delete',
+            'addUrl' => 'admin/manage-planque/add',
+            'updateUrl' => 'admin/manage-planque/update',
+            'previousUrl' => 'admin/manage-planque',
             'token' => $token
         ]);
 
@@ -284,7 +284,7 @@ class AdminPlanqueController
         // on regénère le token
         $this->Security->regenerateToken();
 
-        header('Location: ' . BASE_URL . '/admin/manage-planque/action/success');
+        header('Location: ' . BASE_URL . 'admin/manage-planque/action/success');
         exit;
     }
 

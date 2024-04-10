@@ -2,3 +2,7 @@
 /vendor/
 docs/
 **/**.xml.dist
+Dockerfile
+docker-compose.yml
+**/prod.sql
+**/testprod.sql

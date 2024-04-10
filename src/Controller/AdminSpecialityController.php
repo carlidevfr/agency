@@ -65,10 +65,10 @@ class AdminSpecialityController
             'pageMax' => $pageMax,
             'activePage' => $page,
             'search' => $search,
-            'deleteUrl' => '/admin/manage-speciality/delete',
-            'addUrl' => '/admin/manage-speciality/add',
-            'updateUrl' => '/admin/manage-speciality/update',
-            'previousUrl' => '/admin/manage-speciality',
+            'deleteUrl' => 'admin/manage-speciality/delete',
+            'addUrl' => 'admin/manage-speciality/add',
+            'updateUrl' => 'admin/manage-speciality/update',
+            'previousUrl' => 'admin/manage-speciality',
             'token' => $token
         ]);
     }
@@ -99,7 +99,7 @@ class AdminSpecialityController
         } else {
 
             //Si vide on retourne sur la page speciality
-            header('Location: ' . BASE_URL . '/admin/manage-speciality');
+            header('Location: ' . BASE_URL . 'admin/manage-speciality');
         }
 
         $loader = new Twig\Loader\FilesystemLoader('./src/templates');
@@ -111,10 +111,10 @@ class AdminSpecialityController
             'pageName' => 'speciality',
             'addResult' => $res,
             'data' => $data,
-            'deleteUrl' => '/admin/manage-speciality/delete',
-            'addUrl' => '/admin/manage-speciality/add',
-            'updateUrl' => '/admin/manage-speciality/update',
-            'previousUrl' => '/admin/manage-speciality'
+            'deleteUrl' => 'admin/manage-speciality/delete',
+            'addUrl' => 'admin/manage-speciality/add',
+            'updateUrl' => 'admin/manage-speciality/update',
+            'previousUrl' => 'admin/manage-speciality'
         ]);
 
     }
@@ -140,7 +140,7 @@ class AdminSpecialityController
         // on regénère le token
         $this->Security->regenerateToken();
 
-        header('Location: ' . BASE_URL . '/admin/manage-speciality/action/success');
+        header('Location: ' . BASE_URL . 'admin/manage-speciality/action/success');
         exit;
 
     }
@@ -167,7 +167,7 @@ class AdminSpecialityController
         // on regénère le token
         $this->Security->regenerateToken();
 
-        header('Location: ' . BASE_URL . '/admin/manage-speciality/action/success');
+        header('Location: ' . BASE_URL . 'admin/manage-speciality/action/success');
         exit;
 
 
@@ -205,10 +205,10 @@ class AdminSpecialityController
             'pageName' => 'speciality',
             'elements' => $speciality,
             'modifySection' => $modifySection,
-            'deleteUrl' => '/admin/manage-speciality/delete',
-            'addUrl' => '/admin/manage-speciality/add',
-            'updateUrl' => '/admin/manage-speciality/update',
-            'previousUrl' => '/admin/manage-speciality',
+            'deleteUrl' => 'admin/manage-speciality/delete',
+            'addUrl' => 'admin/manage-speciality/add',
+            'updateUrl' => 'admin/manage-speciality/update',
+            'previousUrl' => 'admin/manage-speciality',
             'token' => $token
         ]);
 
@@ -238,7 +238,7 @@ class AdminSpecialityController
         // on regénère le token
         $this->Security->regenerateToken();
 
-        header('Location: ' . BASE_URL . '/admin/manage-speciality/action/success');
+        header('Location: ' . BASE_URL . 'admin/manage-speciality/action/success');
         exit;
     }
 
