@@ -243,5 +243,5 @@ INSERT INTO Admins (idAdmin, firstname, lastname, email, password) VALUES
     (UUID(), 'Anthony', 'DOTTOR', 'test@test.fr', '$2y$10$w/Z3seCK31OxqV22WKRY2u51LdlRf9cJ6tFAyOnMUGMJ57I5sxdEm')
 ;
 -- création d'un utilisateur qui servira à faire la connexion dans le .ENV du PHP pour toute l'app;
-CREATE OR REPLACE USER 'agenceapp'@'%' IDENTIFIED BY PASSWORD '*FE5CBB8287F3B8323FE2C3012FA5A0598E0705A4';
-GRANT SELECT, INSERT, UPDATE, DELETE ON secret_agency.* TO 'agenceapp'@'%' ;
+-- CREATE OR REPLACE USER 'agenceapp'@'%' IDENTIFIED BY PASSWORD '*FE5CBB8287F3B8323FE2C3012FA5A0598E0705A4';
+-- GRANT SELECT, INSERT, UPDATE, DELETE ON secret_agency.* TO 'agenceapp'@'%' ;
