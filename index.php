@@ -31,15 +31,15 @@ require_once './src/Controller/AdminAgentController.php';
 require_once './src/Controller/AdminContactController.php';
 require_once './src/Controller/AdminMissionController.php';
 require_once './src/Model/Common/Security.php';
-require_once './src/Model/Common/Regenerate.php';
+//require_once './src/Model/Common/Regenerate.php';
 
 
 $router = new Router();
 
 $router->addRoute('GET', BASE_URL . '/', 'homecontroller', 'index');
 
-$router->addRoute('GET', BASE_URL . 'createbddprod', 'homecontroller', 'index');
-$router->addRoute('GET', BASE_URL . 'createbddtest', 'homecontroller', 'index');
+//$router->addRoute('GET', BASE_URL . 'createbddprod', 'homecontroller', 'createBddProd');
+//$router->addRoute('GET', BASE_URL . 'createbddtest', 'homecontroller', 'createBddTest');
 
 
 $router->addRoute('GET', BASE_URL . 'apigetmissions', 'HomeController', 'apiGetMissions');
