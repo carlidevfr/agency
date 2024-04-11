@@ -106,7 +106,19 @@ class HomeController
         
         // Création de la base de données prod
         if ($this->Regenerate->regenerateSqlProd('./src/Data/prod.sql')) {
-            # code...
+            echo 'la base de données a été créée';
+        }else{
+            echo 'une erreur est survenue, consultez les logs';
+        }
+    }
+
+    public function createBddTest(){
+        
+        // Création de la base de données TEST
+        if ($this->Regenerate->regenerateSqlProd('./tests/Data/testprod.sql')) {
+            echo 'la base de données a été créée';
+        }else{
+            echo 'une erreur est survenue, consultez les logs';
         }
     }
 }
