@@ -231,5 +231,5 @@ INSERT INTO Planques (planqueName, location, planqueCountry, type, actuallyMissi
     ('hohoha', 'place principale F4787 Ville', 4,'maison',NULL);
 
 -- création d'un utilisateur qui servira à faire la connexion dans le .ENV du PHP pour toute l'app;
-CREATE OR REPLACE USER 'testagenceapp'@'%' IDENTIFIED BY PASSWORD '*54958E764CE10E50764C2EECBB71D01F08549980';
-GRANT SELECT, INSERT, UPDATE, DELETE ON secret_agency_test.* TO 'testagenceapp'@'%' ;
+-- CREATE OR REPLACE USER 'testagenceapp'@'%' IDENTIFIED BY PASSWORD '*54958E764CE10E50764C2EECBB71D01F08549980';
+-- GRANT SELECT, INSERT, UPDATE, DELETE ON secret_agency_test.* TO 'testagenceapp'@'%' ;
