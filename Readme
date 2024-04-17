@@ -1,0 +1,53 @@
+Comment déployer ?
+-	Installer git
+-	Installer docker
+-	Ouvrir un terminal
+-	Créer un dossier 
+-	Aller dans le dossier
+-	Faire « git clone https://github.com/carlidevfr/agency.git . »
+-	Supprimer l’extension . dev de
+o	docker-compose.yml.dev si vous souhaitez déployer en production sans la bdd de testing
+o	Sinon docker-compose.yml.test.dev, la seconde image mariadb est pour les tests
+o	Dockerfile.dev
+o	Dans src/config -> env.php.dev
+o	Si vous souhaitez faire des tests phpunit.xml.dist.dev
+-	Dans src/data -> renommer create.sql en prod.sql
+-	Dans test/data renommer testcreate.sql en testprod.sql (si vous souhaitez faire des tests)
+
+-	Dans le docker-compose :
+
+o	MYSQL_ROOT_PASSWORD: mettre un mot de passe fort pour root
+o	MYSQL_DATABASE: mettre le nom de la bdd à créer
+o	MYSQL_USER: mettre le nom de l’utilisateur qui servira de connexion par php à la bdd
+o	MYSQL_PASSWORD: mettre le mot de passe fort de l’utilisateur qui servira de connexion par php à la bdd
+
+
+-	Reprendre exactement ces éléments dans le fichier env.php renommé précédemment. (user, pass, nom BDD)
+-	Reprendre exactement ces éléments dans le fichier phpunit.xml.dist
+-	Sur le fichier prod.sql 
+o	Modifier les lignes 3,4 et 5 avec le nom de la base de données choisi.
+o	Modifier la ligne 243 pour créer un admin sur l’application. Le mdp est encodé en bcrypt, voici un site pour le générer : https://www.bcrypt.fr/
+
+-	Sur le fichier testprod.sql 
+o	Modifier les lignes 3,4 et 5 avec le nom de la base de données choisie.
+-	Dans le terminal lancer docker-compose up -d --build
+-	Faire la commande docker ps pour identifier le container php
+-	Faire la commande docker exec -it -u root agency-php-1 /bin/bash (remplacer agency-php-1 par le nom de votre container qui utilise php)
+-	Si vous ne souhaitez pas utiliser phpunit et faire de tests : composer install --prefer-source --no-dev
+-	sinon pour une version avec phpunit : composer install --prefer-source 
+
+-	Une fois les ressources téléchargées accédez à votre url (ou a localhost si vous êtes en local)
+
+-	Vous devriez tomber sur la page d’accueil (vide de toute données mais avec des titres)
+
+-	Pour installer les bases de données :
+
+o	Décommenter les lignes 34, 41 et 42 de index.php et allez sur :
+	Pour installer la base de données prod :  http://localhost/createbddprod
+	Pour installer la base de données test :  http://localhost/createbddtest
+o	Si une erreur apparait consultez log.txt, il peut y avoir une connexion refusée, attendez et retentez.
+o	Re-commentez les lignes de index.php pour éviter tout souci ou supprimez les
+
+-	Pour lancer les tests phpunit faites ‘vendor/bin/phpunit’ dans le terminal (si vous avez choisi le docker compose avec la bdd test)
+
+
