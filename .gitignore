@@ -1,4 +1,5 @@
 **/env.php
+**/envTest.php
 /vendor/
 docs/
 **/**.xml.dist
