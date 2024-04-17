@@ -7,3 +7,4 @@ docker-compose.yml
 **/prod.sql
 **/testprod.sql
 mariadb
+mariadbtest
