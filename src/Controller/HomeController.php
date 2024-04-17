@@ -113,7 +113,8 @@ class HomeController
     }
 
     public function createBddTest(){
-        
+        // Importation des variables d'environnement test
+        require_once './src/Config/envTest.php'; 
         // Création de la base de données TEST
         if ($this->Regenerate->regenerateSqlProd('./tests/Data/testprod.sql')) {
             echo 'la base de données a été créée';
